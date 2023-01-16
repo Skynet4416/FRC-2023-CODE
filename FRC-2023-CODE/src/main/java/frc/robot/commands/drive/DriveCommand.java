@@ -4,6 +4,8 @@
 
 package frc.robot.commands.drive;
 
+import frc.robot.Constants;
+import frc.robot.Constants.Drive;
 import frc.robot.subsystems.DriveSubsystem;
 
 import java.util.function.DoubleSupplier;
@@ -31,19 +33,22 @@ public class DriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
-
+  public double correctJoystickDrift(final double input)
+  {
+    return (Math.abs(input)>Constants.OI.kXboxcontrollerDrift) ? input : 0;
+  }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     switch (m_state) {
       case TANK:
-        m_system.setTankDrive(-m_left.getAsDouble(), -m_right.getAsDouble());
+        m_system.setTankDrive(correctJoystickDrift(-m_left.getAsDouble()), correctJoystickDrift(-m_right.getAsDouble()));
         
       case ARCADE:
-        m_system.setArcadeDrive(-m_left.getAsDouble(), -m_right.getAsDouble());
+        m_system.setArcadeDrive(correctJoystickDrift(-m_left.getAsDouble()), correctJoystickDrift(-m_right.getAsDouble()));
       
       case CURVATURE:
-        m_system.setCurvatureDrive(-m_left.getAsDouble(), -m_right.getAsDouble(), true);
+        m_system.setCurvatureDrive(correctJoystickDrift(-m_left.getAsDouble()), correctJoystickDrift(-m_right.getAsDouble()), true);
 
 
       default:
