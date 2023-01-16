@@ -37,13 +37,13 @@ public class DriveCommand extends CommandBase {
   public void execute() {
     switch (m_state) {
       case TANK:
-        m_system.setTankDrive(m_left.getAsDouble(), m_right.getAsDouble());
+        m_system.setTankDrive(-m_left.getAsDouble(), -m_right.getAsDouble());
         
       case ARCADE:
-        m_system.setArcadeDrive(m_left.getAsDouble(), m_right.getAsDouble());
+        m_system.setArcadeDrive(-m_left.getAsDouble(), -m_right.getAsDouble());
       
       case CURVATURE:
-        m_system.setCurvatureDrive(m_left.getAsDouble(), m_right.getAsDouble(), true);
+        m_system.setCurvatureDrive(-m_left.getAsDouble(), -m_right.getAsDouble(), true);
 
 
       default:
