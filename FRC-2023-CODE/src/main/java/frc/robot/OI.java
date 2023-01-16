@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot;
 
 //import java.lang.Thread;
 import edu.wpi.first.wpilibj.Joystick;
