@@ -49,8 +49,8 @@ public final class Constants {
     public static class CheatedEncodersPorts {
       public static final int[] kRightEncoderPorts = { 2, 3 };
       public static final int[] kLeftEncoderPorts = { 4, 5 };
-      public static final boolean kLeftEncoderReversed = true;
-      public static final boolean kRightEncoderReversed = false;
+      public static final boolean kLeftEncoderReversed = false;
+      public static final boolean kRightEncoderReversed = true;
       public static final int kEncoderCPR = 1024;
       public static final double kEncoderDistancePerPulse = (Physical.kwheelDiamaterInMeters * Math.PI) / (double) kEncoderCPR;
     }
@@ -91,7 +91,7 @@ public final class Constants {
           PID.kaVoltSecondsSquaredPerMeter,
           PIDAngular.kvVoltSecondsPerRadian,
           PIDAngular.kaVoltSecondsSquaredPerRadian);
-
+      public static final Vector<N7> kMessurmentStdDevs = VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005);
     }
   }
 

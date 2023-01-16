@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import java.util.concurrent.TimeUnit;
-
 //import java.lang.Thread;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;

@@ -11,7 +11,6 @@ import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -26,12 +25,11 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSiz
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.Drive;
 import frc.robot.Constants.Drive.Motors;
 import frc.robot.Constants.Drive.Physical;
-
 public class DriveSubsystem extends SubsystemBase {
+    // MANY ERRORS WERE FOUND IN DIS SHITHOLE, CHANGE THE ORDER OF THE VARIABLES UNTIL IT WORKS
     private final CANSparkMax m_leftForwardSparkMax = new CANSparkMax(Motors.kLeftForwardCANID, Motors.kMotorType);
     private final CANSparkMax m_rightForwardSparkMax = new CANSparkMax(Motors.kRightForwardCANID, Motors.kMotorType);
     private final CANSparkMax m_leftBackwardSparkMax = new CANSparkMax(Motors.kLeftBackwardCANID, Motors.kMotorType);
@@ -56,7 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
     private final Field2d m_field2d = new Field2d();
     private final DifferentialDrivetrainSim m_differentialDrivetrainSim = DifferentialDrivetrainSim.createKitbotSim(
             KitbotMotor.kDoubleNEOPerSide,
-            KitbotGearing.k10p71, KitbotWheelSize.kSixInch, null);
+            KitbotGearing.k10p71, KitbotWheelSize.kSixInch, Physical.kMessurmentStdDevs);
     int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
     private final SimDouble m_simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
 
@@ -72,7 +70,10 @@ public class DriveSubsystem extends SubsystemBase {
         restoreFactoryDefaults();
         setIdleMode(IdleMode.kCoast); // being able to move the robot
         resetEncoders();
-        m_leftControllerGroup.setInverted(true);
+        m_rightForwardRelativeEncoder.setInverted(true);
+        m_rightBackwardRelativeEncoder.setInverted(true);
+
+        m_rightControllerGroup.setInverted(true);
         //
         m_leftBackwardSparkMax.enableVoltageCompensation(12);
         m_leftForwardSparkMax.enableVoltageCompensation(12);
@@ -95,8 +96,10 @@ public class DriveSubsystem extends SubsystemBase {
                     Drive.CheatedEncodersPorts.kLeftEncoderReversed);
             m_leftCheatingEncoder.setDistancePerPulse(Drive.CheatedEncodersPorts.kEncoderDistancePerPulse);
             m_rightCheatingEncoder.setDistancePerPulse(Drive.CheatedEncodersPorts.kEncoderDistancePerPulse);
+            m_rightCheatingEncoder.setReverseDirection(true);
             m_leftSimulatedEncoder = new EncoderSim(m_leftCheatingEncoder);
             m_rightSimulatedEncoder = new EncoderSim(m_rightCheatingEncoder);
+        
 
         } else {
             m_rightSimulatedEncoder = null;
