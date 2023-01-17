@@ -10,7 +10,19 @@ import frc.robot.Constants.Drive;
 import frc.robot.commands.drive.DriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -54,6 +66,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(), List.of(new Translation2d(1,0)), new Pose2d(1,2,Rotation2d.fromDegrees(270)),Drive.Trajectory.kTrajectoryConfig);
+    Command auto = new RamseteCommand(trajectory, m_driveSubsystem::getPosition, m_driveSubsystem.getRamseteController(), m_driveSubsystem.getFeedForward(), m_driveSubsystem.getDifferentialDriveKinematics(), m_driveSubsystem::getWheelSpeeds, m_driveSubsystem.getLeftPIDController(), m_driveSubsystem.getRightPIDController(), m_driveSubsystem::setVoltage, m_driveSubsystem);
+
+    // Run path following command, then stop at the end.
+    return auto.andThen(() -> m_driveSubsystem.setVoltage(0, 0));
   }
 }

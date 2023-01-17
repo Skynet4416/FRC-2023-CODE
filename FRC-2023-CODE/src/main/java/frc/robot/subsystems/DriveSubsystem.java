@@ -7,10 +7,15 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -27,9 +32,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Drive;
 import frc.robot.Constants.Drive.Motors;
+import frc.robot.Constants.Drive.PID;
 import frc.robot.Constants.Drive.Physical;
+
 public class DriveSubsystem extends SubsystemBase {
-    // MANY ERRORS WERE FOUND IN DIS SHITHOLE, CHANGE THE ORDER OF THE VARIABLES UNTIL IT WORKS
+    // MANY ERRORS WERE FOUND IN DIS SHITHOLE, CHANGE THE ORDER OF THE VARIABLES
+    // UNTIL IT WORKS
     private final CANSparkMax m_leftForwardSparkMax = new CANSparkMax(Motors.kLeftForwardCANID, Motors.kMotorType);
     private final CANSparkMax m_rightForwardSparkMax = new CANSparkMax(Motors.kRightForwardCANID, Motors.kMotorType);
     private final CANSparkMax m_leftBackwardSparkMax = new CANSparkMax(Motors.kLeftBackwardCANID, Motors.kMotorType);
@@ -66,6 +74,13 @@ public class DriveSubsystem extends SubsystemBase {
     private final EncoderSim m_leftSimulatedEncoder;
     private final EncoderSim m_rightSimulatedEncoder;
 
+    private final PIDController m_leftPIDController = new PIDController(PID.kP, PID.kI, PID.kD);
+    private final PIDController m_rightPIDController = new PIDController(PID.kP, PID.kI, PID.kD);
+    private final SimpleMotorFeedforward m_motorFeedforward = new SimpleMotorFeedforward(PID.kSVolts,
+            PID.kVVoltSecondsPerMeter, PID.kAVoltSecondsSquaredPerMeter);
+    
+    RamseteController m_ramseteController = new RamseteController(Drive.RamseteController.kB, Drive.RamseteController.kZeta);
+
     public DriveSubsystem() {
         restoreFactoryDefaults();
         setIdleMode(IdleMode.kCoast); // being able to move the robot
@@ -99,7 +114,6 @@ public class DriveSubsystem extends SubsystemBase {
             m_rightCheatingEncoder.setReverseDirection(true);
             m_leftSimulatedEncoder = new EncoderSim(m_leftCheatingEncoder);
             m_rightSimulatedEncoder = new EncoderSim(m_rightCheatingEncoder);
-        
 
         } else {
             m_rightSimulatedEncoder = null;
@@ -226,9 +240,21 @@ public class DriveSubsystem extends SubsystemBase {
         m_field2d.setRobotPose(m_differentialDrivePoseEstimator.getEstimatedPosition());
         updateSmartDashboard();
     }
-    public void updateSmartDashboard()
-    {
+
+    public void updateSmartDashboard() {
         SmartDashboard.putData(m_field2d);
+    }
+
+    public PIDController getLeftPIDController() {
+        return m_leftPIDController;
+    }
+
+    public PIDController getRightPIDController() {
+        return m_rightPIDController;
+    }
+    public SimpleMotorFeedforward getFeedForward()
+    {
+        return m_motorFeedforward;
     }
 
     @Override
@@ -244,5 +270,25 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightSimulatedEncoder.setDistance(m_differentialDrivetrainSim.getRightPositionMeters());
         m_rightSimulatedEncoder.setRate(m_differentialDrivetrainSim.getRightVelocityMetersPerSecond());
         m_simAngle.set(m_differentialDrivetrainSim.getHeading().getDegrees());
+    }
+    public Pose2d getPosition()
+    {
+        return m_differentialDrivePoseEstimator.getEstimatedPosition();
+    }
+    public RamseteController getRamseteController()
+    {
+        return m_ramseteController;
+    }
+    public DifferentialDriveKinematics getDifferentialDriveKinematics(){
+        return m_differentialDriveKinematics;
+    }
+    public DifferentialDriveWheelSpeeds getWheelSpeeds()
+    {
+        if(RobotBase.isSimulation())
+        {
+            return new DifferentialDriveWheelSpeeds(getCheatedLeftVelocity(), getCheatedRightVelocity());
+        }
+        return new DifferentialDriveWheelSpeeds(getLeftVelocity(),getRightVelocity());
+        
     }
 }

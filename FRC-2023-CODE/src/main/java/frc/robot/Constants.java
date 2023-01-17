@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.util.Units;
 import frc.robot.commands.drive.DrivingState;
 
@@ -37,7 +38,11 @@ public final class Constants {
 
   public static class Drive {
     public static final DrivingState kDriveState = DrivingState.CURVATURE;
-
+    public static class Trajectory{
+      public static final double kMaxVelocity = 4.0;
+      public static final double kMaxAcceleration = 4.0;
+      public static final TrajectoryConfig kTrajectoryConfig = new TrajectoryConfig(kMaxVelocity, kMaxAcceleration);
+    }
     public static class Motors {
       public static final MotorType kMotorType = MotorType.kBrushless;
       public static final int kLeftForwardCANID = 10;
@@ -56,21 +61,25 @@ public final class Constants {
     }
 
     public static class PID {
-      public static final double kP = 0;
+      public static final double kP = 8.5;
       public static final double kI = 0;
       public static final double kD = 0;
-      public static final double kS = 0;
-      public static final double kvVoltSecondsPerMeter = 1.98;
-      public static final double kaVoltSecondsSquaredPerMeter = 1.2;
+      public static final double kSVolts = 0.22;
+      public static final double kVVoltSecondsPerMeter = 1.98;
+      public static final double kAVoltSecondsSquaredPerMeter = 1.2;
     }
 
     public static class PIDAngular {
       public static final double kP = 0;
       public static final double kI = 0;
       public static final double kD = 0;
-      public static final double kS = 0;
+      public static final double kSVolts = 0;
       public static final double kvVoltSecondsPerRadian = 1.5;
       public static final double kaVoltSecondsSquaredPerRadian = 0.3;
+    }
+    public static class RamseteController{
+      public static final double kB = 2;
+      public static final double kZeta = 0.7;
     }
 
     public static class Physical {
@@ -87,8 +96,8 @@ public final class Constants {
       public static final Pose2d kDeafultPosition = new Pose2d();
       // ------------------ ERROR HERE ------------------
       public static final LinearSystem<N2, N2, N2> kDriveTrainPlant = LinearSystemId.identifyDrivetrainSystem(
-          PID.kvVoltSecondsPerMeter,
-          PID.kaVoltSecondsSquaredPerMeter,
+          PID.kVVoltSecondsPerMeter,
+          PID.kAVoltSecondsSquaredPerMeter,
           PIDAngular.kvVoltSecondsPerRadian,
           PIDAngular.kaVoltSecondsSquaredPerRadian);
       public static final Vector<N7> kMessurmentStdDevs = VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005);
