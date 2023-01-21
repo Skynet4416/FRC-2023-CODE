@@ -1,5 +1,11 @@
 package frc.robot.subsystems;
 
+import java.io.IOException;
+import java.util.Optional;
+
+import org.opencv.aruco.EstimateParameters;
+import org.photonvision.EstimatedRobotPose;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -60,13 +66,14 @@ public class DriveSubsystem extends SubsystemBase {
 
     // The left-side drive encoder
     private final Encoder m_leftCheatingEncoder;
+    private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
 
     // The right-side drive encoder
     private final Encoder m_rightCheatingEncoder;
     private final EncoderSim m_leftSimulatedEncoder;
     private final EncoderSim m_rightSimulatedEncoder;
-
-    public DriveSubsystem() {
+    private Pose2d m_lastPose = null;
+    public DriveSubsystem() throws IOException{
         restoreFactoryDefaults();
         setIdleMode(IdleMode.kCoast); // being able to move the robot
         resetEncoders();
@@ -108,6 +115,7 @@ public class DriveSubsystem extends SubsystemBase {
             m_leftCheatingEncoder = null;
         }
         m_navx.calibrate();
+        m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
     }
 
     public double getLeftDistance() {
@@ -206,13 +214,17 @@ public class DriveSubsystem extends SubsystemBase {
         return Rotation2d.fromDegrees(-m_navx.getAngle());
     }
 
-    public void addVisionMessurement(final Pose2d visionMessurement, final double delayInSeconds) {
-        m_differentialDrivePoseEstimator.addVisionMeasurement(visionMessurement,
-                Timer.getFPGATimestamp() - delayInSeconds);
+    public void addVisionMessurement(final Optional<EstimatedRobotPose> visionMessurement) {
+        if(visionMessurement.isPresent())
+        {
+            EstimatedRobotPose pose = visionMessurement.get();
+            m_differentialDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
+        }
     }
-
+    
     @Override
     public void periodic() {
+        addVisionMessurement(m_visionSubsystem.getEstimatedGlobalPose(m_lastPose));
         if (RobotBase.isSimulation()) {
             m_differentialDrivePoseEstimator.update(
                     Rotation2d.fromDegrees(m_simAngle.get()), m_rightSimulatedEncoder.getDistance(),
@@ -223,7 +235,8 @@ public class DriveSubsystem extends SubsystemBase {
                     getCheatedLeftDistance(),
                     getCheatedRightDistance());
         }
-        m_field2d.setRobotPose(m_differentialDrivePoseEstimator.getEstimatedPosition());
+        m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
+        m_field2d.setRobotPose(m_lastPose);
         updateSmartDashboard();
     }
     public void updateSmartDashboard()
