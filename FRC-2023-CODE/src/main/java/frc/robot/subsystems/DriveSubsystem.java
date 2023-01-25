@@ -26,6 +26,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -81,7 +82,10 @@ public class DriveSubsystem extends SubsystemBase {
     // The left-side drive encoder
     private final Encoder m_leftCheatingEncoder;
     private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
-    private final ProfiledPIDController m_angleProfiledPIDController = new ProfiledPIDController(PIDAngular.kP, PIDAngular.kI,PIDAngular.kD, new TrapezoidProfile.Constraints(Physical.kMaxRotationalVelocityRadiansPerSecond, Physical.kMaxRotationalAccelerationRadiansPerSecondSquered));
+    private final ProfiledPIDController m_angleProfiledPIDController = new ProfiledPIDController(PIDAngular.kP,
+            PIDAngular.kI, PIDAngular.kD,
+            new TrapezoidProfile.Constraints(Physical.kMaxRotationalVelocityRadiansPerSecond,
+                    Physical.kMaxRotationalAccelerationRadiansPerSecondSquered));
     // The right-side drive encoder
     private final Encoder m_rightCheatingEncoder;
     private final EncoderSim m_leftSimulatedEncoder;
@@ -91,10 +95,13 @@ public class DriveSubsystem extends SubsystemBase {
     private final PIDController m_rightPIDController = new PIDController(PID.kP, PID.kI, PID.kD);
     private final SimpleMotorFeedforward m_motorFeedforward = new SimpleMotorFeedforward(PID.kSVolts,
             PID.kVVoltSecondsPerMeter, PID.kAVoltSecondsSquaredPerMeter);
-    
+
     private Pose2d m_lastPose = null;
-    private final RamseteController m_ramseteController = new RamseteController(Drive.RamseteController.kB,Drive.RamseteController.kZeta);
-    public DriveSubsystem() throws IOException{
+    private final RamseteController m_ramseteController = new RamseteController(Drive.RamseteController.kB,
+            Drive.RamseteController.kZeta);
+    private final TrajectoryConfig m_trajectoryConfig = new TrajectoryConfig(Physical.kMaxVelcoityMeterPerSecond, Physical.kMaxAccelerationMeterPerSecondSquered);
+
+    public DriveSubsystem() throws IOException {
         restoreFactoryDefaults();
         setIdleMode(IdleMode.kCoast); // being able to move the robot
         resetEncoders();
@@ -220,13 +227,14 @@ public class DriveSubsystem extends SubsystemBase {
     public void setTankDrive(final double leftSpeed, final double rightSpeed) {
         m_differentialDrive.tankDrive(leftSpeed, rightSpeed);
     }
-    public ProfiledPIDController getRotationalPIDController()
-    {
+
+    public ProfiledPIDController getRotationalPIDController() {
         return m_angleProfiledPIDController;
     }
+
     public void setVoltage(final double leftVoltage, final double rightVoltage) {
-        m_leftControllerGroup.setVoltage(leftVoltage);
-        m_rightControllerGroup.setVoltage(rightVoltage);
+        System.out.println("Voltage set to: " +leftVoltage + ", "+ rightVoltage);
+        m_differentialDrive.tankDrive(leftVoltage/RobotController.getBatteryVoltage(),rightVoltage/RobotController.getBatteryVoltage());
         m_differentialDrive.feed();
     }
 
@@ -237,19 +245,18 @@ public class DriveSubsystem extends SubsystemBase {
     public Rotation2d getHeading() {
         return Rotation2d.fromDegrees(Math.IEEEremainder(m_navx.getAngle(), 360));
     }
-    public Rotation2d getAbsuloteHeading()
-    {
+
+    public Rotation2d getAbsuloteHeading() {
         return Rotation2d.fromDegrees(m_navx.getCompassHeading());
     }
 
     public void addVisionMessurement(final Optional<EstimatedRobotPose> visionMessurement) {
-        if(visionMessurement.isPresent())
-        {
+        if (visionMessurement.isPresent()) {
             EstimatedRobotPose pose = visionMessurement.get();
             m_differentialDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
         }
     }
-    
+
     @Override
     public void periodic() {
         addVisionMessurement(m_visionSubsystem.getEstimatedGlobalPose(m_lastPose));
@@ -270,6 +277,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void updateSmartDashboard() {
         SmartDashboard.putData(m_field2d);
+        SmartDashboard.putNumberArray("Drive Voltages", new Double[] {m_leftControllerGroup.get() * RobotController.getBatteryVoltage(),
+            m_rightControllerGroup.get() * RobotController.getBatteryVoltage()});
     }
 
     public PIDController getLeftPIDController() {
@@ -279,8 +288,8 @@ public class DriveSubsystem extends SubsystemBase {
     public PIDController getRightPIDController() {
         return m_rightPIDController;
     }
-    public SimpleMotorFeedforward getFeedForward()
-    {
+
+    public SimpleMotorFeedforward getFeedForward() {
         return m_motorFeedforward;
     }
 
@@ -298,25 +307,28 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightSimulatedEncoder.setRate(m_differentialDrivetrainSim.getRightVelocityMetersPerSecond());
         m_simAngle.set(m_differentialDrivetrainSim.getHeading().getDegrees());
     }
-    
-    public Pose2d getPosition()
-    {
+
+    public Pose2d getPosition() {
         return m_lastPose;
     }
-    public RamseteController getRamseteController()
-    {
+
+    public RamseteController getRamseteController() {
         return m_ramseteController;
     }
-    public DifferentialDriveKinematics getDifferentialDriveKinematics(){
+
+    public DifferentialDriveKinematics getDifferentialDriveKinematics() {
         return m_differentialDriveKinematics;
     }
-    public DifferentialDriveWheelSpeeds getWheelSpeeds()
-    {
-        if(RobotBase.isSimulation())
-        {
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        if (RobotBase.isSimulation()) {
             return new DifferentialDriveWheelSpeeds(getCheatedLeftVelocity(), getCheatedRightVelocity());
         }
-        return new DifferentialDriveWheelSpeeds(getLeftVelocity(),getRightVelocity());
-        
+        return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity());
+
+    }
+    public TrajectoryConfig getTrajectoryConfig()
+    {
+        return m_trajectoryConfig;
     }
 }

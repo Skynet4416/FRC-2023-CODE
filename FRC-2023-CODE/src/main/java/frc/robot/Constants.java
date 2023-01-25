@@ -202,7 +202,7 @@ public class Constants {
     }
 
     // Locations of staged game pieces
-    public static  class StagingLocations {
+    public static class StagingLocations {
       public static final double centerOffsetX = Units.inchesToMeters(47.36);
       public static final double positionX = fieldLength / 2.0 - Units.inchesToMeters(47.36);
       public static final double firstY = Units.inchesToMeters(36.19);
@@ -274,12 +274,14 @@ public class Constants {
     public static final int kXboxControllerPort = 0;
     public static final double kXboxcontrollerDrift = 0.1;
   }
-  public static class Vision{
 
-    public static class AprilTag{
+  public static class Vision {
+
+    public static class AprilTag {
       public static final String kCameraName = "AprilTag Camera";
     }
-    public static class ReflectiveTape{
+
+    public static class ReflectiveTape {
       public static final String kReflectiveTapeCameraName = "Reflective Tape Camera";
     }
   }
@@ -329,15 +331,12 @@ public class Constants {
       public static final double kaVoltSecondsSquaredPerRadian = 0.3;
 
     }
-    public static class RamseteController{
-      public static final double kB = 2;
-      public static final double kZeta = 0.7;
-    }
 
     public static class RamseteController {
       public static final double kB = 2;
       public static final double kZeta = 0.7;
     }
+
 
     public static class Physical {
       public static final double kwheelDiamaterInMeters = Units.inchesToMeters(6);

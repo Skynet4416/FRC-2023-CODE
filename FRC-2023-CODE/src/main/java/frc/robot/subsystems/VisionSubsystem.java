@@ -50,6 +50,4 @@ public class VisionSubsystem {
         return m_photonPoseEstimator.update();
     }
 
-    
-    
 }
