@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -272,6 +274,15 @@ public class Constants {
     public static final int kXboxControllerPort = 0;
     public static final double kXboxcontrollerDrift = 0.1;
   }
+  public static class Vision{
+
+    public static class AprilTag{
+      public static final String kCameraName = "AprilTag Camera";
+    }
+    public static class ReflectiveTape{
+      public static final String kReflectiveTapeCameraName = "Reflective Tape Camera";
+    }
+  }
 
   public static class Drive {
     public static final DrivingState kDriveState = DrivingState.CURVATURE;
@@ -316,6 +327,11 @@ public class Constants {
       public static final double kSVolts = 0;
       public static final double kvVoltSecondsPerRadian = 1.5;
       public static final double kaVoltSecondsSquaredPerRadian = 0.3;
+
+    }
+    public static class RamseteController{
+      public static final double kB = 2;
+      public static final double kZeta = 0.7;
     }
 
     public static class RamseteController {
@@ -341,6 +357,10 @@ public class Constants {
           PIDAngular.kvVoltSecondsPerRadian,
           PIDAngular.kaVoltSecondsSquaredPerRadian);
       public static final Vector<N7> kMessurmentStdDevs = VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005);
+      public static final double kMaxVelcoityMeterPerSecond = 4;
+      public static final double kMaxAccelerationMeterPerSecondSquered = 4;
+      public static final double kMaxRotationalVelocityRadiansPerSecond = 4;
+      public static final double kMaxRotationalAccelerationRadiansPerSecondSquered = 4;
     }
   }
 

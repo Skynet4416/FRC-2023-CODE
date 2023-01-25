@@ -5,7 +5,9 @@
 package frc.robot.commands.drive;
 
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -15,7 +17,11 @@ public final class Autos {
   public static CommandBase exampleAuto(ExampleSubsystem subsystem) {
     return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
   }
-
+  public static CommandBase testAuto(DriveSubsystem driveSubsystem)
+  {
+    
+    return new RamseteCommand(null, driveSubsystem::getPosition, driveSubsystem.getRamseteController(), driveSubsystem.get, null, null, null, null, null, null)
+  }
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
