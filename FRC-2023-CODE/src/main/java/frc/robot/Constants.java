@@ -67,7 +67,7 @@ public final class Constants {
     }
 
     public static class PID {
-      public static final double kP = 0;
+      public static final double kP = 8.5;
       public static final double kI = 0;
       public static final double kD = 0;
       public static final double kS = 0;
@@ -82,6 +82,11 @@ public final class Constants {
       public static final double kS = 0;
       public static final double kvVoltSecondsPerRadian = 1.5;
       public static final double kaVoltSecondsSquaredPerRadian = 0.3;
+
+    }
+    public static class RamseteController{
+      public static final double kB = 2;
+      public static final double kZeta = 0.7;
     }
 
     public static class Physical {
@@ -103,6 +108,10 @@ public final class Constants {
           PIDAngular.kvVoltSecondsPerRadian,
           PIDAngular.kaVoltSecondsSquaredPerRadian);
       public static final Vector<N7> kMessurmentStdDevs = VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005);
+      public static final double kMaxVelcoityMeterPerSecond = 4;
+      public static final double kMaxAccelerationMeterPerSecondSquered = 4;
+      public static final double kMaxRotationalVelocityRadiansPerSecond = 4;
+      public static final double kMaxRotationalAccelerationRadiansPerSecondSquered = 4;
     }
   }
 

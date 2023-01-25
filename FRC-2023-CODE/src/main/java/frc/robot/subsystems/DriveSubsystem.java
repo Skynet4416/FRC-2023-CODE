@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.io.IOException;
 import java.util.Optional;
 
+import javax.swing.SpringLayout.Constraints;
+
 import org.opencv.aruco.EstimateParameters;
 import org.photonvision.EstimatedRobotPose;
 
@@ -13,10 +15,14 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -33,6 +39,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Drive;
 import frc.robot.Constants.Drive.Motors;
+import frc.robot.Constants.Drive.PIDAngular;
 import frc.robot.Constants.Drive.Physical;
 public class DriveSubsystem extends SubsystemBase {
     // MANY ERRORS WERE FOUND IN DIS SHITHOLE, CHANGE THE ORDER OF THE VARIABLES UNTIL IT WORKS
@@ -67,12 +74,14 @@ public class DriveSubsystem extends SubsystemBase {
     // The left-side drive encoder
     private final Encoder m_leftCheatingEncoder;
     private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
-
+    private final ProfiledPIDController m_angleProfiledPIDController = new ProfiledPIDController(PIDAngular.kP, PIDAngular.kI,PIDAngular.kD, new TrapezoidProfile.Constraints(Physical.kMaxRotationalVelocityRadiansPerSecond, Physical.kMaxRotationalAccelerationRadiansPerSecondSquered));
     // The right-side drive encoder
     private final Encoder m_rightCheatingEncoder;
     private final EncoderSim m_leftSimulatedEncoder;
     private final EncoderSim m_rightSimulatedEncoder;
     private Pose2d m_lastPose = null;
+    private final RamseteController m_ramseteController = new RamseteController(Drive.RamseteController.kB,Drive.RamseteController.kZeta);
+    private final
     public DriveSubsystem() throws IOException{
         restoreFactoryDefaults();
         setIdleMode(IdleMode.kCoast); // being able to move the robot
@@ -116,6 +125,7 @@ public class DriveSubsystem extends SubsystemBase {
         }
         m_navx.calibrate();
         m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
+        m_angleProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     public double getLeftDistance() {
@@ -199,7 +209,10 @@ public class DriveSubsystem extends SubsystemBase {
     public void setTankDrive(final double leftSpeed, final double rightSpeed) {
         m_differentialDrive.tankDrive(leftSpeed, rightSpeed);
     }
-
+    public ProfiledPIDController getRotationalPIDController()
+    {
+        return m_angleProfiledPIDController;
+    }
     public void setVoltage(final double leftVoltage, final double rightVoltage) {
         m_leftControllerGroup.setVoltage(leftVoltage);
         m_rightControllerGroup.setVoltage(rightVoltage);
@@ -211,7 +224,11 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(-m_navx.getAngle());
+        return Rotation2d.fromDegrees(Math.IEEEremainder(m_navx.getAngle(), 360));
+    }
+    public Rotation2d getAbsuloteHeading()
+    {
+        return Rotation2d.fromDegrees(m_navx.getCompassHeading());
     }
 
     public void addVisionMessurement(final Optional<EstimatedRobotPose> visionMessurement) {
@@ -227,13 +244,13 @@ public class DriveSubsystem extends SubsystemBase {
         addVisionMessurement(m_visionSubsystem.getEstimatedGlobalPose(m_lastPose));
         if (RobotBase.isSimulation()) {
             m_differentialDrivePoseEstimator.update(
-                    Rotation2d.fromDegrees(m_simAngle.get()), m_rightSimulatedEncoder.getDistance(),
-                    m_leftSimulatedEncoder.getDistance());
+                    Rotation2d.fromDegrees(m_simAngle.get()), getCheatedLeftDistance(),
+                    getCheatedRightDistance());
         } else {
 
             m_differentialDrivePoseEstimator.update(getHeading(),
-                    getCheatedLeftDistance(),
-                    getCheatedRightDistance());
+                    getLeftDistance(),
+                    getRightDistance());
         }
         m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
         m_field2d.setRobotPose(m_lastPose);
@@ -257,5 +274,14 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightSimulatedEncoder.setDistance(m_differentialDrivetrainSim.getRightPositionMeters());
         m_rightSimulatedEncoder.setRate(m_differentialDrivetrainSim.getRightVelocityMetersPerSecond());
         m_simAngle.set(m_differentialDrivetrainSim.getHeading().getDegrees());
+    }
+    
+    public Pose2d getPosition()
+    {
+        return m_lastPose;
+    }
+    public RamseteController getRamseteController()
+    {
+        return m_ramseteController;
     }
 }

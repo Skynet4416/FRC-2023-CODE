@@ -1,19 +1,16 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonUtils;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -53,9 +50,6 @@ public class VisionSubsystem {
         return m_photonPoseEstimator.update();
     }
 
-    public Pose2d getReflectivePose2d(g) {
-        Pose2d robotPose = PhotonUtils.estimateFieldToRobot(
-                kCameraHeight, kTargetHeight, kCameraPitch, kTargetPitch, Rotation2d.fromDegrees(-target.getYaw()),
-                gyro.getRotation2d(), targetPose, cameraToRobot);
-    }
+    
+    
 }
