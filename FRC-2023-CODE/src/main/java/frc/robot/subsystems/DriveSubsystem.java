@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -234,7 +235,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void setVoltage(final double leftVoltage, final double rightVoltage) {
         System.out.println("Voltage set to: " +leftVoltage + ", "+ rightVoltage);
-        m_differentialDrive.tankDrive(leftVoltage/RobotController.getBatteryVoltage(),rightVoltage/RobotController.getBatteryVoltage());
+        m_differentialDrive.tankDrive(MathUtil.clamp(leftVoltage/RobotController.getBatteryVoltage(),-12,12),MathUtil.clamp(rightVoltage/RobotController.getBatteryVoltage(),-12,12));
         m_differentialDrive.feed();
     }
 
