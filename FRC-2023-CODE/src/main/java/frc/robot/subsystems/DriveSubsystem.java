@@ -62,17 +62,15 @@ public class DriveSubsystem extends SubsystemBase {
             m_rightForwardSparkMax);
     private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftControllerGroup,
             m_rightControllerGroup);
-    private final RelativeEncoder m_leftForwardRelativeEncoder = m_leftForwardSparkMax.getAlternateEncoder(1);
-    private final RelativeEncoder m_rightForwardRelativeEncoder = m_rightForwardSparkMax.getAlternateEncoder(1);
-    private final RelativeEncoder m_leftBackwardRelativeEncoder = m_leftBackwardSparkMax.getAlternateEncoder(1);
-    private final RelativeEncoder m_rightBackwardRelativeEncoder = m_rightBackwardSparkMax.getAlternateEncoder(1);
+    private final RelativeEncoder m_leftForwardRelativeEncoder;
+    private final RelativeEncoder m_rightForwardRelativeEncoder;
+    private final RelativeEncoder m_leftBackwardRelativeEncoder;
+    private final RelativeEncoder m_rightBackwardRelativeEncoder;
     private final AHRS m_navx = new AHRS();
     private final DifferentialDriveKinematics m_differentialDriveKinematics = new DifferentialDriveKinematics(
             Physical.kDistanceBetweenLeftAndRightWheelsInMeters);
 
-    private final DifferentialDrivePoseEstimator m_differentialDrivePoseEstimator = new DifferentialDrivePoseEstimator(
-            m_differentialDriveKinematics, getHeading(), getLeftDistance(), getRightDistance(),
-            Physical.kDeafultPosition, Physical.kStateStdDevs, Physical.kVisionMeasurementStdDevs);
+    private final DifferentialDrivePoseEstimator m_differentialDrivePoseEstimator;
     private final Field2d m_field2d = new Field2d();
     private final DifferentialDrivetrainSim m_differentialDrivetrainSim = DifferentialDrivetrainSim.createKitbotSim(
             KitbotMotor.kDoubleNEOPerSide,
@@ -100,14 +98,12 @@ public class DriveSubsystem extends SubsystemBase {
     private Pose2d m_lastPose = null;
     private final RamseteController m_ramseteController = new RamseteController(Drive.RamseteController.kB,
             Drive.RamseteController.kZeta);
-    private final TrajectoryConfig m_trajectoryConfig = new TrajectoryConfig(Physical.kMaxVelcoityMeterPerSecond, Physical.kMaxAccelerationMeterPerSecondSquered);
+    private final TrajectoryConfig m_trajectoryConfig = new TrajectoryConfig(Physical.kMaxVelcoityMeterPerSecond,
+            Physical.kMaxAccelerationMeterPerSecondSquered);
 
     public DriveSubsystem() throws IOException {
         restoreFactoryDefaults();
         setIdleMode(IdleMode.kCoast); // being able to move the robot
-        resetEncoders();
-        m_rightForwardRelativeEncoder.setInverted(true);
-        m_rightBackwardRelativeEncoder.setInverted(true);
 
         m_rightControllerGroup.setInverted(true);
         //
@@ -120,6 +116,10 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftForwardSparkMax.setSmartCurrentLimit(30);
         m_rightBackwardSparkMax.setSmartCurrentLimit(30);
         m_rightForwardSparkMax.setSmartCurrentLimit(30);
+        m_leftForwardRelativeEncoder = m_leftForwardSparkMax.getAlternateEncoder(1);
+        m_rightForwardRelativeEncoder = m_rightForwardSparkMax.getAlternateEncoder(1);
+        m_leftBackwardRelativeEncoder = m_leftBackwardSparkMax.getAlternateEncoder(1);
+        m_rightBackwardRelativeEncoder = m_rightBackwardSparkMax.getAlternateEncoder(1);
         if (RobotBase.isSimulation()) {
 
             m_rightCheatingEncoder = new Encoder(
@@ -142,7 +142,11 @@ public class DriveSubsystem extends SubsystemBase {
             m_rightCheatingEncoder = null;
             m_leftCheatingEncoder = null;
         }
+        resetEncoders();
         m_navx.calibrate();
+        m_differentialDrivePoseEstimator= new DifferentialDrivePoseEstimator(
+            m_differentialDriveKinematics, getHeading(), getLeftDistance(), getRightDistance(),
+            Physical.kDeafultPosition, Physical.kStateStdDevs, Physical.kVisionMeasurementStdDevs);
         m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
         m_angleProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
     }
@@ -184,6 +188,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setFactoConvertionFactor() {
+        System.out.println(Physical.kUnitsToMeters);
+
         // convert units to meters
         m_leftBackwardRelativeEncoder.setPositionConversionFactor(Physical.kUnitsToMeters);
         m_rightBackwardRelativeEncoder.setPositionConversionFactor(Physical.kUnitsToMeters);
@@ -234,8 +240,9 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setVoltage(final double leftVoltage, final double rightVoltage) {
-        System.out.println("Voltage set to: " +leftVoltage + ", "+ rightVoltage);
-        m_differentialDrive.tankDrive(MathUtil.clamp(leftVoltage/RobotController.getBatteryVoltage(),-12,12),MathUtil.clamp(rightVoltage/RobotController.getBatteryVoltage(),-12,12));
+        System.out.println("Voltage set to: " + leftVoltage + ", " + rightVoltage);
+        m_differentialDrive.tankDrive(MathUtil.clamp(leftVoltage / RobotController.getBatteryVoltage(), -12, 12),
+                MathUtil.clamp(rightVoltage / RobotController.getBatteryVoltage(), -12, 12));
         m_differentialDrive.feed();
     }
 
@@ -244,7 +251,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(Math.IEEEremainder(m_navx.getAngle(), 360));
+        return Rotation2d.fromDegrees(-Math.IEEEremainder(m_navx.getAngle(), 360));
     }
 
     public Rotation2d getAbsuloteHeading() {
@@ -253,6 +260,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void addVisionMessurement(final Optional<EstimatedRobotPose> visionMessurement) {
         if (visionMessurement.isPresent()) {
+            // System.out.println("position reset vision");
             EstimatedRobotPose pose = visionMessurement.get();
             m_differentialDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
         }
@@ -278,8 +286,18 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void updateSmartDashboard() {
         SmartDashboard.putData(m_field2d);
-        SmartDashboard.putNumberArray("Drive Voltages", new Double[] {m_leftControllerGroup.get() * RobotController.getBatteryVoltage(),
-            m_rightControllerGroup.get() * RobotController.getBatteryVoltage()});
+        SmartDashboard.putNumberArray("Drive Voltages",
+                new Double[] { m_leftControllerGroup.get() * RobotController.getBatteryVoltage(),
+                        m_rightControllerGroup.get() * RobotController.getBatteryVoltage() });
+        SmartDashboard.putNumber("left forward Distance", m_leftForwardRelativeEncoder.getPosition());
+        SmartDashboard.putNumber("left forward Velocity", m_leftForwardRelativeEncoder.getVelocity());
+        SmartDashboard.putNumber("right forward Distance", m_rightForwardRelativeEncoder.getPosition());
+        SmartDashboard.putNumber("right forward Velocity", m_rightForwardRelativeEncoder.getVelocity());
+        SmartDashboard.putNumber("left backword Distance", m_leftBackwardRelativeEncoder.getPosition());
+        SmartDashboard.putNumber("left backword Velocity", m_leftBackwardRelativeEncoder.getVelocity());
+        SmartDashboard.putNumber("right backword Distance", m_rightBackwardRelativeEncoder.getPosition());
+        SmartDashboard.putNumber("right backword Velocity", m_rightBackwardRelativeEncoder.getVelocity());
+
     }
 
     public PIDController getLeftPIDController() {
@@ -328,8 +346,8 @@ public class DriveSubsystem extends SubsystemBase {
         return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity());
 
     }
-    public TrajectoryConfig getTrajectoryConfig()
-    {
+
+    public TrajectoryConfig getTrajectoryConfig() {
         return m_trajectoryConfig;
     }
 }
