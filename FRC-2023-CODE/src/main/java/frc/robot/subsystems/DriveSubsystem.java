@@ -100,6 +100,7 @@ public class DriveSubsystem extends SubsystemBase {
             Drive.RamseteController.kZeta);
     private final TrajectoryConfig m_trajectoryConfig = new TrajectoryConfig(Physical.kMaxVelcoityMeterPerSecond,
             Physical.kMaxAccelerationMeterPerSecondSquered);
+    private final DifferentialDriveOdometry m_driveOdometry;
 
     public DriveSubsystem() throws IOException {
         restoreFactoryDefaults();
@@ -116,10 +117,10 @@ public class DriveSubsystem extends SubsystemBase {
         m_leftForwardSparkMax.setSmartCurrentLimit(30);
         m_rightBackwardSparkMax.setSmartCurrentLimit(30);
         m_rightForwardSparkMax.setSmartCurrentLimit(30);
-        m_leftForwardRelativeEncoder = m_leftForwardSparkMax.getAlternateEncoder(1);
-        m_rightForwardRelativeEncoder = m_rightForwardSparkMax.getAlternateEncoder(1);
-        m_leftBackwardRelativeEncoder = m_leftBackwardSparkMax.getAlternateEncoder(1);
-        m_rightBackwardRelativeEncoder = m_rightBackwardSparkMax.getAlternateEncoder(1);
+        m_leftForwardRelativeEncoder = m_leftForwardSparkMax.getEncoder();
+        m_rightForwardRelativeEncoder = m_rightForwardSparkMax.getEncoder();
+        m_leftBackwardRelativeEncoder = m_leftBackwardSparkMax.getEncoder();
+        m_rightBackwardRelativeEncoder = m_rightBackwardSparkMax.getEncoder();
         if (RobotBase.isSimulation()) {
 
             m_rightCheatingEncoder = new Encoder(
@@ -144,47 +145,44 @@ public class DriveSubsystem extends SubsystemBase {
         }
         resetEncoders();
         m_navx.calibrate();
-        m_differentialDrivePoseEstimator= new DifferentialDrivePoseEstimator(
-            m_differentialDriveKinematics, getHeading(), getLeftDistance(), getRightDistance(),
-            Physical.kDeafultPosition, Physical.kStateStdDevs, Physical.kVisionMeasurementStdDevs);
+        m_differentialDrivePoseEstimator = new DifferentialDrivePoseEstimator(
+                m_differentialDriveKinematics, getHeading(), getLeftDistance(), getRightDistance(),
+                Physical.kDeafultPosition, Physical.kStateStdDevs, Physical.kVisionMeasurementStdDevs);
+        m_driveOdometry = new DifferentialDriveOdometry(getHeading(), getLeftDistance(), getRightDistance());
         m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
         m_angleProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     public double getLeftDistance() {
+        if (RobotBase.isSimulation()) {
+            return m_leftCheatingEncoder.getDistance();
+        }
         return (m_leftBackwardRelativeEncoder.getPosition()
                 + m_leftForwardRelativeEncoder.getPosition()) / 2;
     }
 
     public double getRightDistance() {
+        if (RobotBase.isSimulation()) {
+            return m_rightCheatingEncoder.getDistance();
+        }
         return (m_rightBackwardRelativeEncoder.getPosition()
                 + m_rightForwardRelativeEncoder.getPosition()) / 2;
     }
 
     public double getLeftVelocity() {
+        if (RobotBase.isSimulation()) {
+            return m_leftCheatingEncoder.getRate();
+        }
         return (m_leftBackwardRelativeEncoder.getVelocity()
                 + m_leftForwardRelativeEncoder.getVelocity()) / 2;
     }
 
     public double getRightVelocity() {
+        if (RobotBase.isSimulation()) {
+            return m_rightCheatingEncoder.getRate();
+        }
         return (m_rightBackwardRelativeEncoder.getVelocity()
                 + m_rightForwardRelativeEncoder.getVelocity()) / 2;
-    }
-
-    public double getCheatedLeftDistance() {
-        return m_leftCheatingEncoder.getDistance();
-    }
-
-    public double getCheatedRightDistance() {
-        return m_rightCheatingEncoder.getDistance();
-    }
-
-    public double getCheatedLeftVelocity() {
-        return m_leftCheatingEncoder.getRate();
-    }
-
-    public double getCheatedRightVelocity() {
-        return m_rightCheatingEncoder.getRate();
     }
 
     public void setFactoConvertionFactor() {
@@ -251,35 +249,40 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(-Math.IEEEremainder(m_navx.getAngle(), 360));
+        if (RobotBase.isSimulation())
+            return Rotation2d.fromDegrees(-Math.IEEEremainder(m_navx.getAngle(), 360));
+        else {
+            return Rotation2d.fromDegrees(-Math.IEEEremainder(m_simAngle.get(), 360));
+        }
     }
 
     public Rotation2d getAbsuloteHeading() {
-        return Rotation2d.fromDegrees(m_navx.getCompassHeading());
+        return Rotation2d.fromDegrees(-m_navx.getCompassHeading());
     }
 
     public void addVisionMessurement(final Optional<EstimatedRobotPose> visionMessurement) {
         if (visionMessurement.isPresent()) {
             // System.out.println("position reset vision");
             EstimatedRobotPose pose = visionMessurement.get();
-            m_differentialDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
+            if (Drive.kKalmanPoseEstimation) {
+                m_differentialDrivePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
+                        pose.timestampSeconds);
+            } else {
+                m_driveOdometry.resetPosition(pose.estimatedPose.toPose2d().getRotation(), getLeftDistance(),
+                        getRightDistance(), pose.estimatedPose.toPose2d());
+            }
         }
     }
 
     @Override
     public void periodic() {
-        addVisionMessurement(m_visionSubsystem.getEstimatedGlobalPose(m_lastPose));
-        if (RobotBase.isSimulation()) {
-            m_differentialDrivePoseEstimator.update(
-                    Rotation2d.fromDegrees(m_simAngle.get()), getCheatedLeftDistance(),
-                    getCheatedRightDistance());
+        if (Drive.kKalmanPoseEstimation) {
+            m_differentialDrivePoseEstimator.update(getHeading(), getLeftDistance(), getRightDistance());
+            m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
         } else {
-
-            m_differentialDrivePoseEstimator.update(getHeading(),
-                    getLeftDistance(),
-                    getRightDistance());
+            m_driveOdometry.update(getHeading(), getLeftDistance(), getRightDistance());
+            m_lastPose = m_driveOdometry.getPoseMeters();
         }
-        m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
         m_field2d.setRobotPose(m_lastPose);
         updateSmartDashboard();
     }
@@ -289,6 +292,9 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumberArray("Drive Voltages",
                 new Double[] { m_leftControllerGroup.get() * RobotController.getBatteryVoltage(),
                         m_rightControllerGroup.get() * RobotController.getBatteryVoltage() });
+        SmartDashboard.putNumberArray("left Side", new Double[] { getLeftDistance(), getLeftVelocity() });
+        SmartDashboard.putNumberArray("right Side", new Double[] { getRightDistance(), getRightVelocity() });
+
         SmartDashboard.putNumber("left forward Distance", m_leftForwardRelativeEncoder.getPosition());
         SmartDashboard.putNumber("left forward Velocity", m_leftForwardRelativeEncoder.getVelocity());
         SmartDashboard.putNumber("right forward Distance", m_rightForwardRelativeEncoder.getPosition());
@@ -340,9 +346,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        if (RobotBase.isSimulation()) {
-            return new DifferentialDriveWheelSpeeds(getCheatedLeftVelocity(), getCheatedRightVelocity());
-        }
         return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity());
 
     }

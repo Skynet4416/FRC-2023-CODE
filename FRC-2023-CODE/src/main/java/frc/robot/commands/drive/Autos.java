@@ -30,15 +30,18 @@ public final class Autos {
     return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
   }
 
-  public static CommandBase testAuto(DriveSubsystem driveSubsystem)
-  {
+  public static CommandBase testAuto(DriveSubsystem driveSubsystem) {
 
     double start_time = Timer.getFPGATimestamp();
-    Translation2d[] array = {new Translation2d(1,0), new Translation2d(1,2)};
-    
-    Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(driveSubsystem.getPosition(),Arrays.asList(array), new Pose2d(3,3,Rotation2d.fromDegrees(180)), driveSubsystem.getTrajectoryConfig());
+    Translation2d[] array = { new Translation2d(1, 0), new Translation2d(1, 2) };
+
+    Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(driveSubsystem.getPosition(),
+        Arrays.asList(array), new Pose2d(3, 3, Rotation2d.fromDegrees(180)), driveSubsystem.getTrajectoryConfig());
     System.out.println(Timer.getFPGATimestamp() - start_time);
-    return new RamseteCommand(testTrajectory, driveSubsystem::getPosition, driveSubsystem.getRamseteController(), driveSubsystem.getFeedForward(), driveSubsystem.getDifferentialDriveKinematics(), driveSubsystem::getWheelSpeeds, driveSubsystem.getLeftPIDController(), driveSubsystem.getRightPIDController(), driveSubsystem::setVoltage, driveSubsystem);
+    return new RamseteCommand(testTrajectory, driveSubsystem::getPosition, driveSubsystem.getRamseteController(),
+        driveSubsystem.getFeedForward(), driveSubsystem.getDifferentialDriveKinematics(),
+        driveSubsystem::getWheelSpeeds, driveSubsystem.getLeftPIDController(), driveSubsystem.getRightPIDController(),
+        driveSubsystem::setVoltage, driveSubsystem);
   }
 
   private Autos() {

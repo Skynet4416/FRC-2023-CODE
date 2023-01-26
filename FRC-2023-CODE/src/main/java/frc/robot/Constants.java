@@ -288,6 +288,7 @@ public class Constants {
 
   public static class Drive {
     public static final DrivingState kDriveState = DrivingState.CURVATURE;
+    public static final boolean kKalmanPoseEstimation = false;
 
     public static class Trajectory {
       public static final double kMaxVelocity = 4.0;
@@ -336,7 +337,6 @@ public class Constants {
       public static final double kB = 2;
       public static final double kZeta = 0.7;
     }
-
 
     public static class Physical {
       public static final double kwheelDiamaterInMeters = Units.inchesToMeters(6);
