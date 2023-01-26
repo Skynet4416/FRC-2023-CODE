@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import javax.management.ConstructorParameters;
-
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,14 +18,12 @@ public class IntakeSubsystem extends SubsystemBase {
     m_rightIntakeSparkMax.setInverted(true);
   }
 
-  //create a @param speed that will be used to set the speed of the intake motors and can be from -1 to 1
-  
   /**
    * Sets the speed of the intake motors.
    * <p>
    * 
    * @param percent
-   *       The speed to set the intake motors to (Can be from -1 to 1.)
+   *       The percent to set the intake motors to (Can be from -1 to 1.)
    * 
    */
   public void setPercentage(double percent) {
@@ -35,6 +31,7 @@ public class IntakeSubsystem extends SubsystemBase {
     m_leftIntakeSparkMax.set(percent);
     m_rightIntakeSparkMax.set(percent);
   }
+
 
   @Override
   public void periodic() {

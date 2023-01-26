@@ -4,17 +4,16 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeCommand extends CommandBase {
   private final IntakeSubsystem m_subsystem;
-  private final DoubleSupplier m_right;
-  private final DoubleSupplier m_left;
+  private final Trigger m_right;
+  private final Trigger m_left;
   
-  public IntakeCommand(IntakeSubsystem subsystem, DoubleSupplier m_left, DoubleSupplier m_right) {
+  public IntakeCommand(IntakeSubsystem subsystem, Trigger m_left, Trigger m_right) {
     this.m_subsystem = subsystem;
     this.m_left = m_left;
     this.m_right = m_right;
@@ -30,8 +29,13 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double triggerVal = m_right.getAsDouble() - m_left.getAsDouble();
-    m_subsystem.setPercentage(triggerVal);
+    if (m_right.getAsBoolean() && !(m_left.getAsBoolean())) {
+      m_subsystem.setPercentage(1);
+    } else if (m_left.getAsBoolean() && !(m_right.getAsBoolean())) {
+      m_subsystem.setPercentage(-1);
+    } else {
+      m_subsystem.setPercentage(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
