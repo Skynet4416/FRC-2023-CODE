@@ -8,6 +8,9 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -18,6 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -30,14 +34,9 @@ public final class Autos {
     return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
   }
 
-  public static CommandBase testAuto(DriveSubsystem driveSubsystem) {
+  public static CommandBase testAuto(DriveSubsystem driveSubsystem) throws IOException {
 
-    double start_time = Timer.getFPGATimestamp();
-    Translation2d[] array = { new Translation2d(1, 0), new Translation2d(1, 2) };
-
-    Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(driveSubsystem.getPosition(),
-        Arrays.asList(array), new Pose2d(3, 3, Rotation2d.fromDegrees(180)), driveSubsystem.getTrajectoryConfig());
-    System.out.println(Timer.getFPGATimestamp() - start_time);
+   Trajectory testTrajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("src\\main\\deploy\\pathplanner\\generatedJSON\\New Path.wpilib.json"));
     return new RamseteCommand(testTrajectory, driveSubsystem::getPosition, driveSubsystem.getRamseteController(),
         driveSubsystem.getFeedForward(), driveSubsystem.getDifferentialDriveKinematics(),
         driveSubsystem::getWheelSpeeds, driveSubsystem.getLeftPIDController(), driveSubsystem.getRightPIDController(),

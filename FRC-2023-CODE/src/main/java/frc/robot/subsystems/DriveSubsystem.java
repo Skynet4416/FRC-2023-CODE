@@ -155,7 +155,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public double getLeftDistance() {
         if (RobotBase.isSimulation()) {
-            return m_leftCheatingEncoder.getDistance();
+            return m_leftSimulatedEncoder.getDistance();
         }
         return (m_leftBackwardRelativeEncoder.getPosition()
                 + m_leftForwardRelativeEncoder.getPosition()) / 2;
@@ -163,7 +163,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public double getRightDistance() {
         if (RobotBase.isSimulation()) {
-            return m_rightCheatingEncoder.getDistance();
+            return m_rightSimulatedEncoder.getDistance();
         }
         return (m_rightBackwardRelativeEncoder.getPosition()
                 + m_rightForwardRelativeEncoder.getPosition()) / 2;
@@ -171,7 +171,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public double getLeftVelocity() {
         if (RobotBase.isSimulation()) {
-            return m_leftCheatingEncoder.getRate();
+            return m_leftSimulatedEncoder.getRate();
         }
         return (m_leftBackwardRelativeEncoder.getVelocity()
                 + m_leftForwardRelativeEncoder.getVelocity()) / 2;
@@ -179,7 +179,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public double getRightVelocity() {
         if (RobotBase.isSimulation()) {
-            return m_rightCheatingEncoder.getRate();
+            return m_rightSimulatedEncoder.getRate();
         }
         return (m_rightBackwardRelativeEncoder.getVelocity()
                 + m_rightForwardRelativeEncoder.getVelocity()) / 2;
@@ -205,7 +205,13 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightBackwardRelativeEncoder.setPosition(0);
         m_rightForwardRelativeEncoder.setPosition(0);
         m_leftForwardRelativeEncoder.setPosition(0);
+        if (RobotBase.isSimulation()) {
+            m_rightSimulatedEncoder.setDistance(0);
+            m_leftSimulatedEncoder.setDistance(0);
+            m_rightSimulatedEncoder.setRate(0);
+            m_leftSimulatedEncoder.setRate(0);
 
+        }
         setFactoConvertionFactor();
     }
 
@@ -237,11 +243,12 @@ public class DriveSubsystem extends SubsystemBase {
         return m_angleProfiledPIDController;
     }
 
-    public void setVoltage(final double leftVoltage, final double rightVoltage) {
+    public void setVoltage(double leftVoltage, double rightVoltage) {
+        leftVoltage = MathUtil.clamp(leftVoltage, -12, 12) / RobotController.getBatteryVoltage();
+        rightVoltage = MathUtil.clamp(rightVoltage, -12, 12) / RobotController.getBatteryVoltage();
+        m_differentialDrive.tankDrive(leftVoltage, rightVoltage);
         System.out.println("Voltage set to: " + leftVoltage + ", " + rightVoltage);
-        m_differentialDrive.tankDrive(MathUtil.clamp(leftVoltage / RobotController.getBatteryVoltage(), -12, 12),
-                MathUtil.clamp(rightVoltage / RobotController.getBatteryVoltage(), -12, 12));
-        m_differentialDrive.feed();
+
     }
 
     public void setArcadeDrive(final double xSpeed, final double zSpeed) {
@@ -352,5 +359,35 @@ public class DriveSubsystem extends SubsystemBase {
 
     public TrajectoryConfig getTrajectoryConfig() {
         return m_trajectoryConfig;
+    }
+
+    public void resetGyro() {
+        m_navx.reset();
+    }
+
+    public void reset() {
+        resetGyro();
+        m_differentialDrive.feed();
+
+        resetEncoders();
+        m_differentialDrive.feed();
+
+        restoreFactoryDefaults();
+        m_differentialDrive.feed();
+
+        m_lastPose = new Pose2d();
+        m_differentialDrive.feed();
+
+        m_driveOdometry.resetPosition(getHeading(), getLeftDistance(), getRightDistance(), m_lastPose);
+        m_differentialDrive.feed();
+
+        m_differentialDrivetrainSim.setPose(m_lastPose);
+        m_differentialDrive.feed();
+
+        m_differentialDrivePoseEstimator.resetPosition(getHeading(), getLeftDistance(), getRightDistance(), m_lastPose);
+        m_differentialDrive.feed();
+
+        m_simAngle.set(getHeading().getDegrees());
+        m_differentialDrive.feed();
     }
 }

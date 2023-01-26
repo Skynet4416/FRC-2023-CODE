@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.drive.Autos;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.drive.DriveCommand;
+import frc.robot.commands.drive.ResetPositionCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -21,6 +22,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import java.io.IOException;
@@ -73,14 +75,16 @@ public class RobotContainer {
   private void configureBindings() {
     m_driveSubsystem.setDefaultCommand(new DriveCommand(m_driveSubsystem, Drive.kDriveState,
         OI.xboxController::getLeftY, OI.xboxController::getRightY));
+    m_driverController.x().onTrue(new ResetPositionCommand(m_driveSubsystem));
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
+   * @throws IOException
    */
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() throws IOException {
     // An example command will be run in autonomous
 
     // Run path following command, then stop at the end.
