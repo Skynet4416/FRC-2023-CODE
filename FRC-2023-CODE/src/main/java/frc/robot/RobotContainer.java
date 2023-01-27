@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.Arm.Physical;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Arm.ArmCommand;
@@ -51,10 +52,10 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    m_driverController.a().onTrue(new ArmCommand(m_armSubsystem, 2 /* TODO: what height is the floor? */));
-    m_driverController.b().onTrue(new ArmCommand(m_armSubsystem,20 /* TODO: what height is middle? */));
-    // TODO: Throw thing m_driverController.y().onTrue()
-    
+    m_driverController.a().onTrue(new ArmCommand(m_armSubsystem,  Physical.kFloorHeightInMeters));
+    m_driverController.b().onTrue(new ArmCommand(m_armSubsystem,  Physical.kMiddleHeightInMeters));
+    m_driverController.y().onTrue(new ArmCommand(m_armSubsystem, Physical.kTopHeightInMeters));
+
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

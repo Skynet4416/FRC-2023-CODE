@@ -42,7 +42,12 @@ public final class Constants {
       public static double falconUnitsPerRotation = 4096.0;
     }
     public static class Physical{
-      public static double kHeightThreasholdInMeters=0.01; 
+      public static double kHeightThreasholdInMeters=0.01;
+
+      //TODO: Measure the actual value (THIS IS NOT CORRECT)
+      public static double kFloorHeightInMeters = 2.0;
+      public static double kMiddleHeightInMeters = 5.0;
+      public static double kTopHeightInMeters = 8.0;
     }
 
     public static class Encoders {
