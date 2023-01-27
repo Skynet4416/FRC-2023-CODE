@@ -27,4 +27,26 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  
+    public static class OI {
+      public static final int kLeftJoystickControllerPort = 1;
+      public static final int kRightJoystickControllerPort = 2;
+      public static final int kXboxControllerPort = 0;
+      public static final double kXboxcontrollerDrift = 0.1;
+  }
+
+  public static class Arm {
+    public static class Motors {
+      public static MotorType kMotorType = MotorType.kBrushless;
+      public static int kArmCANID = 16;
+      public static double falconUnitsPerRotation = 4096.0;
+    }
+    public static class Physical{
+      public static double kHeightThreasholdInMeters=0.01; 
+    }
+
+    public static class Encoders {
+      public static int kCANCoderID = 17;
+    }
+  }
 }
