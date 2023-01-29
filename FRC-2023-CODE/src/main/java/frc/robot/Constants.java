@@ -46,6 +46,14 @@ public final class Constants {
       public static final double kTopHeightInMeters = 8.0;
       public static final double kArmMomentOfInertia = 1.2; //kg * m^2
       public static final double kArmGearing = 10;
+
+      public static final double kIntakeGroundHeight = 0;
+      public static final double kIntakeDoubleSubstationHeight = 1.2;
+      public static final double kGroundGridHeight = 0;
+      public static final double kCubeMidGridHeight = 0;
+      public static final double kConeMidGridHeight = 0;
+      public static final double kCubeHighGridHeight = 0;
+      public static final double kConeHighGridHeight = 0;
     }
 
     public static class Encoders {
