@@ -1,7 +1,47 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "CANCoder[0]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[0]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[0]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[0]/Integrated Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[0]/Rev Limit": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Arm Sim": "Mechanism2d"
+    }
+  },
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "transitory": {
+      "SmartDashboard": {
+        "open": true
+      }
     }
   }
 }

@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -39,20 +41,23 @@ public final class Constants {
 
     public static class Physical{
       public static double kHeightThreasholdInMeters=0.01;
-
+      public static double kArmMininunAngleInRadians=Units.degreesToRadians(80);
+    public static double kArmMaximumAngleInRadians = Units.degreesToRadians(180);
+    public static double kArmMass = 10;
+      public static final double kArmLength = 2;
       //TODO: Measure the actual value (THIS IS NOT CORRECT)
       public static final double kFloorHeightInMeters = 2.0;
       public static final double kMiddleHeightInMeters = 5.0;
       public static final double kTopHeightInMeters = 8.0;
       public static final double kArmMomentOfInertia = 1.2; //kg * m^2
-      public static final double kArmGearing = 10;
+      public static final double kArmGearing = 100;
 
       public static final double kIntakeGroundHeight = 0;
       public static final double kIntakeDoubleSubstationHeight = 1.2;
-      public static final double kGroundGridHeight = 0;
-      public static final double kCubeMidGridHeight = 0;
-      public static final double kConeMidGridHeight = 0;
-      public static final double kCubeHighGridHeight = 0;
+      public static final double kGroundGridHeight = 0.2;
+      public static final double kCubeMidGridHeight = 0.6;
+      public static final double kConeMidGridHeight = 0.6;
+      public static final double kCubeHighGridHeight = 1.2;
       public static final double kConeHighGridHeight = 0;
     }
 

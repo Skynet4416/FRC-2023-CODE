@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.CANCoderSimCollection;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.math.Nat;
@@ -15,8 +17,18 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Arm.Physical;
 
@@ -68,7 +80,21 @@ public class StateSpacedArmSubsystem extends SubsystemBase {
             12.0, 0.020);
     private final WPI_CANCoder m_armCANCoder = new WPI_CANCoder(0);
     private final WPI_TalonFX m_armTalonFX = new WPI_TalonFX(0);
-    private TrapezoidProfile.State m_goalState = new TrapezoidProfile.State(getAbsoluteAngle(),0);
+    private TrapezoidProfile.State m_goalState = new TrapezoidProfile.State(getAbsoluteAngle(), 0);
+    private final SingleJointedArmSim m_armSim = new SingleJointedArmSim(DCMotor.getFalcon500(1), Physical.kArmGearing, Physical.kArmMomentOfInertia, Physical.kArmLength, Physical.kArmMininunAngleInRadians, Physical.kArmMaximumAngleInRadians, Physical.kArmMass, true);
+    private final TalonFXSimCollection m_falconSimCollection =  m_armTalonFX.getSimCollection();
+    private final CANCoderSimCollection m_CANCoderSimCollection = m_armCANCoder.getSimCollection(); 
+    // Create a Mechanism2d display of an Arm with a fixed ArmTower and moving Arm.
+    private final Mechanism2d m_mech2d = new Mechanism2d(60, 60);
+    private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
+    private final MechanismLigament2d m_armTower = m_armPivot.append(new MechanismLigament2d("ArmTower", 30, -90));
+    private final MechanismLigament2d m_arm = m_armPivot.append(
+            new MechanismLigament2d(
+                    "Arm",
+                    30,
+                    Units.radiansToDegrees(m_armSim.getAngleRads()),
+                    6,
+                    new Color8Bit(Color.kYellow)));
 
     public StateSpacedArmSubsystem() {
         m_armTalonFX.configFactoryDefault();
@@ -112,6 +138,22 @@ public class StateSpacedArmSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumberArray("Arm State", new double[] { getState().position, getState().velocity });
         SmartDashboard.putNumberArray("Arm Goal State", new Double[] { m_goalState.position, m_goalState.velocity });
+        SmartDashboard.putNumber("Arm Absolute Angle", getAbsoluteAngle());
+        SmartDashboard.putData("Arm Sim", m_mech2d);
+
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        m_falconSimCollection.setBusVoltage(RoboRioSim.getVInVoltage());
+        m_armSim.setInput(m_armTalonFX.get() * RobotController.getBatteryVoltage());
+        m_CANCoderSimCollection.setRawPosition((int)(m_armSim.getAngleRads()/Math.PI * 4096));
+        // SimBattery estimates loaded battery voltages
+        RoboRioSim.setVInVoltage(
+                BatterySim.calculateDefaultBatteryLoadedVoltage(m_armSim.getCurrentDrawAmps()));
+
+        // Update the Mechanism Arm angle based on the simulated arm angle
+        m_arm.setAngle(Units.radiansToDegrees(m_armSim.getAngleRads()));
     }
 
     public double heightToSystemAngle(double height) {
@@ -143,14 +185,16 @@ public class StateSpacedArmSubsystem extends SubsystemBase {
         double nextVoltage = m_loop.getU(0);
         setVoltage(nextVoltage);
     }
-    public double absoluteAngleToHeight(double angle)
-    {
+
+    public double absoluteAngleToHeight(double angle) {
         return systemAngleToHeight(absoluteAngleToArmAngle(angle));
     }
-    public double systemAngleToHeight(double angle){
+
+    public double systemAngleToHeight(double angle) {
         return angle;
     }
-	public double getHeight() {
-		return systemAngleToHeight(getArmAngle());
-	}
+
+    public double getHeight() {
+        return systemAngleToHeight(getArmAngle());
+    }
 }
