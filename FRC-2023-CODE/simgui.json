@@ -40,6 +40,12 @@
     },
     "transitory": {
       "SmartDashboard": {
+        "Arm Sim": {
+          "ArmPivot": {
+            "open": true
+          },
+          "open": true
+        },
         "open": true
       }
     }

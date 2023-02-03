@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoderSimCollection;
@@ -30,6 +31,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Arm.Encoders;
+import frc.robot.Constants.Arm.Motors;
 import frc.robot.Constants.Arm.Physical;
 
 public class StateSpacedArmSubsystem extends SubsystemBase {
@@ -78,12 +81,14 @@ public class StateSpacedArmSubsystem extends SubsystemBase {
     // for easy control.
     private final LinearSystemLoop<N2, N1, N1> m_loop = new LinearSystemLoop<>(m_armPlant, m_controller, m_observer,
             12.0, 0.020);
-    private final WPI_CANCoder m_armCANCoder = new WPI_CANCoder(0);
-    private final WPI_TalonFX m_armTalonFX = new WPI_TalonFX(0);
-    private TrapezoidProfile.State m_goalState = new TrapezoidProfile.State(getAbsoluteAngle(), 0);
-    private final SingleJointedArmSim m_armSim = new SingleJointedArmSim(DCMotor.getFalcon500(1), Physical.kArmGearing, Physical.kArmMomentOfInertia, Physical.kArmLength, Physical.kArmMininunAngleInRadians, Physical.kArmMaximumAngleInRadians, Physical.kArmMass, true);
-    private final TalonFXSimCollection m_falconSimCollection =  m_armTalonFX.getSimCollection();
-    private final CANCoderSimCollection m_CANCoderSimCollection = m_armCANCoder.getSimCollection(); 
+    private final WPI_CANCoder m_armCANCoder = new WPI_CANCoder(Encoders.kCANCoderID);
+    private final WPI_TalonFX m_armTalonFX = new WPI_TalonFX(Motors.kArmCANID);
+    private TrapezoidProfile.State m_goalState = new TrapezoidProfile.State(getArmAngle(), 0);
+    private final SingleJointedArmSim m_armSim = new SingleJointedArmSim(DCMotor.getFalcon500(1), Physical.kArmGearing,
+            Physical.kArmMomentOfInertia, Physical.kArmLength, Physical.kArmMininunAngleInRadians,
+            Physical.kArmMaximumAngleInRadians, Physical.kArmMass, true);
+    private final TalonFXSimCollection m_falconSimCollection = m_armTalonFX.getSimCollection();
+    private final CANCoderSimCollection m_CANCoderSimCollection = m_armCANCoder.getSimCollection();
     // Create a Mechanism2d display of an Arm with a fixed ArmTower and moving Arm.
     private final Mechanism2d m_mech2d = new Mechanism2d(60, 60);
     private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
@@ -98,8 +103,14 @@ public class StateSpacedArmSubsystem extends SubsystemBase {
 
     public StateSpacedArmSubsystem() {
         m_armTalonFX.configFactoryDefault();
+        m_armTalonFX.setNeutralMode(NeutralMode.Brake);
+        m_armTalonFX.configVoltageCompSaturation(12);
         m_armCANCoder.configFactoryDefault();
         m_loop.reset(VecBuilder.fill(getArmAngle(), m_armCANCoder.getVelocity()));
+        SmartDashboard.putData("Arm Sim", m_mech2d);
+        m_armTower.setColor(new Color8Bit(Color.kBlue));
+        m_controller.latencyCompensate(m_armPlant, 0.02, Encoders.kTimeDelayOfSensor);
+
     }
 
     public Vector<N2> getStateAsVector() {
@@ -115,7 +126,7 @@ public class StateSpacedArmSubsystem extends SubsystemBase {
     }
 
     public double absoluteAngleToArmAngle(double absAngle) {
-        return absAngle;
+        return absAngle - Encoders.kCANCoderZeroAngle;
     }
 
     public double getArmAngle() {
@@ -139,15 +150,17 @@ public class StateSpacedArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumberArray("Arm State", new double[] { getState().position, getState().velocity });
         SmartDashboard.putNumberArray("Arm Goal State", new Double[] { m_goalState.position, m_goalState.velocity });
         SmartDashboard.putNumber("Arm Absolute Angle", getAbsoluteAngle());
-        SmartDashboard.putData("Arm Sim", m_mech2d);
+        SmartDashboard.putNumber("Arm Angle", getArmAngle());
+        SmartDashboard.putNumber("Arm Height", getHeight());
 
     }
 
     @Override
     public void simulationPeriodic() {
         m_falconSimCollection.setBusVoltage(RoboRioSim.getVInVoltage());
-        m_armSim.setInput(m_armTalonFX.get() * RobotController.getBatteryVoltage());
-        m_CANCoderSimCollection.setRawPosition((int)(m_armSim.getAngleRads()/Math.PI * 4096));
+        m_armSim.setInput(m_armTalonFX.get() * RoboRioSim.getVInVoltage());
+        m_CANCoderSimCollection.setRawPosition((int) (m_armSim.getAngleRads()*2048 / Math.PI));
+        System.out.println(m_armSim.getAngleRads()*2048/Math.PI);
         // SimBattery estimates loaded battery voltages
         RoboRioSim.setVInVoltage(
                 BatterySim.calculateDefaultBatteryLoadedVoltage(m_armSim.getCurrentDrawAmps()));
@@ -165,7 +178,11 @@ public class StateSpacedArmSubsystem extends SubsystemBase {
     }
 
     public void setHeight(double height) {
-        m_goalState = new TrapezoidProfile.State(systemAngleToAbsoluteAngle(heightToSystemAngle(height)), 0);
+        m_goalState = new TrapezoidProfile.State(heightToSystemAngle(height), 0);
+    }
+
+    public void setAngle(double angle) {
+        m_goalState = new TrapezoidProfile.State(angle, 0);
     }
 
     public void execute() {
@@ -191,7 +208,7 @@ public class StateSpacedArmSubsystem extends SubsystemBase {
     }
 
     public double systemAngleToHeight(double angle) {
-        return angle;
+        return Math.sin(angle) * Physical.kArmLength;
     }
 
     public double getHeight() {

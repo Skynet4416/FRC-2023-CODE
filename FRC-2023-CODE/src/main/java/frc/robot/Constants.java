@@ -49,7 +49,7 @@ public final class Constants {
       public static final double kFloorHeightInMeters = 2.0;
       public static final double kMiddleHeightInMeters = 5.0;
       public static final double kTopHeightInMeters = 8.0;
-      public static final double kArmMomentOfInertia = 1.2; //kg * m^2
+      public static final double kArmMomentOfInertia = 1.91800 ; //kg * m^2
       public static final double kArmGearing = 100;
 
       public static final double kIntakeGroundHeight = 0;
@@ -63,6 +63,8 @@ public final class Constants {
 
     public static class Encoders {
       public static final int kCANCoderID = 17;
+      public static final double kCANCoderZeroAngle = 0;
+      public static final double kTimeDelayOfSensor = 0.025;
     }
   }
 }
