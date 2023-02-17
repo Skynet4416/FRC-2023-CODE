@@ -13,7 +13,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private final CANSparkMax m_leftIntakeSparkMax = new CANSparkMax(Motors.kLeftIntakeCANID, Motors.kMotorType);
   private final CANSparkMax m_rightIntakeSparkMax = new CANSparkMax(Motors.kRightIntakeCANID, Motors.kMotorType);
-  
+
   public IntakeSubsystem() {
     m_rightIntakeSparkMax.setInverted(true);
   }

@@ -51,12 +51,18 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
-        
+    /* 
     m_driverController.rightTrigger().whileTrue(new IntakeCommand(m_intakeSubsystem, m_driverController.rightTrigger(), m_driverController.leftTrigger()));
     m_driverController.leftTrigger().whileTrue(new IntakeCommand(m_intakeSubsystem, m_driverController.rightTrigger(), m_driverController.leftTrigger()));
+    */
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+
+    //while pressing A button it give intake
+    OI.A.whileTrue(new IntakeCommand(m_intakeSubsystem, 1));
+
   }
 
   /**
