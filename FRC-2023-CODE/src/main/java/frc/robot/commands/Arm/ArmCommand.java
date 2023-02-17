@@ -1,14 +1,14 @@
 package frc.robot.commands.Arm;
 
 import frc.robot.Constants.Arm.Physical;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.PIDArmSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ArmCommand extends CommandBase {
-  private final ArmSubsystem m_subsystem;
+  private final PIDArmSubsystem m_subsystem;
   private final double m_wantedHeight;
 
   /**
@@ -16,7 +16,7 @@ public class ArmCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ArmCommand(ArmSubsystem subsystem,double wantedHeight) {
+  public ArmCommand(PIDArmSubsystem subsystem,double wantedHeight) {
     m_subsystem = subsystem;
     m_wantedHeight = wantedHeight;
     addRequirements(subsystem);
