@@ -71,13 +71,13 @@ public class RobotContainer {
     OI.A.whileTrue(new IntakeCommand(m_intakeSubsystem, 1));
     m_stateSpaceArmSubsystem.setDefaultCommand(
         new frc.robot.commands.Arm.StateSpaceCommands.KeepArmAtStateCommand(m_stateSpaceArmSubsystem));
-    OI.xboxController.povDown()
+    OI.DPadDOWN
         .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kGroundGridHeight));
-    OI.xboxController.povLeft()
+    OI.DPadLEFT
         .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeMidGridHeight));
-    OI.xboxController.povRight()
+    OI.DpadRIGHT
         .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kConeMidGridHeight));
-    OI.xboxController.povRight()
+    OI.DPadUP
         .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeHighGridHeight));
   }
 
