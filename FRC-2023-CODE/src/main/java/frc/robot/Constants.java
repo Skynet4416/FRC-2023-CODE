@@ -18,11 +18,11 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.util.Units;
 import frc.robot.commands.drive.DrivingState;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
 import java.util.Map;
 
 /**
@@ -363,7 +363,24 @@ public class Constants {
     }
   }
 
+  public static class Intake {
+    public static class Motors {
+      public static final MotorType kMotorType = MotorType.kBrushless;
+      public static final int kLeftIntakeCANID = 14;
+      public static final int kRightIntakeCANID = 15;
+    }
+
+  }
+
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  }
+  
+    public static class OI {
+      public static final int kLeftJoystickControllerPort = 1;
+      public static final int kRightJoystickControllerPort = 2;
+      public static final int kXboxControllerPort = 0;
+      public static final double kXboxcontrollerDrift = 0.1;
   }
 }
