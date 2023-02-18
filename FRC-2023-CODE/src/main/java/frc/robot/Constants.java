@@ -368,6 +368,35 @@ public class Constants {
     }
   }
 
+  public static class Wrist {
+    public static class Motors {
+      public static final int kWristCANID = -1;
+    }
+    public static class Physical{
+      public static final double kMaxVelcoityRadiansPerSecond = 0.0;
+      public static final double kMaxAccelerationRadiansPerSecondSquered = 0.0;
+
+    }
+    public static class PID{
+      public final static double kP = 0;
+      public final static double kD = 0;
+      public final static double kI = 0;
+
+    }
+    public static class FeedForward{  
+      public final static double kS = 0;
+      public final static double kG = 0;
+      public final static double kV = 0;
+      public final static double kA = 0;
+
+    }
+    public static class Encoders {
+      public static final int kWristCANID = -1;
+      public static final double kCANCoderZeroAbsAngle = 0;
+    }
+
+  }
+
   public static class Arm {
     public static class Motors {
       public static final MotorType kMotorType = MotorType.kBrushless;

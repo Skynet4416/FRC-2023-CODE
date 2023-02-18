@@ -15,6 +15,8 @@ public class IntakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_rightIntakeSparkMax = new CANSparkMax(Motors.kRightIntakeCANID, Motors.kMotorType);
 
   public IntakeSubsystem() {
+    m_leftIntakeSparkMax.restoreFactoryDefaults();
+    m_rightIntakeSparkMax.restoreFactoryDefaults();
     m_rightIntakeSparkMax.setInverted(true);
   }
 
