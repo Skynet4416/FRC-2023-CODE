@@ -34,17 +34,17 @@ jobs:
       run: ls
     # Grant execute permission for gradlew
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: chmod +x FRC-2023-CODE/gradlew
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
-      run: ./gradlew build
+      run: ./FRC-2023-CODE/gradlew build
      # Runs a single command using the runners shell
     - name: Simulate robot code
       run: |
         set +e
         (
-          timeout --preserve-status 10s ./gradlew simulateJava
+          timeout --preserve-status 10s ./FRC-2023-CODE/gradlew simulateJava
         )
         if [ $? -eq 143 ]; then
           echo 'Simulation SUCCESS!'
