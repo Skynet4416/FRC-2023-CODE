@@ -38,20 +38,23 @@ public final class Constants {
       public static final int kArmCANID = 16;
       public static final double falconUnitsPerRotation = 4096.0;
     }
-    public static class MotionMagicPID{
+
+    public static class MotionMagicPID {
       public static final double kP = 0;
       public static final double kI = 0;
       public static final double kD = 0;
       public static final double kFF = 0;
       public static final double kG = 0;
     }
-    public static class PoistionPID{
-      public static final class PID{
+
+    public static class PoistionPID {
+      public static final class PID {
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
       }
-      public static final class ArbitraryFeedForward{
+
+      public static final class ArbitraryFeedForward {
         public static final double kG = 0;
         public static final double kS = 0;
         public static final double kV = 0;
@@ -60,17 +63,19 @@ public final class Constants {
       }
     }
 
-    public static class Physical{
-      public static double kHeightThreasholdInMeters=0.01;
-      public static double kArmMininunAngleInRadians=Units.degreesToRadians(80);
-    public static double kArmMaximumAngleInRadians = Units.degreesToRadians(180);
-    public static double kArmMass = 6;
-      public static final double kArmLength = 2;
-      //TODO: Measure the actual value (THIS IS NOT CORRECT)
+    public static class Physical {
+      public static double kHeightThreasholdInMeters = 0.01;
+      public static double kArmMininunAngleInRadians = Units.degreesToRadians(80);
+      public static double kArmMaximumAngleInRadians = Units.degreesToRadians(180);
+      public static double kArmMass = 6;
+      public static double kArmMaxVelocityRadiansPerSecond = Units.degreesToRadians(120);
+      public static double kArmMaxAccelerationRadiansPerSecondSquered = Units.degreesToRadians(20);
+      public static final double kArmLength = 1;
+      // TODO: Measure the actual value (THIS IS NOT CORRECT)
       public static final double kFloorHeightInMeters = 2.0;
       public static final double kMiddleHeightInMeters = 5.0;
       public static final double kTopHeightInMeters = 8.0;
-      public static final double kArmMomentOfInertia = 1.91800 ; //kg * m^2
+      public static final double kArmMomentOfInertia = kArmMass * Math.pow(0.62, 2); // kg * m^2
       public static final double kMotorGearing = 100;
       public static final double kExtraGearing = 1;
       public static final double kArmGearing = kMotorGearing * kExtraGearing;
