@@ -42,6 +42,6 @@ public class ArmToConstantHeightCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(m_wantedHeight - m_spaceStateArmSubsystem.getHeight())< Physical.kHeightThreasholdInMeters;
+        return Math.abs(m_wantedHeight - m_spaceStateArmSubsystem.getArmHeightInMeters())< Physical.kHeightThreasholdInMeters;
     }
 }

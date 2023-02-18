@@ -8,10 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.Arm.Physical;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.Arm.ArmCommand;
-import frc.robot.commands.Arm.KeepArmAtStateCommand;
 import frc.robot.commands.Arm.StateSpaceCommands.ArmToConstantHeightCommand;
-import frc.robot.subsystems.PIDArmSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.StateSpacedArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -55,10 +52,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // m_armSubsystem.setDefaultCommand(new KeepArmAtStateCommand(m_armSubsystem));
-    // m_driverController.a().onTrue(new ArmCommand(m_armSubsystem,  Physical.kFloorHeightInMeters));
-    // m_driverController.b().onTrue(new ArmCommand(m_armSubsystem,  Physical.kMiddleHeightInMeters));
-    // m_driverController.y().onTrue(new ArmCommand(m_armSubsystem, Physical.kTopHeightInMeters));
+
     m_stateSpaceArmSubsystem.setDefaultCommand(new frc.robot.commands.Arm.StateSpaceCommands.KeepArmAtStateCommand(m_stateSpaceArmSubsystem));
     m_driverController.povDown().onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kGroundGridHeight));
     m_driverController.povLeft().onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeMidGridHeight));
