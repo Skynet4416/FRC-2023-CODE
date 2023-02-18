@@ -13,5 +13,4 @@ public class OI {
                         frc.robot.Constants.OI.kXboxControllerPort);
 
         public static JoystickButton A = new JoystickButton(xboxController, XboxController.Button.kA.value);
-
 }
