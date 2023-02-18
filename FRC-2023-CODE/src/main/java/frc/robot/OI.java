@@ -12,5 +12,10 @@ public class OI {
         public static final XboxController xboxController = new XboxController(
                         frc.robot.Constants.OI.kXboxControllerPort);
 
-        public static JoystickButton A = new JoystickButton(xboxController, XboxController.Button.kA.value);
+        public static final JoystickButton A = new JoystickButton(xboxController, XboxController.Button.kA.value);
+        public static final JoystickButton B = new JoystickButton(xboxController, XboxController.Button.kB.value);
+        public static final JoystickButton X = new JoystickButton(xboxController, XboxController.Button.kX.value);
+        public static final JoystickButton Y = new JoystickButton(xboxController, XboxController.Button.kY.value);
+
+
 }
