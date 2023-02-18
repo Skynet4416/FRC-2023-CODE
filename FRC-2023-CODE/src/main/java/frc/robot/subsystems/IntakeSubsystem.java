@@ -22,8 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
    * Sets the speed of the intake motors.
    * <p>
    * 
-   * @param percent
-   *       The percent to set the intake motors to (Can be from -1 to 1.)
+   * @param percent The percent to set the intake motors to (Can be from -1 to 1.)
    * 
    */
   public void setPercentage(double percent) {
@@ -32,9 +31,8 @@ public class IntakeSubsystem extends SubsystemBase {
     m_rightIntakeSparkMax.set(percent);
   }
 
-
+  // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
   }
 }
