@@ -4,39 +4,20 @@
 
 package frc.robot;
 
-// THERE WILL BE ISSUES HERE.
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.drive.Autos;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.drive.DriveCommand;
 import frc.robot.commands.drive.ResetPositionCommand;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import java.io.IOException;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-import com.ctre.phoenixpro.controls.MotionMagicTorqueCurrentFOC;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -51,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
@@ -86,20 +66,7 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(new DriveCommand(m_driveSubsystem, Drive.kDriveState,
         OI.xboxController::getLeftY, OI.xboxController::getRightY));
     m_driverController.x().onTrue(new ResetPositionCommand(m_driveSubsystem));
-    
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-    /* 
-    m_driverController.rightTrigger().whileTrue(new IntakeCommand(m_intakeSubsystem, m_driverController.rightTrigger(), m_driverController.leftTrigger()));
-    m_driverController.leftTrigger().whileTrue(new IntakeCommand(m_intakeSubsystem, m_driverController.rightTrigger(), m_driverController.leftTrigger()));
-    */
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-
-    //while pressing A button it give intake
     OI.A.whileTrue(new IntakeCommand(m_intakeSubsystem, 1));
   }
 
