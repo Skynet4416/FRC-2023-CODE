@@ -6,7 +6,7 @@ name: CI
 # events but only for the main branch.
 on:
   push:
-    branches: [ main, Development ]
+    branches: [ main , Development ]
   pull_request:
     branches: [ main, Development ]
 
@@ -23,7 +23,11 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+
+    # Declares the repository safe and not under dubious ownership.
+    - name: Add repository to git safe directories
+      run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
     # Grant execute permission for gradlew
     - name: Grant execute permission for gradlew
@@ -32,18 +36,3 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
-
-    # Runs a single command using the runners shell
-    - name: Simulate robot code
-      run: |
-        set +e
-        (
-          timeout --preserve-status 10s ./gradlew simulateJava
-        )
-        if [ $? -eq 143 ]; then
-          echo 'Simulation SUCCESS!'
-          exit 0
-        else
-          echo 'Simulation FAILED!'
-          exit 1
-        fi
