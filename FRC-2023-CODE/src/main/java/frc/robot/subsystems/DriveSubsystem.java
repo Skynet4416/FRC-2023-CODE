@@ -3,9 +3,6 @@ package frc.robot.subsystems;
 import java.io.IOException;
 import java.util.Optional;
 
-import javax.swing.SpringLayout.Constraints;
-
-import org.opencv.aruco.EstimateParameters;
 import org.photonvision.EstimatedRobotPose;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -16,7 +13,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -32,7 +28,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
