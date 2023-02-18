@@ -8,7 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drive.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class DriveCommand extends CommandBase {

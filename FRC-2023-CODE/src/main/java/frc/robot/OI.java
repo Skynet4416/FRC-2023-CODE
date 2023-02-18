@@ -17,5 +17,4 @@ public class OI {
         public static final JoystickButton X = new JoystickButton(xboxController, XboxController.Button.kX.value);
         public static final JoystickButton Y = new JoystickButton(xboxController, XboxController.Button.kY.value);
 
-
 }

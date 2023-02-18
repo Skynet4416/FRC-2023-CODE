@@ -4,9 +4,7 @@
 
 package frc.robot.commands.drive;
 
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Drive.DriveSubsystem;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -19,13 +17,11 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
-  public static CommandBase exampleAuto(ExampleSubsystem subsystem) {
-    return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
-  }
 
   public static CommandBase testAuto(DriveSubsystem driveSubsystem) throws IOException {
 
-   Trajectory testTrajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("src\\main\\deploy\\pathplanner\\generatedJSON\\New Path.wpilib.json"));
+    Trajectory testTrajectory = TrajectoryUtil
+        .fromPathweaverJson(Paths.get("src\\main\\deploy\\pathplanner\\generatedJSON\\New Path.wpilib.json"));
     return new RamseteCommand(testTrajectory, driveSubsystem::getPosition, driveSubsystem.getRamseteController(),
         driveSubsystem.getFeedForward(), driveSubsystem.getDifferentialDriveKinematics(),
         driveSubsystem::getWheelSpeeds, driveSubsystem.getLeftPIDController(), driveSubsystem.getRightPIDController(),

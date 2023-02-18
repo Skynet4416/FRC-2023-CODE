@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Wrist;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
@@ -21,12 +21,15 @@ import frc.robot.Constants.Wrist.Physical;
 public class WristSubsystem extends SubsystemBase {
     private final CANSparkMax m_wristSparkMax = new CANSparkMax(Motors.kWristCANID, MotorType.kBrushless);
     private CANCoder m_CANCoder = new CANCoder(Encoders.kWristCANID);
-    private ProfiledPIDController m_PidController = new ProfiledPIDController(PID.kP,PID.kI,PID.kD,new Constraints(Physical.kMaxVelcoityRadiansPerSecond,Physical.kMaxAccelerationRadiansPerSecondSquered));
-    private ArmFeedforward armFeedforward = new ArmFeedforward(FeedForward.kS, FeedForward.kG, FeedForward.kV,FeedForward.kA);
+    private ProfiledPIDController m_PidController = new ProfiledPIDController(PID.kP, PID.kI, PID.kD,
+            new Constraints(Physical.kMaxVelcoityRadiansPerSecond, Physical.kMaxAccelerationRadiansPerSecondSquered));
+    private ArmFeedforward armFeedforward = new ArmFeedforward(FeedForward.kS, FeedForward.kG, FeedForward.kV,
+            FeedForward.kA);
+
     public WristSubsystem() {
         m_CANCoder.configFactoryDefault(); // Is this the right thing to do? yes.
         m_wristSparkMax.restoreFactoryDefaults();
-        
+
     }
 
     public double getAbsuloteAngleInDegrees() {
@@ -36,23 +39,28 @@ public class WristSubsystem extends SubsystemBase {
     public double getAbsuloteAngleInRadianes() {
         return Units.degreesToRadians(getAbsuloteAngleInDegrees());
     }
+
     public double getWristAngleInDegrees() {
         return getAbsuloteAngleInDegrees() - Encoders.kCANCoderZeroAbsAngle;
     }
+
     public double getWristAngleInRadians() {
-    
-        return Units.degreesToRadians(getWristAngleInDegrees());}
-    public CANSparkMax getSpark(){
+
+        return Units.degreesToRadians(getWristAngleInDegrees());
+    }
+
+    public CANSparkMax getSpark() {
         return m_wristSparkMax;
     }
-    
-    public CANCoder getCANCoder(){
+
+    public CANCoder getCANCoder() {
         return m_CANCoder;
     }
 
     public double getRoationalVelocity() {
         return m_CANCoder.getVelocity();
     }
+
     public double getRotationalVelocityInRadians() {
         return Units.degreesToRadians(getRoationalVelocity());
     }
@@ -64,15 +72,18 @@ public class WristSubsystem extends SubsystemBase {
     public void setPrecentage(double precentage) {
         m_wristSparkMax.set(precentage);
     }
-    public double calculate(){
-        return m_PidController.calculate(getWristAngleInRadians()) + armFeedforward.calculate(getWristAngleInRadians(), getRotationalVelocityInRadians());
+
+    public double calculate() {
+        return m_PidController.calculate(getWristAngleInRadians())
+                + armFeedforward.calculate(getWristAngleInRadians(), getRotationalVelocityInRadians());
     }
-    public void setAngle(double angle){
+
+    public void setAngle(double angle) {
         m_PidController.setGoal(new State(angle, 0));
     }
+
     @Override
-    public void periodic()
-    {
+    public void periodic() {
         SmartDashboard.putNumber("Wrist Absolute Angle", getAbsuloteAngleInDegrees());
         SmartDashboard.putNumber("Wrist Angle", getWristAngleInDegrees());
         SmartDashboard.putNumber("Wrist Rotational Velocity", getRoationalVelocity());

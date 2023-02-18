@@ -4,8 +4,8 @@
 
 package frc.robot.commands.drive;
 
-import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Drive.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class ResetPositionCommand extends CommandBase {
@@ -15,6 +15,7 @@ public class ResetPositionCommand extends CommandBase {
    * @param subsystem The subsystem used by this command.
    */
   private final DriveSubsystem m_driveSubsystem;
+
   public ResetPositionCommand(DriveSubsystem subsystem) {
     m_driveSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.

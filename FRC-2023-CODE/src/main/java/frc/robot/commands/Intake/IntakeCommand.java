@@ -2,26 +2,25 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Intake;
 
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Intake.IntakeSubsystem;
 
-/** An example command that uses an example subsystem. */
-public class ExampleCommand extends CommandBase {
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public ExampleCommand(ExampleSubsystem subsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class IntakeCommand extends CommandBase {
+  private final IntakeSubsystem m_subsystem;
+  private final double Percentage;
+
+  public IntakeCommand(IntakeSubsystem subsystem, double Percentage) {
+    this.m_subsystem = subsystem;
+    this.Percentage = Percentage;
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_subsystem.setPercentage(this.Percentage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,6 +31,7 @@ public class ExampleCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_subsystem.setPercentage(0);
   }
 
   // Returns true when the command should end.

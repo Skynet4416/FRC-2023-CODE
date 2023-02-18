@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Vision;
 
 import java.io.IOException;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Arm;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
@@ -84,7 +84,6 @@ public class StateSpacedArmSubsystem extends ArmSubsystem {
 
     private TrapezoidProfile.State m_goalState = new TrapezoidProfile.State(getArmAngleinRadians(), 0);
 
-
     public StateSpacedArmSubsystem() {
         super();
 
@@ -110,8 +109,6 @@ public class StateSpacedArmSubsystem extends ArmSubsystem {
         SmartDashboard.putNumberArray("Arm State", new double[] { getState().position, getState().velocity });
         SmartDashboard.putNumberArray("Arm Goal State", new Double[] { m_goalState.position, m_goalState.velocity });
     }
-
-
 
     @Override
     public void setAngleInDegrees(double angle) {

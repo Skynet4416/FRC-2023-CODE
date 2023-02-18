@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Arm;
 
 import javax.swing.text.StyleContext.SmallAttributeSet;
 

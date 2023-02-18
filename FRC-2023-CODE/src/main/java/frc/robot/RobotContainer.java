@@ -8,19 +8,16 @@ import frc.robot.commands.drive.Autos;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.drive.DriveCommand;
 import frc.robot.commands.drive.ResetPositionCommand;
-import frc.robot.subsystems.DriveSubsystem;
-
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import java.io.IOException;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.subsystems.IntakeSubsystem;
 
+import frc.robot.subsystems.Arm.StateSpacedArmSubsystem;
 import frc.robot.Constants.Arm.Physical;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Arm.StateSpaceCommands.ArmToConstantHeightCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.StateSpacedArmSubsystem;
+import frc.robot.commands.Intake.IntakeCommand;
+import frc.robot.subsystems.Drive.DriveSubsystem;
+import frc.robot.subsystems.Intake.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -38,7 +35,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   // private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -73,11 +69,16 @@ public class RobotContainer {
         OI.xboxController::getLeftY, OI.xboxController::getRightY));
 
     OI.A.whileTrue(new IntakeCommand(m_intakeSubsystem, 1));
-    m_stateSpaceArmSubsystem.setDefaultCommand(new frc.robot.commands.Arm.StateSpaceCommands.KeepArmAtStateCommand(m_stateSpaceArmSubsystem));
-    OI.xboxController.povDown().onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kGroundGridHeight));
-    OI.xboxController.povLeft().onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeMidGridHeight));
-    OI.xboxController.povRight().onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kConeMidGridHeight));
-    OI.xboxController.povRight().onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeHighGridHeight));
+    m_stateSpaceArmSubsystem.setDefaultCommand(
+        new frc.robot.commands.Arm.StateSpaceCommands.KeepArmAtStateCommand(m_stateSpaceArmSubsystem));
+    OI.xboxController.povDown()
+        .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kGroundGridHeight));
+    OI.xboxController.povLeft()
+        .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeMidGridHeight));
+    OI.xboxController.povRight()
+        .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kConeMidGridHeight));
+    OI.xboxController.povRight()
+        .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeHighGridHeight));
   }
 
   /**

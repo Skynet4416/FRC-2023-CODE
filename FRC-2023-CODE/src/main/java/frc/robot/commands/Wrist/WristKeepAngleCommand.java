@@ -1,7 +1,7 @@
-package frc.robot.commands;
+package frc.robot.commands.Wrist;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.WristSubsystem;
+import frc.robot.subsystems.Wrist.WristSubsystem;
 
 public class WristKeepAngleCommand extends CommandBase {
     private final WristSubsystem m_subsystem;
