@@ -2,6 +2,27 @@
   "HALProvider": {
     "Other Devices": {
       "navX-Sensor[0]": {
+      "CANCoder[0]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[0]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[0]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[0]/Integrated Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[0]/Rev Limit": {
         "header": {
           "open": true
         }
@@ -30,6 +51,21 @@
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
+      "/SmartDashboard/Arm Sim": "Mechanism2d"
+    }
+  },
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "transitory": {
+      "SmartDashboard": {
+        "Arm Sim": {
+          "ArmPivot": {
+            "open": true
+          },
+          "open": true
+        },
         "open": true
       }
     }

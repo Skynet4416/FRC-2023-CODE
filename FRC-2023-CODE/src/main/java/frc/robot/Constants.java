@@ -6,8 +6,6 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,13 +15,12 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.util.Units;
 import frc.robot.commands.drive.DrivingState;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import java.util.Map;
+import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -397,9 +394,70 @@ public class Constants {
       public static final int kWristCANID = -1;
       public static final double kCANCoderZeroAbsAngle = 0;
     }
+
   }
 
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+  public static class Arm {
+    public static class Motors {
+      public static final MotorType kMotorType = MotorType.kBrushless;
+      public static final int kArmCANID = 16;
+      public static final double falconUnitsPerRotation = 4096.0;
+    }
+
+    public static class MotionMagicPID {
+      public static final double kP = 0;
+      public static final double kI = 0;
+      public static final double kD = 0;
+      public static final double kFF = 0;
+      public static final double kG = 0;
+    }
+
+    public static class PoistionPID {
+      public static final class PID {
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+      }
+
+      public static final class ArbitraryFeedForward {
+        public static final double kG = 0;
+        public static final double kS = 0;
+        public static final double kV = 0;
+        public static final double kA = 0;
+
+      }
+    }
+
+    public static class Physical {
+      public static double kHeightThreasholdInMeters = 0.01;
+      public static double kArmMininunAngleInRadians = Units.degreesToRadians(80);
+      public static double kArmMaximumAngleInRadians = Units.degreesToRadians(180);
+      public static double kArmMass = 6;
+      public static double kArmMaxVelocityRadiansPerSecond = Units.degreesToRadians(120);
+      public static double kArmMaxAccelerationRadiansPerSecondSquered = Units.degreesToRadians(20);
+      public static final double kArmLength = 1;
+      // TODO: Measure the actual value (THIS IS NOT CORRECT)
+      public static final double kFloorHeightInMeters = 2.0;
+      public static final double kMiddleHeightInMeters = 5.0;
+      public static final double kTopHeightInMeters = 8.0;
+      public static final double kArmMomentOfInertia = kArmMass * Math.pow(0.62, 2); // kg * m^2
+      public static final double kMotorGearing = 100;
+      public static final double kExtraGearing = 1;
+      public static final double kArmGearing = kMotorGearing * kExtraGearing;
+      public static final double kArmHeight = 2;
+      public static final double kIntakeGroundHeight = 0;
+      public static final double kIntakeDoubleSubstationHeight = 1.2;
+      public static final double kGroundGridHeight = 0.2;
+      public static final double kCubeMidGridHeight = 0.6;
+      public static final double kConeMidGridHeight = 0.6;
+      public static final double kCubeHighGridHeight = 1.2;
+      public static final double kConeHighGridHeight = 0;
+    }
+
+    public static class Encoders {
+      public static final int kCANCoderID = 17;
+      public static final double kCANCoderZeroAngle = 0;
+      public static final double kTimeDelayOfSensor = 0.025;
+    }
   }
 }
