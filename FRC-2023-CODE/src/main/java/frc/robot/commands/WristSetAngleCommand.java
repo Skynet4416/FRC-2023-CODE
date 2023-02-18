@@ -17,17 +17,19 @@ public class WristSetAngleCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        // TODO: Control wrist using PID.
+        m_subsystem.setAngle(angle);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        m_subsystem.setVoltage(m_subsystem.calculate());
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        m_subsystem.setVoltage(0);
     }
 
     // Returns true when the command should end.
