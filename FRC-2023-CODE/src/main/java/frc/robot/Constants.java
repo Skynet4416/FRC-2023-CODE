@@ -365,7 +365,16 @@ public class Constants {
       public static final int kLeftIntakeCANID = 14;
       public static final int kRightIntakeCANID = 15;
     }
+  }
 
+  public static class Wrist {
+    public static class Motors {
+      public static final int kWristCANID = -1;
+    }
+
+    public static class Encoders {
+      public static final int kWristCANID = -1;
+    }
   }
 
   public static class OperatorConstants {
