@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPRamseteCommand;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -37,8 +39,12 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Drive;
+import frc.robot.Constants.Drive.ChargeStationPID;
 import frc.robot.Constants.Drive.Motors;
 import frc.robot.Constants.Drive.PID;
 import frc.robot.Constants.Drive.PIDAngular;
@@ -97,6 +103,8 @@ public class DriveSubsystem extends SubsystemBase {
     private final TrajectoryConfig m_trajectoryConfig = new TrajectoryConfig(Physical.kMaxVelcoityMeterPerSecond,
             Physical.kMaxAccelerationMeterPerSecondSquered);
     private final DifferentialDriveOdometry m_driveOdometry;
+    private final PIDController m_chargeStationPIDController = new PIDController(ChargeStationPID.kP,
+            ChargeStationPID.kI, ChargeStationPID.kD);
 
     public DriveSubsystem() throws IOException {
         restoreFactoryDefaults();
@@ -385,5 +393,39 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_simAngle.set(getHeading().getDegrees());
         m_differentialDrive.feed();
+    }
+
+    public Command getFollowCommand(PathPlannerTrajectory traj) {
+        return new SequentialCommandGroup(
+
+                new PPRamseteCommand(
+                        traj,
+                        this::getPosition, // Pose supplier
+                        this.getRamseteController(),
+                        this.getFeedForward(),
+                        this.getDifferentialDriveKinematics(), // DifferentialDriveKinematics
+                        this::getWheelSpeeds, // DifferentialDriveWheelSpeeds supplier
+                        this.getLeftPIDController(), // Left controller. Tune these values for your robot. Leaving them
+                                                     // 0
+                        // will only
+                        // use feedforwards.
+                        this.getRightPIDController(), // Right controller (usually the same values as left controller)
+                        this::setVoltage, // Voltage biconsumer
+                        true, // Should the path be automatically mirrored depending on alliance color.
+                              // Optional, defaults to true
+                        this // Requires this drive subsystem
+                ));
+    }
+
+    public Rotation2d getPitch() {
+        return Rotation2d.fromDegrees(m_navx.getPitch());
+    }
+
+    public Rotation2d getRoll() {
+        return Rotation2d.fromDegrees(m_navx.getRoll());
+    }
+
+    public double getChargeStationAngle() {
+        return getRoll().getRadians() * getHeading().getSin() + getPitch().getRadians() * getHeading().getCos();
     }
 }
