@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-// THERE WILL BE ISSUES HERE.
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.drive.Autos;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.drive.DriveCommand;
@@ -27,10 +25,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import java.io.IOException;
-import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 import com.ctre.phoenixpro.controls.MotionMagicTorqueCurrentFOC;
@@ -56,8 +52,6 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController = new CommandXboxController(
-      OperatorConstants.kDriverControllerPort);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -85,7 +79,6 @@ public class RobotContainer {
   private void configureBindings() {
     m_driveSubsystem.setDefaultCommand(new DriveCommand(m_driveSubsystem, Drive.kDriveState,
         OI.xboxController::getLeftY, OI.xboxController::getRightY));
-    m_driverController.x().onTrue(new ResetPositionCommand(m_driveSubsystem));
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
@@ -96,7 +89,6 @@ public class RobotContainer {
     */
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
 
     //while pressing A button it give intake

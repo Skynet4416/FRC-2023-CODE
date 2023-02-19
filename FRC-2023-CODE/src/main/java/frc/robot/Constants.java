@@ -332,6 +332,12 @@ public class Constants {
       public static final double kaVoltSecondsSquaredPerRadian = 0.3;
 
     }
+    public static class ChargeStationPID{
+      public static final double kP = 0;
+      public static final double kI = 0;
+      public static final double kD = 0;
+
+    }
 
     public static class RamseteController {
       public static final double kB = 2;
@@ -373,14 +379,4 @@ public class Constants {
   }
 
 
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
-  
-    public static class OI {
-      public static final int kLeftJoystickControllerPort = 1;
-      public static final int kRightJoystickControllerPort = 2;
-      public static final int kXboxControllerPort = 0;
-      public static final double kXboxcontrollerDrift = 0.1;
-  }
 }
