@@ -295,8 +295,8 @@ public class Constants {
     public static class Motors {
       public static final MotorType kMotorType = MotorType.kBrushless;
       public static final int kLeftForwardCANID = 14;
-      public static final int kRightForwardCANID = 15;
-      public static final int kLeftBackwardCANID = 12;
+      public static final int kRightForwardCANID = 16;
+      public static final int kLeftBackwardCANID = 15;
       public static final int kRightBackwardCANID = 10;
     }
 
@@ -375,7 +375,7 @@ public class Constants {
 
   public static class Wrist {
     public static class Motors {
-      public static final int kWristSparkMaxCANID = -1;
+      public static final int kWristSparkMaxCANID = 12;
     }
 
     public static class Physical {
@@ -401,7 +401,7 @@ public class Constants {
     }
 
     public static class Encoders {
-      public static final int kWristCANID = -1;
+      public static final int kWristCANCoderCANID = 19;
       public static final double kCANCoderZeroAbsAngle = 0;
     }
 
