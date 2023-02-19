@@ -20,7 +20,7 @@ import frc.robot.Constants.Wrist.Physical;
 
 public class WristSubsystem extends SubsystemBase {
     private final CANSparkMax m_wristSparkMax = new CANSparkMax(Motors.kWristSparkMaxCANID, MotorType.kBrushless);
-    private final CANCoder m_CANCoder = new CANCoder(Encoders.kWristCANID);
+    private final CANCoder m_CANCoder = new CANCoder(Encoders.kWristCANCoderCANID);
     private final ProfiledPIDController m_PidController = new ProfiledPIDController(PID.kP, PID.kI, PID.kD,
             new Constraints(Physical.kMaxVelcoityRadiansPerSecond, Physical.kMaxAccelerationRadiansPerSecondSquered));
     private final ArmFeedforward armFeedforward = new ArmFeedforward(FeedForward.kS, FeedForward.kG, FeedForward.kV,

@@ -7,6 +7,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -14,10 +15,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Vision.AprilTag;
 import frc.robot.Constants.Vision.ReflectiveTape;
 
-public class VisionSubsystem {
+public class VisionSubsystem extends SubsystemBase{
     private final PhotonCamera m_aprilTagCamera = new PhotonCamera(AprilTag.kCameraName);
     private final PhotonCamera m_reflectiveTapeCamera = new PhotonCamera(ReflectiveTape.kReflectiveTapeCameraName);
     private AprilTagFieldLayout m_fieldLayout = null;
@@ -43,6 +45,40 @@ public class VisionSubsystem {
 
     public boolean reflectiveHasTarget() {
         return m_aprilTagCamera.getLatestResult().hasTargets();
+    }
+    public boolean hasTarget()
+    {
+        return reflectiveHasTarget() || aprilTagHasTarget();
+    }
+    public PhotonTrackedTarget getReflectiveTarget()
+    {
+        if(reflectiveHasTarget())
+        {
+            return m_reflectiveTapeCamera.getLatestResult().getBestTarget();
+        }
+        return null;
+    }
+    public PhotonTrackedTarget getAprilTarget()
+    {
+        if(aprilTagHasTarget())
+        {
+            return m_aprilTagCamera.getLatestResult().getBestTarget();
+        }
+        return null;
+    }
+    public PhotonTrackedTarget getVisionTarget()
+    {
+
+        if(reflectiveHasTarget())
+        {
+            return getReflectiveTarget();
+        }
+        else if(aprilTagHasTarget())
+        {
+            return getAprilTarget();
+        }
+        return null;
+        
     }
 
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {

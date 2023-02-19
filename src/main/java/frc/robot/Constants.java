@@ -326,6 +326,7 @@ public class Constants {
       public static final double kSVolts = 0;
       public static final double kvVoltSecondsPerRadian = 1.5;
       public static final double kaVoltSecondsSquaredPerRadian = 0.3;
+      public static final double kAngleThreashold = 0;
 
     }
     public static class ChargeStationPID{
