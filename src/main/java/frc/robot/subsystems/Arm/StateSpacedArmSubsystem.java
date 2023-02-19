@@ -87,6 +87,7 @@ public class StateSpacedArmSubsystem extends ArmSubsystem {
 
     @Override
     public void periodic() {
+        super.periodic();
         SmartDashboard.putNumberArray("Arm State", new double[] { getState().position, getState().velocity });
         SmartDashboard.putNumberArray("Arm Goal State", new Double[] { m_goalState.position, m_goalState.velocity });
     }

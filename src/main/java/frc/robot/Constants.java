@@ -294,10 +294,10 @@ public class Constants {
 
     public static class Motors {
       public static final MotorType kMotorType = MotorType.kBrushless;
-      public static final int kLeftForwardCANID = 10;
-      public static final int kRightForwardCANID = 11;
+      public static final int kLeftForwardCANID = 14;
+      public static final int kRightForwardCANID = 15;
       public static final int kLeftBackwardCANID = 12;
-      public static final int kRightBackwardCANID = 13;
+      public static final int kRightBackwardCANID = 10;
     }
 
     public static class CheatedEncodersPorts {
@@ -368,8 +368,8 @@ public class Constants {
   public static class Intake {
     public static class Motors {
       public static final MotorType kMotorType = MotorType.kBrushless;
-      public static final int kLeftIntakeCANID = 14;
-      public static final int kRightIntakeCANID = 15;
+      public static final int kLeftIntakeCANID = 11;
+      public static final int kRightIntakeCANID = 13;
     }
   }
 
@@ -410,7 +410,7 @@ public class Constants {
   public static class Arm {
     public static class Motors {
       public static final MotorType kMotorType = MotorType.kBrushless;
-      public static final int kArmCANID = 16;
+      public static final int kArmCANID = 17;
       public static final double falconUnitsPerRotation = 4096.0;
     }
 
@@ -465,7 +465,7 @@ public class Constants {
     }
 
     public static class Encoders {
-      public static final int kCANCoderID = 17;
+      public static final int kCANCoderID = 18;
       public static final double kCANCoderZeroAngle = 0;
       public static final double kTimeDelayOfSensor = 0.025;
     }

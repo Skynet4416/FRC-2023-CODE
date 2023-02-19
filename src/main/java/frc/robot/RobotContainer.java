@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import frc.robot.subsystems.Arm.StateSpacedArmSubsystem;
 import frc.robot.Constants.Arm.Physical;
+import frc.robot.commands.Arm.MovePrecentageCommand;
 import frc.robot.commands.Arm.StateSpaceCommands.ArmToConstantHeightCommand;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.subsystems.Drive.DriveSubsystem;

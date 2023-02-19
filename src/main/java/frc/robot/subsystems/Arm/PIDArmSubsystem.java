@@ -20,6 +20,7 @@ public class PIDArmSubsystem extends ArmSubsystem {
 
     @Override
     public void setAngleInDegrees(double degrees) {
+        super.periodic();
         pidController.setGoal(Units.degreesToRadians(degrees));
     }
 

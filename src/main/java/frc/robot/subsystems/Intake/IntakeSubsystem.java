@@ -5,6 +5,7 @@
 package frc.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Intake.Motors;
@@ -17,6 +18,9 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     m_leftIntakeSparkMax.restoreFactoryDefaults();
     m_rightIntakeSparkMax.restoreFactoryDefaults();
+    m_leftIntakeSparkMax.setIdleMode(IdleMode.kBrake);
+    m_rightIntakeSparkMax.setIdleMode(IdleMode.kBrake);
+    m_rightIntakeSparkMax.follow(m_leftIntakeSparkMax);
     m_rightIntakeSparkMax.setInverted(true);
   }
 
@@ -30,7 +34,6 @@ public class IntakeSubsystem extends SubsystemBase {
   public void setPercentage(double percent) {
     System.out.println("Intake speed: " + percent + ".");
     m_leftIntakeSparkMax.set(percent);
-    m_rightIntakeSparkMax.set(percent);
   }
 
   // This method will be called once per scheduler run
