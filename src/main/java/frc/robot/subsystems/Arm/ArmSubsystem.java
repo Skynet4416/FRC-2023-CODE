@@ -1,20 +1,15 @@
 package frc.robot.subsystems.Arm;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Arm.Encoders;
@@ -24,6 +19,8 @@ import frc.robot.Constants.Arm.Physical;
 public abstract class ArmSubsystem extends SubsystemBase {
     protected WPI_TalonFX m_armFalcon = new WPI_TalonFX(Motors.kArmCANID);
     protected CANCoder m_CANCoder = new CANCoder(Encoders.kCANCoderID);
+    private double m_lastRotationalVelocity=0;
+    private double m_lastTimeStamp = Timer.getFPGATimestamp();
 
     public ArmSubsystem() {
         m_armFalcon.configFactoryDefault();
@@ -98,10 +95,13 @@ public abstract class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm Absolute Angle", getAbsuloteAngleInDegrees());
-        SmartDashboard.putNumber("Arm Angle", getAbsuloteAngleInDegrees());
-        SmartDashboard.putNumber("Arm Height", getArmHeightInMeters());
-        SmartDashboard.putNumber("Arm Velocity", getArmRoationalVelocity());
+        SmartDashboard.putNumber("Arm Absolute Angle In Degrees", getAbsuloteAngleInDegrees());
+        SmartDashboard.putNumber("Arm Angle In Degrees", getArmAngleInDegrees());
+        SmartDashboard.putNumber("Arm Rotational Velocity In Degrees Per Second", getArmRoationalVelocity());
+        SmartDashboard.putNumber("Arm Rotational Velocity In Radians Per Second", getArmRoationalVelocityInRadiansPerSecond());
+        SmartDashboard.putNumber("Arm Acceleration In Radians Per Second Squered", (getArmRoationalVelocityInRadiansPerSecond() - m_lastRotationalVelocity)/(Timer.getFPGATimestamp() - m_lastTimeStamp));
+        m_lastTimeStamp = Timer.getFPGATimestamp();
+        m_lastRotationalVelocity = getArmRoationalVelocityInRadiansPerSecond();
 
     }
 

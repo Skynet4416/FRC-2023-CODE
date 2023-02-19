@@ -20,7 +20,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import java.util.Map;
-import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -376,12 +375,13 @@ public class Constants {
 
   public static class Wrist {
     public static class Motors {
-      public static final int kWristCANID = -1;
+      public static final int kWristSparkMaxCANID = -1;
     }
 
     public static class Physical {
       public static final double kMaxVelcoityRadiansPerSecond = 0.0;
       public static final double kMaxAccelerationRadiansPerSecondSquered = 0.0;
+      public static final double kErrorTolarance = 0;
 
     }
 
@@ -443,7 +443,7 @@ public class Constants {
       public static double kArmMininunAngleInRadians = Units.degreesToRadians(80);
       public static double kArmMaximumAngleInRadians = Units.degreesToRadians(180);
       public static double kArmMass = 6;
-      public static double kArmMaxVelocityRadiansPerSecond = Units.degreesToRadians(120);
+      public static double kArmMaxVelocityRadiansPerSecond = Units.degreesToRadians(110);
       public static double kArmMaxAccelerationRadiansPerSecondSquered = Units.degreesToRadians(20);
       public static final double kArmLength = 1;
       // TODO: Measure the actual value (THIS IS NOT CORRECT)

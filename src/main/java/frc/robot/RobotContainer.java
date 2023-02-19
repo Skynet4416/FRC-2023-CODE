@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.commands.drive.Autos;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.drive.DriveCommand;
-import frc.robot.commands.drive.ResetPositionCommand;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import java.io.IOException;

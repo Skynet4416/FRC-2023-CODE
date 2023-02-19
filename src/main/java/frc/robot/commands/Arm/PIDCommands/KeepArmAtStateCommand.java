@@ -1,7 +1,6 @@
 package frc.robot.commands.Arm.PIDCommands;
 
 import frc.robot.subsystems.Arm.PIDArmSubsystem;
-import frc.robot.subsystems.Arm.StateSpacedArmSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class KeepArmAtStateCommand extends CommandBase {

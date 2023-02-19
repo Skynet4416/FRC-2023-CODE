@@ -1,6 +1,7 @@
 package frc.robot.commands.Wrist;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.Wrist.Physical;
 import frc.robot.subsystems.Wrist.WristSubsystem;
 
 public class WristSetAngleCommand extends CommandBase {
@@ -35,6 +36,6 @@ public class WristSetAngleCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return Math.abs(m_subsystem.getWristAngleInDegrees()-angle) < Physical.kErrorTolarance;
     }
 }

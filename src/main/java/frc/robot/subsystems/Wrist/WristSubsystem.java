@@ -9,9 +9,9 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.Wrist;
 import frc.robot.Constants.Wrist.Encoders;
 import frc.robot.Constants.Wrist.FeedForward;
 import frc.robot.Constants.Wrist.Motors;
@@ -19,16 +19,21 @@ import frc.robot.Constants.Wrist.PID;
 import frc.robot.Constants.Wrist.Physical;
 
 public class WristSubsystem extends SubsystemBase {
-    private final CANSparkMax m_wristSparkMax = new CANSparkMax(Motors.kWristCANID, MotorType.kBrushless);
-    private CANCoder m_CANCoder = new CANCoder(Encoders.kWristCANID);
-    private ProfiledPIDController m_PidController = new ProfiledPIDController(PID.kP, PID.kI, PID.kD,
+    private final CANSparkMax m_wristSparkMax = new CANSparkMax(Motors.kWristSparkMaxCANID, MotorType.kBrushless);
+    private final CANCoder m_CANCoder = new CANCoder(Encoders.kWristCANID);
+    private final ProfiledPIDController m_PidController = new ProfiledPIDController(PID.kP, PID.kI, PID.kD,
             new Constraints(Physical.kMaxVelcoityRadiansPerSecond, Physical.kMaxAccelerationRadiansPerSecondSquered));
-    private ArmFeedforward armFeedforward = new ArmFeedforward(FeedForward.kS, FeedForward.kG, FeedForward.kV,
+    private final ArmFeedforward armFeedforward = new ArmFeedforward(FeedForward.kS, FeedForward.kG, FeedForward.kV,
             FeedForward.kA);
+    private double m_lastRotationalVelocity=0;
+    private double m_lastTimeStamp = Timer.getFPGATimestamp();
 
     public WristSubsystem() {
         m_CANCoder.configFactoryDefault(); // Is this the right thing to do? yes.
         m_wristSparkMax.restoreFactoryDefaults();
+        m_wristSparkMax.enableVoltageCompensation(12);
+        m_wristSparkMax.setSmartCurrentLimit(30);
+        
 
     }
 
@@ -84,9 +89,12 @@ public class WristSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Wrist Absolute Angle", getAbsuloteAngleInDegrees());
-        SmartDashboard.putNumber("Wrist Angle", getWristAngleInDegrees());
-        SmartDashboard.putNumber("Wrist Rotational Velocity", getRoationalVelocity());
-
+        SmartDashboard.putNumber("Wrist Absolute Angle In Degrees", getAbsuloteAngleInDegrees());
+        SmartDashboard.putNumber("Wrist Angle In Degrees", getWristAngleInDegrees());
+        SmartDashboard.putNumber("Wrist Rotational Velocity In Degrees Per Second", getRoationalVelocity());
+        SmartDashboard.putNumber("Wrist Rotational Velocity In Radians Per Second", getRotationalVelocityInRadians());
+        SmartDashboard.putNumber("Wrist Acceleration In Radians Per Second Squered", (getRotationalVelocityInRadians() - m_lastRotationalVelocity)/(Timer.getFPGATimestamp() - m_lastTimeStamp));
+        m_lastTimeStamp = Timer.getFPGATimestamp();
+        m_lastRotationalVelocity = getRotationalVelocityInRadians();
     }
 }
