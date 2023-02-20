@@ -288,11 +288,11 @@ public class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
-  
-    public static class OI {
-      public static final int kLeftJoystickControllerPort = 1;
-      public static final int kRightJoystickControllerPort = 2;
-      public static final int kXboxControllerPort = 0;
-      public static final double kXboxcontrollerDrift = 0.1;
-  }
+  //cant call this OI because of the OI calss
+  public static class OIConstants {
+    public static final int kLeftJoystickControllerPort = 1;
+    public static final int kRightJoystickControllerPort = 2;
+    public static final int kXboxControllerPort = 0;
+    public static final double kXboxcontrollerDrift = 0.1;
+}
 }
