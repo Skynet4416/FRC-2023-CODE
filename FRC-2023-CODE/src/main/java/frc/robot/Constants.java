@@ -257,12 +257,7 @@ public class Constants {
             new Rotation3d()));
   }
 
-  public static class OI {
-    public static final int kLeftJoystickControllerPort = 1;
-    public static final int kRightJoystickControllerPort = 2;
-    public static final int kXboxControllerPort = 0;
-    public static final double kXboxcontrollerDrift = 0.1;
-  }
+
 
   public static class Vision {
 
