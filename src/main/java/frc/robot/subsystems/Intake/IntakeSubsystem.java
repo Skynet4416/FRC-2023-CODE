@@ -20,8 +20,11 @@ public class IntakeSubsystem extends SubsystemBase {
     m_rightIntakeSparkMax.restoreFactoryDefaults();
     m_leftIntakeSparkMax.setIdleMode(IdleMode.kBrake);
     m_rightIntakeSparkMax.setIdleMode(IdleMode.kBrake);
-    m_rightIntakeSparkMax.follow(m_leftIntakeSparkMax);
-    m_rightIntakeSparkMax.setInverted(true);
+    m_leftIntakeSparkMax.setInverted(true);
+    m_rightIntakeSparkMax.follow(m_leftIntakeSparkMax, true);
+
+    m_leftIntakeSparkMax.setSmartCurrentLimit(30);
+    m_rightIntakeSparkMax.setSmartCurrentLimit(30);
   }
 
   /**

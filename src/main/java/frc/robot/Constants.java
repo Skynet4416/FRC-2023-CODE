@@ -311,12 +311,12 @@ public class Constants {
     }
 
     public static class PID {
-      public static final double kP = 8.5;
+      public static final double kP = 5.3372E-05;
       public static final double kI = 0;
       public static final double kD = 0;
-      public static final double kSVolts = 0.22;
-      public static final double kVVoltSecondsPerMeter = 1.98;
-      public static final double kAVoltSecondsSquaredPerMeter = 1.2;
+      public static final double kSVolts = 0.17619;
+      public static final double kVVoltSecondsPerMeter = 2.3251;
+      public static final double kAVoltSecondsSquaredPerMeter = 0.24452;
     }
 
     public static class PIDAngular {
@@ -382,12 +382,12 @@ public class Constants {
     public static class Physical {
       public static final double kMaxVelcoityRadiansPerSecond = 0.0;
       public static final double kMaxAccelerationRadiansPerSecondSquered = 0.0;
-      public static final double kErrorTolarance = 0;
+      public static final double kErrorTolarance = 1;
 
     }
 
     public static class PID {
-      public final static double kP = 0;
+      public final static double kP = 0.2;
       public final static double kD = 0;
       public final static double kI = 0;
 
@@ -403,7 +403,7 @@ public class Constants {
 
     public static class Encoders {
       public static final int kWristCANCoderCANID = 19;
-      public static final double kCANCoderZeroAbsAngle = 0;
+      public static final double kCANCoderZeroAbsAngle = 148.0078125;
     }
 
   }

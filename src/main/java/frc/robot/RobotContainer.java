@@ -11,13 +11,19 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import java.io.IOException;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
+import frc.robot.subsystems.Arm.PIDArmSubsystem;
 import frc.robot.subsystems.Arm.StateSpacedArmSubsystem;
 import frc.robot.Constants.Arm.Physical;
 import frc.robot.commands.Arm.MovePrecentageCommand;
 import frc.robot.commands.Arm.StateSpaceCommands.ArmToConstantHeightCommand;
 import frc.robot.commands.Intake.IntakeCommand;
+import frc.robot.commands.Wrist.WristKeepAngleCommand;
+import frc.robot.commands.Wrist.WristSetAngleCommand;
 import frc.robot.subsystems.Drive.DriveSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
+import frc.robot.subsystems.Wrist.WristSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -34,12 +40,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final WristSubsystem m_WristSubsystem = new WristSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  // private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+  // private final PIDArmSubsystem m_PidArmSubsystem = new PIDArmSubsystem();
+  // // Replace with CommandPS4Controller or CommandJoystick if needed
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-
-  private final StateSpacedArmSubsystem m_stateSpaceArmSubsystem = new StateSpacedArmSubsystem();
+  // private final StateSpacedArmSubsystem m_stateSpaceArmSubsystem = new StateSpacedArmSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -67,18 +73,23 @@ public class RobotContainer {
   private void configureBindings() {
     m_driveSubsystem.setDefaultCommand(new DriveCommand(m_driveSubsystem, Drive.kDriveState,
         OI.xboxController::getLeftY, OI.xboxController::getRightY));
+    m_WristSubsystem.setDefaultCommand(new WristKeepAngleCommand(m_WristSubsystem));
+    OI.A.onTrue(new WristSetAngleCommand(m_WristSubsystem, -30));
+    OI.B.whileTrue(new IntakeCommand(m_intakeSubsystem, 0.5));
+    // OI.A.whileTrue(new MovePrecentageCommand(m_PidArmSubsystem, -0.1));
+    // OI.X.whileTrue(new MovePrecentageCommand(m_PidArmSubsystem, 0.1));
 
-    OI.A.whileTrue(new IntakeCommand(m_intakeSubsystem, 1));
-    m_stateSpaceArmSubsystem.setDefaultCommand(
-        new frc.robot.commands.Arm.StateSpaceCommands.KeepArmAtStateCommand(m_stateSpaceArmSubsystem));
-    OI.DPadDOWN
-        .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kGroundGridHeight));
-    OI.DPadLEFT
-        .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeMidGridHeight));
-    OI.DpadRIGHT
-        .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kConeMidGridHeight));
-    OI.DPadUP
-        .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeHighGridHeight));
+    // OI.A.whileTrue(new IntakeCommand(m_intakeSubsystem, 1));
+    // m_stateSpaceArmSubsystem.setDefaultCommand(
+    //     new frc.robot.commands.Arm.StateSpaceCommands.KeepArmAtStateCommand(m_stateSpaceArmSubsystem));
+    // OI.DPadDOWN
+    //     .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kGroundGridHeight));
+    // OI.DPadLEFT
+    //     .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeMidGridHeight));
+    // OI.DpadRIGHT
+    //     .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kConeMidGridHeight));
+    // OI.DPadUP
+    //     .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeHighGridHeight));
   }
 
   /**
@@ -92,5 +103,13 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     return Autos.testAuto(m_driveSubsystem).andThen(() -> m_driveSubsystem.setVoltage(0, 0));
+  }
+  public void enableBreak()
+  {
+    m_driveSubsystem.setIdleMode(IdleMode.kBrake);
+  }
+  public void disableBreak()
+  {
+    m_driveSubsystem.setIdleMode(IdleMode.kCoast);
   }
 }
