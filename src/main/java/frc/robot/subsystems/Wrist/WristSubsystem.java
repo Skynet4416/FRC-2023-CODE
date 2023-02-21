@@ -39,6 +39,7 @@ public class WristSubsystem extends SubsystemBase {
         m_wristSparkMax.setSmartCurrentLimit(30);
         SmartDashboard.putNumber("Wrist P", PID.kP);
         m_wristSparkMax.setInverted(true);
+        m_PidController.setSetpoint(getWristAngleInDegrees());
         
 
     }

@@ -284,7 +284,7 @@ public class Constants {
 
   public static class Drive {
     public static final DrivingState kDriveState = DrivingState.CURVATURE;
-    public static final boolean kKalmanPoseEstimation = false;
+    public static final boolean kKalmanPoseEstimation = true;
 
     public static class Trajectory {
       public static final double kMaxVelocity = 4.0;
@@ -320,13 +320,13 @@ public class Constants {
     }
 
     public static class PIDAngular {
-      public static final double kP = 0;
+      public static final double kP = 6.0737E-09;
       public static final double kI = 0;
       public static final double kD = 0;
-      public static final double kSVolts = 0;
-      public static final double kvVoltSecondsPerRadian = 1.5;
-      public static final double kaVoltSecondsSquaredPerRadian = 0.3;
-      public static final double kAngleThreashold = 0;
+      public static final double kSVolts = 0.47102;
+      public static final double kvVoltSecondsPerRadian = 2.2717;
+      public static final double kaVoltSecondsSquaredPerRadian = 0.38669;
+      public static final double kAngleThreashold = 1;
 
     }
     public static class ChargeStationPID{
@@ -425,7 +425,7 @@ public class Constants {
 
     public static class PoistionPID {
       public static final class PID {
-        public static final double kP = 0;
+        public static final double kP = 0.15;
         public static final double kI = 0;
         public static final double kD = 0;
       }
@@ -441,6 +441,8 @@ public class Constants {
 
     public static class Physical {
       public static double kHeightThreasholdInMeters = 0.01;
+      public static double kArmAngleThreasholdInDegrees = 1;
+
       public static double kArmMininunAngleInRadians = Units.degreesToRadians(80);
       public static double kArmMaximumAngleInRadians = Units.degreesToRadians(180);
       public static double kArmMass = 6;
@@ -467,7 +469,7 @@ public class Constants {
 
     public static class Encoders {
       public static final int kCANCoderID = 18;
-      public static final double kCANCoderZeroAngle = 0;
+      public static final double kCANCoderZeroAngle = 203.203125;
       public static final double kTimeDelayOfSensor = 0.025;
     }
   }

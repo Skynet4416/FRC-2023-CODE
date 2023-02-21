@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSiz
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Drive;
@@ -83,10 +84,8 @@ public class DriveSubsystem extends SubsystemBase {
     // The left-side drive encoder
     private final Encoder m_leftCheatingEncoder;
     private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
-    private final ProfiledPIDController m_angleProfiledPIDController = new ProfiledPIDController(PIDAngular.kP,
-            PIDAngular.kI, PIDAngular.kD,
-            new TrapezoidProfile.Constraints(Physical.kMaxRotationalVelocityRadiansPerSecond,
-                    Physical.kMaxRotationalAccelerationRadiansPerSecondSquered));
+    private final PIDController m_angleProfiledPIDController = new PIDController(PIDAngular.kP,
+            PIDAngular.kI, PIDAngular.kD);
     // The right-side drive encoder
     private final Encoder m_rightCheatingEncoder;
     private final EncoderSim m_leftSimulatedEncoder;
@@ -154,7 +153,6 @@ public class DriveSubsystem extends SubsystemBase {
                 Physical.kDeafultPosition, Physical.kStateStdDevs, Physical.kVisionMeasurementStdDevs);
         m_driveOdometry = new DifferentialDriveOdometry(getHeading(), getLeftDistance(), getRightDistance());
         m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
-        m_angleProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     public double getLeftDistance() {
@@ -243,7 +241,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_differentialDrive.tankDrive(leftSpeed, rightSpeed);
     }
 
-    public ProfiledPIDController getRotationalPIDController() {
+    public PIDController getRotationalPIDController() {
         return m_angleProfiledPIDController;
     }
 
@@ -260,7 +258,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getHeading() {
-        if (RobotBase.isSimulation())
+        if (!RobotBase.isSimulation())
             return Rotation2d.fromDegrees(-Math.IEEEremainder(m_navx.getAngle(), 360));
         else {
             return Rotation2d.fromDegrees(-Math.IEEEremainder(m_simAngle.get(), 360));
@@ -314,7 +312,8 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("left backword Velocity", m_leftBackwardRelativeEncoder.getVelocity());
         SmartDashboard.putNumber("right backword Distance", m_rightBackwardRelativeEncoder.getPosition());
         SmartDashboard.putNumber("right backword Velocity", m_rightBackwardRelativeEncoder.getVelocity());
-
+        SmartDashboard.putNumber("Drive Heading", getHeading().getDegrees());
+        m_angleProfiledPIDController.setP(SmartDashboard.getNumber("Drive Angular kp", PIDAngular.kP));
     }
 
     public PIDController getLeftPIDController() {

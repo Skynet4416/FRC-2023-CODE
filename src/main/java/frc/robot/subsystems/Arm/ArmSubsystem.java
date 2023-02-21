@@ -75,6 +75,7 @@ public abstract class ArmSubsystem extends SubsystemBase {
         return degreesToHeightInMeters(getArmAngleInDegrees());
     }
 
+
     public double getArmRoationalVelocity() {
         return m_CANCoder.getVelocity();
     }
@@ -100,8 +101,19 @@ public abstract class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Arm Rotational Velocity In Degrees Per Second", getArmRoationalVelocity());
         SmartDashboard.putNumber("Arm Rotational Velocity In Radians Per Second", getArmRoationalVelocityInRadiansPerSecond());
         SmartDashboard.putNumber("Arm Acceleration In Radians Per Second Squered", (getArmRoationalVelocityInRadiansPerSecond() - m_lastRotationalVelocity)/(Timer.getFPGATimestamp() - m_lastTimeStamp));
+        SmartDashboard.putNumber("Arm Voltage", m_armFalcon.getMotorOutputVoltage());
         m_lastTimeStamp = Timer.getFPGATimestamp();
         m_lastRotationalVelocity = getArmRoationalVelocityInRadiansPerSecond();
+    }
+    public void lockArm()
+    {
+        m_armFalcon.setNeutralMode(NeutralMode.Brake);
+        System.out.println("Arm Locked");
+    }
+    public void unlockArm()
+    {
+        m_armFalcon.setNeutralMode(NeutralMode.Coast);
+        System.out.println("Arm Unlocked");
 
     }
 

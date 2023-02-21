@@ -7,7 +7,10 @@ package frc.robot;
 import frc.robot.commands.drive.Autos;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.drive.DriveCommand;
+import frc.robot.commands.drive.Auto.TurnToAngle;
+import frc.robot.commands.drive.Auto.TurnToConstantAngle;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.io.IOException;
 
@@ -16,7 +19,11 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import frc.robot.subsystems.Arm.PIDArmSubsystem;
 import frc.robot.subsystems.Arm.StateSpacedArmSubsystem;
 import frc.robot.Constants.Arm.Physical;
+import frc.robot.Constants.Arm.PoistionPID.PID;
+import frc.robot.Constants.Drive.PIDAngular;
 import frc.robot.commands.Arm.MovePrecentageCommand;
+import frc.robot.commands.Arm.PIDCommands.ArmKeepAtConstantAngle;
+import frc.robot.commands.Arm.PIDCommands.ArmToConstantAngleCommand;
 import frc.robot.commands.Arm.StateSpaceCommands.ArmToConstantHeightCommand;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Wrist.WristKeepAngleCommand;
@@ -25,6 +32,7 @@ import frc.robot.subsystems.Drive.DriveSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.Wrist.WristSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -42,7 +50,7 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final WristSubsystem m_WristSubsystem = new WristSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  // private final PIDArmSubsystem m_PidArmSubsystem = new PIDArmSubsystem();
+  private final PIDArmSubsystem m_PidArmSubsystem = new PIDArmSubsystem();
   // // Replace with CommandPS4Controller or CommandJoystick if needed
 
   // private final StateSpacedArmSubsystem m_stateSpaceArmSubsystem = new StateSpacedArmSubsystem();
@@ -53,6 +61,7 @@ public class RobotContainer {
   public RobotContainer() throws IOException {
     // Configure the trigger bindings
     configureBindings();
+    configureSmartDashboard();
     LiveWindow.disableAllTelemetry();
   }
 
@@ -70,12 +79,25 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+  private void configureSmartDashboard()
+  {
+    SmartDashboard.putNumber("Drive Angular kp", PIDAngular.kP);
+    SmartDashboard.putNumber("Arm P", PID.kP);
+
+  }
   private void configureBindings() {
     m_driveSubsystem.setDefaultCommand(new DriveCommand(m_driveSubsystem, Drive.kDriveState,
         OI.xboxController::getLeftY, OI.xboxController::getRightY));
+    // OI.A.onTrue(new TurnToConstantAngle(m_driveSubsystem, 30));
     m_WristSubsystem.setDefaultCommand(new WristKeepAngleCommand(m_WristSubsystem));
+    m_PidArmSubsystem.setDefaultCommand(new ArmKeepAtConstantAngle(m_PidArmSubsystem));
     OI.A.onTrue(new WristSetAngleCommand(m_WristSubsystem, -30));
-    OI.B.whileTrue(new IntakeCommand(m_intakeSubsystem, 0.5));
+    OI.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30.0));
+    OI.B.onTrue(new InstantCommand(() ->m_PidArmSubsystem.lockArm()));
+    OI.Y.onTrue(new InstantCommand(() ->m_PidArmSubsystem.unlockArm()));
+
+
+    // OI.B.whileTrue(new IntakeCommand(m_intakeSubsystem, 0.5));
     // OI.A.whileTrue(new MovePrecentageCommand(m_PidArmSubsystem, -0.1));
     // OI.X.whileTrue(new MovePrecentageCommand(m_PidArmSubsystem, 0.1));
 

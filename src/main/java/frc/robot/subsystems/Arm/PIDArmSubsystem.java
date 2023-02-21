@@ -11,29 +11,30 @@ import frc.robot.Constants.Arm.PoistionPID.ArbitraryFeedForward;
 import frc.robot.Constants.Arm.PoistionPID.PID;
 
 public class PIDArmSubsystem extends ArmSubsystem {
-    private ProfiledPIDController pidController = new ProfiledPIDController(PID.kP, PID.kI, PID.kD, new Constraints(
-            Physical.kArmMaxVelocityRadiansPerSecond, Physical.kArmMaxAccelerationRadiansPerSecondSquered));
-    private ArmFeedforward feedForward = new ArmFeedforward(ArbitraryFeedForward.kS, ArbitraryFeedForward.kG,
-            ArbitraryFeedForward.kV, ArbitraryFeedForward.kA);
+    private PIDController pidController = new PIDController(PID.kP, PID.kI, PID.kD);
 
     public PIDArmSubsystem() {
         super();
         SmartDashboard.putNumber("Arm P", PID.kP);
+        pidController.setSetpoint(getArmAngleInDegrees());
     }
+
     @Override
     public void periodic()
     {
         super.periodic();
         pidController.setP(SmartDashboard.getNumber("Arm P", PID.kP));
+        SmartDashboard.putNumber("Arm error", pidController.getPositionError());
+        SmartDashboard.putNumber("Arm goal", pidController.getSetpoint());
+
     }
+
     @Override
     public void setAngleInDegrees(double degrees) {
-        super.periodic();
-        pidController.setGoal(Units.degreesToRadians(degrees));
+        pidController.setSetpoint(degrees);
     }
 
     public double calculateVoltage() {
-        return pidController.calculate(getArmAngleinRadians(), getArmRoationalVelocityInRadiansPerSecond())
-                + feedForward.calculate(getArmAngleinRadians(), getArmRoationalVelocityInRadiansPerSecond());
+        return pidController.calculate(getArmAngleInDegrees());
     }
 }
