@@ -36,6 +36,7 @@ public abstract class ArmSubsystem extends SubsystemBase {
         m_armFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5);
         m_armFalcon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_Targets, 10);
         m_armFalcon.configClosedLoopPeriod(0, 1);
+        
     }
 
     public double unitsToDegrees(double units) {

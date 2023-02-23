@@ -2,6 +2,7 @@ package frc.robot.subsystems.Wrist;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -35,6 +36,7 @@ public class WristSubsystem extends SubsystemBase {
 
         m_CANCoder.configFactoryDefault(); // Is this the right thing to do? yes.
         m_wristSparkMax.restoreFactoryDefaults();
+        m_wristSparkMax.setIdleMode(IdleMode.kBrake);
         m_wristSparkMax.enableVoltageCompensation(12);
         m_wristSparkMax.setSmartCurrentLimit(30);
         SmartDashboard.putNumber("Wrist P", PID.kP);

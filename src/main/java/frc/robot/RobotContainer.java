@@ -83,20 +83,23 @@ public class RobotContainer {
   {
     SmartDashboard.putNumber("Drive Angular kp", PIDAngular.kP);
     SmartDashboard.putNumber("Arm P", PID.kP);
-
+    SmartDashboard.putNumber("Wanted Arm setpoint", 0);
   }
   private void configureBindings() {
     m_driveSubsystem.setDefaultCommand(new DriveCommand(m_driveSubsystem, Drive.kDriveState,
         OI.xboxController::getLeftY, OI.xboxController::getRightY));
-    // OI.A.onTrue(new TurnToConstantAngle(m_driveSubsystem, 30));
+    OI.A.onTrue(new TurnToConstantAngle(m_driveSubsystem, 30));
     m_WristSubsystem.setDefaultCommand(new WristKeepAngleCommand(m_WristSubsystem));
-    m_PidArmSubsystem.setDefaultCommand(new ArmKeepAtConstantAngle(m_PidArmSubsystem));
-    OI.A.onTrue(new WristSetAngleCommand(m_WristSubsystem, -30));
-    OI.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30.0));
+    // m_PidArmSubsystem.setDefaultCommand(new ArmKeepAtConstantAngle(m_PidArmSubsystem));
+    OI.A.onTrue(new WristSetAngleCommand(m_WristSubsystem, 0));
+    // OI.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30.0));
+    // OI.X.onTrue(new InstantCommand(() -> m_PidArmSubsystem.setAngleInDegrees(SmartDashboard.getNumber("Wanted Arm setpoint", 0))));
     OI.B.onTrue(new InstantCommand(() ->m_PidArmSubsystem.lockArm()));
     OI.Y.onTrue(new InstantCommand(() ->m_PidArmSubsystem.unlockArm()));
 
 
+
+    
     // OI.B.whileTrue(new IntakeCommand(m_intakeSubsystem, 0.5));
     // OI.A.whileTrue(new MovePrecentageCommand(m_PidArmSubsystem, -0.1));
     // OI.X.whileTrue(new MovePrecentageCommand(m_PidArmSubsystem, 0.1));

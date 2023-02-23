@@ -16,6 +16,7 @@ public class PIDArmSubsystem extends ArmSubsystem {
     public PIDArmSubsystem() {
         super();
         SmartDashboard.putNumber("Arm P", PID.kP);
+        pidController.disableContinuousInput();
         pidController.setSetpoint(getArmAngleInDegrees());
     }
 
@@ -25,7 +26,7 @@ public class PIDArmSubsystem extends ArmSubsystem {
         super.periodic();
         pidController.setP(SmartDashboard.getNumber("Arm P", PID.kP));
         SmartDashboard.putNumber("Arm error", pidController.getPositionError());
-        SmartDashboard.putNumber("Arm goal", pidController.getSetpoint());
+        SmartDashboard.putNumber("Arm setpint", pidController.getSetpoint());
 
     }
 

@@ -311,12 +311,12 @@ public class Constants {
     }
 
     public static class PID {
-      public static final double kP = 5.3372E-05;
+      public static final double kP = 1.4856;
       public static final double kI = 0;
       public static final double kD = 0;
-      public static final double kSVolts = 0.17619;
-      public static final double kVVoltSecondsPerMeter = 2.3251;
-      public static final double kAVoltSecondsSquaredPerMeter = 0.24452;
+      public static final double kSVolts = 0.21021;
+      public static final double kVVoltSecondsPerMeter = 2.2942;
+      public static final double kAVoltSecondsSquaredPerMeter = 0.30007;
     }
 
     public static class PIDAngular {
@@ -335,6 +335,7 @@ public class Constants {
       public static final double kD = 0;
 
     }
+    
 
     public static class RamseteController {
       public static final double kB = 2;
@@ -469,7 +470,7 @@ public class Constants {
 
     public static class Encoders {
       public static final int kCANCoderID = 18;
-      public static final double kCANCoderZeroAngle = 203.203125;
+      public static final double kCANCoderZeroAngle = 203.5546875;
       public static final double kTimeDelayOfSensor = 0.025;
     }
   }
