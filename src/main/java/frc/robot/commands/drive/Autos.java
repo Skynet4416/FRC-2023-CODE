@@ -27,9 +27,6 @@ public final class Autos {
         driveSubsystem::setVoltage, driveSubsystem);
   }
 
-  public static CommandBase testPathPlanerCommand(DriveSubsystem driveSubsystem) {
-    
-  }
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
