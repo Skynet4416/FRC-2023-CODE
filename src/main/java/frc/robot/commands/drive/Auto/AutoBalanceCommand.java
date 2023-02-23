@@ -38,32 +38,32 @@ public class AutoBalanceCommand extends CommandBase {
         // charge station limits
         double chargeStationInnerX = AllianceFlipUtil.apply(FieldConstants.Community.chargingStationInnerX);
         double chargeStationOuterX = AllianceFlipUtil.apply(FieldConstants.Community.chargingStationOuterX);
+        if(ChargeStationPID.kWantedLimits){
+            // speed limits depending on alliance
+            if (DriverStation.getAlliance() == Alliance.Blue) {
+                // check boundaries for left of charge station
+                if (drive.getPosition().getX() <= chargeStationInnerX && driveSpeedAfterPID < 0) {
+                    driveSpeedAfterPID = 0;
+                }
 
-        // speed limits depending on alliance
-        if (DriverStation.getAlliance() == Alliance.Blue) {
-            // check boundaries for left of charge station
-            if (drive.getPosition().getX() <= chargeStationInnerX && driveSpeedAfterPID < 0) {
-                driveSpeedAfterPID = 0;
-            }
+                // check boundaries for right of charge station
+                if (drive.getPosition().getX() > chargeStationOuterX
+                        && driveSpeedAfterPID > 0) {
+                    driveSpeedAfterPID = 0;
+                }
+            } else {
+                // check boundaries for left of charge station
+                if (drive.getPosition().getX() <= chargeStationInnerX && driveSpeedAfterPID > 0) {
+                    driveSpeedAfterPID = 0;
+                }
 
-            // check boundaries for right of charge station
-            if (drive.getPosition().getX() > chargeStationOuterX
-                    && driveSpeedAfterPID > 0) {
-                driveSpeedAfterPID = 0;
-            }
-        } else {
-            // check boundaries for left of charge station
-            if (drive.getPosition().getX() <= chargeStationInnerX && driveSpeedAfterPID > 0) {
-                driveSpeedAfterPID = 0;
-            }
-
-            // check boundaries for right of charge station
-            if (drive.getPosition().getX() > chargeStationOuterX
-                    && driveSpeedAfterPID < 0) {
-                driveSpeedAfterPID = 0;
+                // check boundaries for right of charge station
+                if (drive.getPosition().getX() > chargeStationOuterX
+                        && driveSpeedAfterPID < 0) {
+                    driveSpeedAfterPID = 0;
+                }
             }
         }
-
         // command drive subsystem
         drive.setArcadeDrive(driveSpeedAfterPID, 0);
     }
