@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
@@ -38,7 +39,7 @@ public class TurnToConstantAngle extends CommandBase {
     public void execute() {
         double voltage = m_PID.calculate(m_driveSubsystem.getHeading().getRadians());
         SmartDashboard.putNumber("Drive Angular Voltage" , voltage);
-        m_driveSubsystem.setVoltage(voltage, -voltage);
+        m_driveSubsystem.setArcadeDrive(0, voltage/RobotController.getBatteryVoltage());;
     }
 
     @Override

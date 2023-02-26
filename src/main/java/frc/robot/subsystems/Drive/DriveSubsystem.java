@@ -27,6 +27,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
@@ -50,6 +51,7 @@ import frc.robot.Constants.Drive.Motors;
 import frc.robot.Constants.Drive.PID;
 import frc.robot.Constants.Drive.PIDAngular;
 import frc.robot.Constants.Drive.Physical;
+import frc.robot.commands.drive.Auto.TurnToAngle;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -153,6 +155,8 @@ public class DriveSubsystem extends SubsystemBase {
                 Physical.kDeafultPosition, Physical.kStateStdDevs, Physical.kVisionMeasurementStdDevs);
         m_driveOdometry = new DifferentialDriveOdometry(getHeading(), getLeftDistance(), getRightDistance());
         m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
+        m_angleProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
+        m_angleProfiledPIDController.setTolerance(Units.degreesToRadians(PIDAngular.kAngleThreashold));
     }
 
     public double getLeftDistance() {

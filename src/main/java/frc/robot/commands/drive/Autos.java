@@ -1,4 +1,4 @@
-90// Copyright (c) FIRST and other WPILib contributors.
+// Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -13,6 +13,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
@@ -21,8 +22,7 @@ public final class Autos {
 
   public static CommandBase testAuto(DriveSubsystem driveSubsystem) throws IOException {
 
-    Trajectory testTrajectory = TrajectoryUtil
-        .fromPathweaverJson(Paths.get("src\\main\\deploy\\pathplanner\\generatedJSON\\New Path.wpilib.json"));
+    Trajectory testTrajectory =  TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("pathplanner/generatedJSON/Bottom gray not charge.wpilib.json"));
     return new RamseteCommand(testTrajectory, driveSubsystem::getPosition, driveSubsystem.getRamseteController(),
         driveSubsystem.getFeedForward(), driveSubsystem.getDifferentialDriveKinematics(),
         driveSubsystem::getWheelSpeeds, driveSubsystem.getLeftPIDController(), driveSubsystem.getRightPIDController(),

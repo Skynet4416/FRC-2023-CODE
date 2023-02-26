@@ -329,14 +329,14 @@ public class Constants {
       public static final double kAngleThreashold = 1;
 
     }
-    public static class ChargeStationPID{
+
+    public static class ChargeStationPID {
       public static final boolean kWantedLimits = false;
       public static final double kP = 0;
       public static final double kI = 0;
       public static final double kD = 0;
 
     }
-    
 
     public static class RamseteController {
       public static final double kB = 2;
@@ -473,6 +473,49 @@ public class Constants {
       public static final int kCANCoderID = 18;
       public static final double kCANCoderZeroAngle = 276.15;
       public static final double kTimeDelayOfSensor = 0.025;
+    }
+  }
+
+  public static class CommandGroups {
+    public static class LowCube {
+      public static double kArmAngle = 0;
+      public static double kWristAngle = 0;
+      public static double kIntakeSpeed = 0;
+    }
+    public static class MidCube {
+      public static double kArmAngle = 0;
+      public static double kWristAngle = 0;
+      public static double kIntakeSpeed = 0;
+    }
+    public static class HighCube {
+      public static double kArmAngle = 0;
+      public static double kWristAngle = 0;
+      public static double kIntakeSpeed = 0;
+    }
+    public static class LowCone {
+      public static double kArmAngle = 0;
+      public static double kWristAngle = 0;
+      public static double kIntakeSpeed = 0;
+    }
+    public static class MidCone {
+      public static double kArmAngle = 0;
+      public static double kWristAngle = 0;
+      public static double kIntakeSpeed = 0;
+    }
+    public static class HighCone {
+      public static double kArmAngle = 0;
+      public static double kWristAngle = 0;
+      public static double kIntakeSpeed = 0;
+    }
+    public static class IntakeGround {
+      public static double kArmAngle = 0;
+      public static double kWristAngle = 0;
+      public static double kIntakeSpeed = 0;
+    }
+    public static class IntakeSubstation {
+      public static double kArmAngle = 0;
+      public static double kWristAngle = 0;
+      public static double kIntakeSpeed = 0;
     }
   }
 }

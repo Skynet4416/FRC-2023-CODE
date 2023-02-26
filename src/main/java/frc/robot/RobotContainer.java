@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.commands.drive.Autos;
 import frc.robot.Constants.Drive;
 import frc.robot.commands.drive.DriveCommand;
+import frc.robot.commands.drive.Auto.AutoBalanceCommand;
 import frc.robot.commands.drive.Auto.TurnToAngle;
 import frc.robot.commands.drive.Auto.TurnToConstantAngle;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -20,11 +21,20 @@ import frc.robot.subsystems.Arm.PIDArmSubsystem;
 import frc.robot.subsystems.Arm.StateSpacedArmSubsystem;
 import frc.robot.Constants.Arm.Physical;
 import frc.robot.Constants.Arm.PoistionPID.PID;
+import frc.robot.Constants.CommandGroups.HighCone;
+import frc.robot.Constants.CommandGroups.HighCube;
+import frc.robot.Constants.CommandGroups.IntakeGround;
+import frc.robot.Constants.CommandGroups.IntakeSubstation;
+import frc.robot.Constants.CommandGroups.LowCube;
+import frc.robot.Constants.CommandGroups.MidCone;
+import frc.robot.Constants.CommandGroups.MidCube;
 import frc.robot.Constants.Drive.PIDAngular;
 import frc.robot.commands.Arm.MovePrecentageCommand;
+import frc.robot.commands.Arm.PIDCommands.ArmInstantCommand;
 import frc.robot.commands.Arm.PIDCommands.ArmKeepAtConstantAngle;
 import frc.robot.commands.Arm.PIDCommands.ArmToConstantAngleCommand;
 import frc.robot.commands.Arm.StateSpaceCommands.ArmToConstantHeightCommand;
+import frc.robot.commands.Intake.EjectCommand;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Wrist.WristKeepAngleCommand;
 import frc.robot.commands.Wrist.WristSetAngleCommand;
@@ -51,6 +61,7 @@ public class RobotContainer {
   private final WristSubsystem m_WristSubsystem = new WristSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final PIDArmSubsystem m_PidArmSubsystem = new PIDArmSubsystem();
+  
   // // Replace with CommandPS4Controller or CommandJoystick if needed
 
   // private final StateSpacedArmSubsystem m_stateSpaceArmSubsystem = new StateSpacedArmSubsystem();
@@ -96,27 +107,13 @@ public class RobotContainer {
     // OI.A.onTrue(new WristSetAngleCommand(m_WristSubsystem, 0));
     // OI.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30.0));
     OI.X.onTrue(new InstantCommand(() -> m_PidArmSubsystem.setAngleInDegrees(SmartDashboard.getNumber("Wanted Arm setpoint", 0))));
-    OI.B.onTrue(new InstantCommand(() ->m_PidArmSubsystem.lockArm()));
-    OI.Y.onTrue(new InstantCommand(() ->m_PidArmSubsystem.unlockArm()));
-
-
-
-    
-    // OI.B.whileTrue(new IntakeCommand(m_intakeSubsystem, 0.5));
-    // OI.A.whileTrue(new MovePrecentageCommand(m_PidArmSubsystem, -0.1));
-    // OI.X.whileTrue(new MovePrecentageCommand(m_PidArmSubsystem, 0.1));
-
-    // OI.A.whileTrue(new IntakeCommand(m_intakeSubsystem, 1));
-    // m_stateSpaceArmSubsystem.setDefaultCommand(
-    //     new frc.robot.commands.Arm.StateSpaceCommands.KeepArmAtStateCommand(m_stateSpaceArmSubsystem));
-    // OI.DPadDOWN
-    //     .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kGroundGridHeight));
-    // OI.DPadLEFT
-    //     .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeMidGridHeight));
-    // OI.DpadRIGHT
-    //     .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kConeMidGridHeight));
-    // OI.DPadUP
-    //     .onTrue(new ArmToConstantHeightCommand(m_stateSpaceArmSubsystem, Physical.kCubeHighGridHeight));
+    OI.DPadDOWN.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, LowCube.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, LowCube.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, LowCube.kIntakeSpeed)));
+    OI.DPadLEFT.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, MidCube.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, MidCube.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, MidCube.kIntakeSpeed)));
+    OI.DpadRIGHT.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, MidCone.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, MidCone.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, MidCone.kIntakeSpeed)));
+    OI.DPadDOWN.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, HighCube.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, HighCube.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, HighCube.kIntakeSpeed)));
+    OI.A.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, IntakeGround.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, IntakeGround.kWristAngle))).andThen(new IntakeCommand(m_intakeSubsystem, IntakeGround.kIntakeSpeed)));
+    OI.Y.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, IntakeSubstation.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, IntakeSubstation.kWristAngle))).andThen(new IntakeCommand(m_intakeSubsystem, IntakeSubstation.kIntakeSpeed)));
+    OI.B.onTrue(new AutoBalanceCommand(m_driveSubsystem));
   }
 
   /**
