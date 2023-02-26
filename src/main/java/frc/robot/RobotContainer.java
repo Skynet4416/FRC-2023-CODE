@@ -40,6 +40,7 @@ import frc.robot.commands.Wrist.WristKeepAngleCommand;
 import frc.robot.commands.Wrist.WristSetAngleCommand;
 import frc.robot.subsystems.Drive.DriveSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
+import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Wrist.WristSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -61,7 +62,8 @@ public class RobotContainer {
   private final WristSubsystem m_WristSubsystem = new WristSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final PIDArmSubsystem m_PidArmSubsystem = new PIDArmSubsystem();
-  
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+  private final Command m_wrestingCommand = (new ArmToConstantAngleCommand(m_PidArmSubsystem, Physical.kArmRestingAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, frc.robot.Constants.Wrist.Physical.kWristRestingAngle)));
   // // Replace with CommandPS4Controller or CommandJoystick if needed
 
   // private final StateSpacedArmSubsystem m_stateSpaceArmSubsystem = new StateSpacedArmSubsystem();
@@ -106,14 +108,22 @@ public class RobotContainer {
     m_PidArmSubsystem.setDefaultCommand(new ArmKeepAtConstantAngle(m_PidArmSubsystem));
     // OI.A.onTrue(new WristSetAngleCommand(m_WristSubsystem, 0));
     // OI.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30.0));
-    OI.X.onTrue(new InstantCommand(() -> m_PidArmSubsystem.setAngleInDegrees(SmartDashboard.getNumber("Wanted Arm setpoint", 0))));
-    OI.DPadDOWN.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, LowCube.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, LowCube.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, LowCube.kIntakeSpeed)));
-    OI.DPadLEFT.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, MidCube.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, MidCube.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, MidCube.kIntakeSpeed)));
-    OI.DpadRIGHT.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, MidCone.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, MidCone.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, MidCone.kIntakeSpeed)));
-    OI.DPadDOWN.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, HighCube.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, HighCube.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, HighCube.kIntakeSpeed)));
-    OI.A.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, IntakeGround.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, IntakeGround.kWristAngle))).andThen(new IntakeCommand(m_intakeSubsystem, IntakeGround.kIntakeSpeed)));
-    OI.Y.onTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, IntakeSubstation.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, IntakeSubstation.kWristAngle))).andThen(new IntakeCommand(m_intakeSubsystem, IntakeSubstation.kIntakeSpeed)));
+    // OI.X.onTrue(new InstantCommand(() -> m_PidArmSubsystem.setAngleInDegrees(SmartDashboard.getNumber("Wanted Arm setpoint", 0))));
+    OI.DPadDOWN.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, LowCube.kArmAngle).alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem)).alongWith(new WristSetAngleCommand(m_WristSubsystem, LowCube.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, LowCube.kIntakeSpeed)));
+    OI.DPadDOWN.onFalse(m_wrestingCommand);
+    OI.DPadUP.onFalse(m_wrestingCommand);
+    OI.DPadLEFT.onFalse(m_wrestingCommand);
+    OI.DpadRIGHT.onFalse(m_wrestingCommand);
+    OI.A.onFalse(m_wrestingCommand);
+    OI.Y.onFalse(m_wrestingCommand);
+    OI.DPadLEFT.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, MidCube.kArmAngle).alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem)).alongWith(new WristSetAngleCommand(m_WristSubsystem, MidCube.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, MidCube.kIntakeSpeed)));
+    OI.DpadRIGHT.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, MidCone.kArmAngle).alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem)).alongWith(new WristSetAngleCommand(m_WristSubsystem, MidCone.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, MidCone.kIntakeSpeed)));
+    OI.DPadDOWN.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, HighCube.kArmAngle).alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem)).alongWith(new WristSetAngleCommand(m_WristSubsystem, HighCube.kWristAngle))).andThen(new EjectCommand(m_intakeSubsystem, HighCube.kIntakeSpeed)));
+    OI.A.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, IntakeGround.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, IntakeGround.kWristAngle))).andThen(new IntakeCommand(m_intakeSubsystem, IntakeGround.kIntakeSpeed)));
+    OI.Y.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, IntakeSubstation.kArmAngle).alongWith(new WristSetAngleCommand(m_WristSubsystem, IntakeSubstation.kWristAngle))).andThen(new IntakeCommand(m_intakeSubsystem, IntakeSubstation.kIntakeSpeed)));
     OI.B.onTrue(new AutoBalanceCommand(m_driveSubsystem));
+    // OI.A.onTrue(new InstantCommand(()->m_PidArmSubsystem.setPrecentage(0.3)));
+    // OI.A.onFalse(new InstantCommand(()->m_PidArmSubsystem.setPrecentage(0)));
   }
 
   /**

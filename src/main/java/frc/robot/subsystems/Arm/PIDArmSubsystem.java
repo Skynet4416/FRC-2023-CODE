@@ -40,6 +40,6 @@ public class PIDArmSubsystem extends ArmSubsystem {
     }
 
     public double calculateVoltage() {
-        return MathUtil.clamp(pidController.calculate(getArmAngleInDegrees()), -3.75, 3.75);
+        return pidController.calculate(getArmAngleInDegrees());
     }
 }

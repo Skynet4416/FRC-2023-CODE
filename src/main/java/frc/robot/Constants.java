@@ -385,6 +385,7 @@ public class Constants {
       public static final double kMaxVelcoityRadiansPerSecond = 0.0;
       public static final double kMaxAccelerationRadiansPerSecondSquered = 0.0;
       public static final double kErrorTolarance = 1;
+      public static final double kWristRestingAngle = 0;
 
     }
 
@@ -427,7 +428,8 @@ public class Constants {
 
     public static class PoistionPID {
       public static final class PID {
-        public static final double kP = 0.05;
+        // public static final double kP = 0.05;
+        public static final double kP = 0.0;
         public static final double kI = 0;
         public static final double kD = 0;
       }
@@ -451,7 +453,6 @@ public class Constants {
       public static double kArmMaxVelocityRadiansPerSecond = Units.degreesToRadians(110);
       public static double kArmMaxAccelerationRadiansPerSecondSquered = Units.degreesToRadians(20);
       public static final double kArmLength = 1;
-      // TODO: Measure the actual value (THIS IS NOT CORRECT)
       public static final double kFloorHeightInMeters = 2.0;
       public static final double kMiddleHeightInMeters = 5.0;
       public static final double kTopHeightInMeters = 8.0;
@@ -467,6 +468,7 @@ public class Constants {
       public static final double kConeMidGridHeight = 0.6;
       public static final double kCubeHighGridHeight = 1.2;
       public static final double kConeHighGridHeight = 0;
+      public static final double kArmRestingAngle = -217;
     }
 
     public static class Encoders {
@@ -482,36 +484,43 @@ public class Constants {
       public static double kWristAngle = 0;
       public static double kIntakeSpeed = 0;
     }
+
     public static class MidCube {
       public static double kArmAngle = 0;
       public static double kWristAngle = 0;
       public static double kIntakeSpeed = 0;
     }
+
     public static class HighCube {
       public static double kArmAngle = 0;
       public static double kWristAngle = 0;
       public static double kIntakeSpeed = 0;
     }
+
     public static class LowCone {
       public static double kArmAngle = 0;
       public static double kWristAngle = 0;
       public static double kIntakeSpeed = 0;
     }
+
     public static class MidCone {
       public static double kArmAngle = 0;
       public static double kWristAngle = 0;
       public static double kIntakeSpeed = 0;
     }
+
     public static class HighCone {
       public static double kArmAngle = 0;
       public static double kWristAngle = 0;
       public static double kIntakeSpeed = 0;
     }
+
     public static class IntakeGround {
       public static double kArmAngle = 0;
       public static double kWristAngle = 0;
       public static double kIntakeSpeed = 0;
     }
+
     public static class IntakeSubstation {
       public static double kArmAngle = 0;
       public static double kWristAngle = 0;
