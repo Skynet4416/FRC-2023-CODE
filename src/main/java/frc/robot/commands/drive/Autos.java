@@ -9,6 +9,8 @@ import frc.robot.subsystems.Drive.DriveSubsystem;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -27,9 +29,7 @@ public final class Autos {
         driveSubsystem::setVoltage, driveSubsystem);
   }
 
-  public static CommandBase testPathPlanerCommand(DriveSubsystem driveSubsystem) {
-    
-  }
+
 
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");

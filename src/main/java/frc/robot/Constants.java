@@ -427,15 +427,15 @@ public class Constants {
 
     public static class PoistionPID {
       public static final class PID {
-        public static final double kP = 0.15;
+        public static final double kP = 0.05;
         public static final double kI = 0;
         public static final double kD = 0;
       }
 
       public static final class ArbitraryFeedForward {
-        public static final double kG = 0;
-        public static final double kS = 0;
-        public static final double kV = 0;
+        public static final double kG = 0.99;
+        public static final double kS = 1.32;
+        public static final double kV = 0.09;
         public static final double kA = 0;
 
       }
@@ -471,7 +471,7 @@ public class Constants {
 
     public static class Encoders {
       public static final int kCANCoderID = 18;
-      public static final double kCANCoderZeroAngle = 203.5546875;
+      public static final double kCANCoderZeroAngle = 276.15;
       public static final double kTimeDelayOfSensor = 0.025;
     }
   }

@@ -20,7 +20,7 @@ public class ArmKeepAtConstantAngle extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-
+        m_pidArmSubsystem.unlockArm();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -33,6 +33,7 @@ public class ArmKeepAtConstantAngle extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         m_pidArmSubsystem.setVoltage(0);
+        m_pidArmSubsystem.lockArm();
     }
 
     // Returns true when the command should end.
