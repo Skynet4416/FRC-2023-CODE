@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.0,
-        "y": 3.0
+        "x": 1.841264879110955,
+        "y": 2.763438689270541
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
-        "y": 3.0
+        "x": 1.0379363427624595,
+        "y": 2.763438689270541
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -16,32 +16,36 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "names": [
+          "PutCone"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "deadline",
+        "waitTime": 2.0
       }
     },
     {
       "anchorPoint": {
-        "x": 3.0,
-        "y": 5.0
+        "x": 5.822118003388027,
+        "y": 3.2720920948336816
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 6.420351302241066,
+        "y": 3.2087862466323225
       },
       "nextControl": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 4.993069503648766,
+        "y": 3.359823116454648
       },
       "holonomicAngle": 0,
-      "isReversal": true,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "SubStationAutoBalance"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -49,12 +53,12 @@
     },
     {
       "anchorPoint": {
-        "x": 6.3975129659661025,
-        "y": 3.094594565257507
+        "x": 4.0722753555934785,
+        "y": 3.2720920948336816
       },
       "prevControl": {
-        "x": 5.906488736054396,
-        "y": 4.6590206000924885
+        "x": 5.031485479141929,
+        "y": 3.2720920948336816
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -63,15 +67,14 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "AutoBalance"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "maxVelocity": null,
-  "maxAcceleration": 4.0,
-  "isReversed": null,
   "markers": []
 }
