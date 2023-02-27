@@ -32,7 +32,7 @@ public class KeepArmAtStateCommand extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_stateSpaceArmSubsystem.setVoltage(0);
+        m_stateSpaceArmSubsystem.setPrecentage(0);
     }
 
     // Returns true when the command should end.

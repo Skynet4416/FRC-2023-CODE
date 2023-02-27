@@ -3,6 +3,7 @@ package frc.robot.commands.drive.Auto;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.Drive.ChargeStationPID;
@@ -29,6 +30,9 @@ public class AutoBalanceCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        pidController.setD(SmartDashboard.getNumber("ChargeStation d", 0));
+        pidController.setP(SmartDashboard.getNumber("ChargeStation p", 0));
+        pidController.setI(SmartDashboard.getNumber("ChargeStation i", 0));
 
         double chargeStationAngle = drive.getChargeStationAngle();
 
@@ -76,6 +80,6 @@ public class AutoBalanceCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return Math.abs(drive.getPitch().getDegrees())<ChargeStationPID.kThreashold;
     }
 }

@@ -312,30 +312,32 @@ public class Constants {
     }
 
     public static class PID {
-      public static final double kP = 1.4856;
+      public static final double kP = 1.2857;
       public static final double kI = 0;
       public static final double kD = 0;
-      public static final double kSVolts = 0.21021;
-      public static final double kVVoltSecondsPerMeter = 2.2942;
-      public static final double kAVoltSecondsSquaredPerMeter = 0.30007;
+      public static final double kSVolts = 0.20489;
+      public static final double kVVoltSecondsPerMeter = 2.2815;
+      public static final double kAVoltSecondsSquaredPerMeter =0.27212;
     }
 
     public static class PIDAngular {
-      public static final double kP = 6.0737E-09;
+      public static final double kP = 7.1005E-17;
       public static final double kI = 0;
       public static final double kD = 0;
-      public static final double kSVolts = 0.47102;
-      public static final double kvVoltSecondsPerRadian = 2.2717;
-      public static final double kaVoltSecondsSquaredPerRadian = 0.38669;
+      public static final double kSVolts = 0.38699;
+      public static final double kvVoltSecondsPerRadian = 2.3397;
+      public static final double kaVoltSecondsSquaredPerRadian = 0.3072;
       public static final double kAngleThreashold = 1;
 
     }
 
     public static class ChargeStationPID {
       public static final boolean kWantedLimits = false;
-      public static final double kP = 0;
+      public static final double kP = 2;
       public static final double kI = 0;
       public static final double kD = 0;
+      public static double kThreashold = 0.02;
+
 
     }
 
@@ -430,15 +432,15 @@ public class Constants {
     public static class PoistionPID {
       public static final class PID {
         // public static final double kP = 0.05;
-        public static final double kP = 0.0;
+        public static final double kP = 0.15;
         public static final double kI = 0;
         public static final double kD = 0;
       }
 
       public static final class ArbitraryFeedForward {
-        public static final double kG = 0.99;
-        public static final double kS = 1.32;
-        public static final double kV = 0.09;
+        public static final double kG = -1.03;
+        public static final double kS = 0;
+        public static final double kV = 0;
         public static final double kA = 0;
 
       }
@@ -446,7 +448,7 @@ public class Constants {
 
     public static class Physical {
       public static double kHeightThreasholdInMeters = 0.01;
-      public static double kArmAngleThreasholdInDegrees = 1;
+      public static double kArmAngleThreasholdInDegrees = 6;
 
       public static double kArmMininunAngleInRadians = Units.degreesToRadians(80);
       public static double kArmMaximumAngleInRadians = Units.degreesToRadians(180);
@@ -469,7 +471,7 @@ public class Constants {
       public static final double kConeMidGridHeight = 0.6;
       public static final double kCubeHighGridHeight = 1.2;
       public static final double kConeHighGridHeight = 0;
-      public static final double kArmRestingAngle = -217;
+      public static final double kArmRestingAngle = -207.15585937499998;
     }
 
     public static class Encoders {
@@ -481,51 +483,55 @@ public class Constants {
 
   public static class CommandGroups {
     public static class LowCube {
-      public static double kArmAngle = 0;
-      public static double kWristAngle = 0;
-      public static double kIntakeSpeed = 0;
+      public static double kArmAngle = 67.06289062500002;
+      public static double kWristAngle = -63.19;
+      public static double kIntakeSpeed = 0.1;
     }
 
     public static class MidCube {
-      public static double kArmAngle = 0;
-      public static double kWristAngle = 0;
-      public static double kIntakeSpeed = 0;
+      public static double kArmAngle = -24.43;
+      public static double kWristAngle = 52.4;
+      public static double kIntakeSpeed = 0.1;
     }
 
     public static class HighCube {
       public static double kArmAngle = 0;
       public static double kWristAngle = 0;
       public static double kIntakeSpeed = 0;
+
     }
 
     public static class LowCone {
-      public static double kArmAngle = 0;
-      public static double kWristAngle = 0;
-      public static double kIntakeSpeed = 0;
+      public static double kArmAngle = 67.06289062500002;
+      public static double kWristAngle = -63.19;
+      public static double kIntakeSpeed = 0.1;
     }
 
     public static class MidCone {
-      public static double kArmAngle = 0;
-      public static double kWristAngle = 0;
-      public static double kIntakeSpeed = 0;
+      public static double kArmAngle = -27.507421874999977;
+      public static double kWristAngle = 15.4;
+      public static double kIntakeSpeed = 0.1;
+      public static double kArmAngle2 = -27.507421874999977;
+      public static double kWristAngle2 = 41.2;
+      public static double kIntakeSpeed2 = 0.1;
     }
 
     public static class HighCone {
       public static double kArmAngle = 0;
       public static double kWristAngle = 0;
-      public static double kIntakeSpeed = 0;
+      public static double kIntakeSpeed = 0.1;
     }
 
     public static class IntakeGround {
-      public static double kArmAngle = 0;
-      public static double kWristAngle = 0;
-      public static double kIntakeSpeed = 0;
+      public static double kArmAngle = 67.06289062500002;
+      public static double kWristAngle = -63.19;
+      public static double kIntakeSpeed = 0.1;
     }
 
     public static class IntakeSubstation {
-      public static double kArmAngle = 0;
-      public static double kWristAngle = 0;
-      public static double kIntakeSpeed = 0;
+      public static double kArmAngle = -38.31796874999998;
+      public static double kWristAngle = 10.8;
+      public static double kIntakeSpeed = 0.2;
     }
   }
 }

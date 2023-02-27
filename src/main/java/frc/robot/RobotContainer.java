@@ -29,6 +29,7 @@ import frc.robot.Constants.CommandGroups.IntakeSubstation;
 import frc.robot.Constants.CommandGroups.LowCube;
 import frc.robot.Constants.CommandGroups.MidCone;
 import frc.robot.Constants.CommandGroups.MidCube;
+import frc.robot.Constants.Drive.ChargeStationPID;
 import frc.robot.Constants.Drive.PIDAngular;
 import frc.robot.commands.Arm.MovePrecentageCommand;
 import frc.robot.commands.Arm.PIDCommands.ArmInstantCommand;
@@ -135,6 +136,11 @@ public class RobotContainer {
     SmartDashboard.putNumber("Wanted Arm setpoint", 0);
     SmartDashboard.putNumber("Arm I", PID.kI);
     SmartDashboard.putNumber("Arm D", PID.kD);
+    SmartDashboard.putNumber("Extra Volt", 0);
+    SmartDashboard.putNumber("ChargeStation d", ChargeStationPID.kD);
+    SmartDashboard.putNumber("ChargeStation p", ChargeStationPID.kP);
+    SmartDashboard.putNumber("ChargeStation i", ChargeStationPID.kI);
+
   }
 
   private void configureBindings() {
@@ -145,26 +151,31 @@ public class RobotContainer {
     m_PidArmSubsystem.setDefaultCommand(new ArmKeepAtConstantAngle(m_PidArmSubsystem));
     // OI.A.onTrue(new WristSetAngleCommand(m_WristSubsystem, 0));
     // OI.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30.0));
-    // OI.X.onTrue(new InstantCommand(() ->
-    // m_PidArmSubsystem.setAngleInDegrees(SmartDashboard.getNumber("Wanted Arm
-    // setpoint", 0))));
+    // OI.X.onTrue(new InstantCommand(
+    //     () -> m_PidArmSubsystem.setAngleInDegrees(SmartDashboard.getNumber("Wanted Arm setpoint", 0))));
     OI.DPadDOWN.whileTrue(m_PutConeOrCubeLow);
-    OI.DPadDOWN.onFalse(m_wrestingCommand);
-    OI.DPadUP.onFalse(m_wrestingCommand);
-    OI.DPadLEFT.onFalse(m_wrestingCommand);
-    OI.DpadRIGHT.onFalse(m_wrestingCommand);
-    OI.A.onFalse(m_wrestingCommand);
-    OI.Y.onFalse(m_wrestingCommand);
+    // OI.DPadDOWN.onFalse(m_wrestingCommand);
+    // OI.DPadUP.onFalse(m_wrestingCommand);
+    // OI.DPadLEFT.onFalse(m_wrestingCommand);
+    // OI.DpadRIGHT.onFalse(m_wrestingCommand);
+    // OI.A.onFalse(m_wrestingCommand);
+    // OI.Y.onFalse(m_wrestingCommand);
     OI.DPadLEFT.whileTrue(m_putCubeMid);
     OI.DpadRIGHT.whileTrue(m_putConeMid);
     OI.DPadUP.whileTrue(m_putCubeHigh);
-    OI.A.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, IntakeGround.kArmAngle)
-        .alongWith(new WristSetAngleCommand(m_WristSubsystem, IntakeGround.kWristAngle)))
-        .andThen(new IntakeCommand(m_intakeSubsystem, IntakeGround.kIntakeSpeed)));
-    OI.Y.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem, IntakeSubstation.kArmAngle)
-        .alongWith(new WristSetAngleCommand(m_WristSubsystem, IntakeSubstation.kWristAngle)))
-        .andThen(new IntakeCommand(m_intakeSubsystem, IntakeSubstation.kIntakeSpeed)));
+    OI.A.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem,
+    IntakeGround.kArmAngle)
+    .alongWith(new WristSetAngleCommand(m_WristSubsystem,
+    IntakeGround.kWristAngle)))
+    .andThen(new IntakeCommand(m_intakeSubsystem, IntakeGround.kIntakeSpeed)));
+    OI.Y.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem,
+    IntakeSubstation.kArmAngle)
+    .alongWith(new WristSetAngleCommand(m_WristSubsystem,
+    IntakeSubstation.kWristAngle)))
+    .andThen(new IntakeCommand(m_intakeSubsystem,
+    IntakeSubstation.kIntakeSpeed))); 
     OI.B.onTrue(m_autoBalacne);
+    OI.X.onTrue(new InstantCommand(()->m_PidArmSubsystem.unlockArm()));
     // OI.A.onTrue(new InstantCommand(()->m_PidArmSubsystem.setPrecentage(0.3)));
     // OI.A.onFalse(new InstantCommand(()->m_PidArmSubsystem.setPrecentage(0)));
   }
@@ -179,8 +190,9 @@ public class RobotContainer {
     // An example command will be run in autonomous
 
     // Run path following command, then stop at the end.
-    return m_autos.getMainAutoCommand();
-    }
+    // return 
+    return null;
+  }
 
   public void enableBreak() {
     m_driveSubsystem.setIdleMode(IdleMode.kBrake);

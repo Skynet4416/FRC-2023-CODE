@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance.NetworkMode;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,17 +22,17 @@ import frc.robot.Constants.Arm.Motors;
 import frc.robot.Constants.Arm.Physical;
 
 public abstract class ArmSubsystem extends SubsystemBase {
-    protected CANSparkMax m_armSparkMax = new CANSparkMax(Motors.kArmCANID, MotorType.kBrushless);
+    protected WPI_TalonFX m_armSparkMax = new WPI_TalonFX(Motors.kArmCANID);
     protected CANCoder m_CANCoder = new CANCoder(Encoders.kCANCoderID);
     private double m_lastRotationalVelocity = 0;
     private double m_lastTimeStamp = Timer.getFPGATimestamp();
 
     public ArmSubsystem() {
-        m_armSparkMax.restoreFactoryDefaults();
+        m_armSparkMax.configFactoryDefault();
         m_CANCoder.configFactoryDefault();
-        m_armSparkMax.setIdleMode(IdleMode.kBrake);
-        m_armSparkMax.enableVoltageCompensation(12);
-        m_armSparkMax.setSmartCurrentLimit(30);
+        m_armSparkMax.setNeutralMode(NeutralMode.Brake);
+        // m_armSparkMax.enableVoltageCompensation(true);
+        m_armSparkMax.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 30, Units.millisecondsToSeconds(150)));
     }
 
     public double unitsToDegrees(double units) {
@@ -64,7 +65,7 @@ public abstract class ArmSubsystem extends SubsystemBase {
 
     public double getArmAngleInDegrees() // 0 angle = parallel to the ground forward
     {
-        return getAbsuloteAngleInDegrees() - Encoders.kCANCoderZeroAngle;
+        return getAbsuloteAngleInDegrees()- Encoders.kCANCoderZeroAngle;
     }
 
     public double getArmHeightInMeters() {
@@ -106,12 +107,12 @@ public abstract class ArmSubsystem extends SubsystemBase {
     }
 
     public void lockArm() {
-        m_armSparkMax.setIdleMode(IdleMode.kBrake);
+        m_armSparkMax.setNeutralMode(NeutralMode.Brake);
         System.out.println("Arm Locked");
     }
 
     public void unlockArm() {
-        m_armSparkMax.setIdleMode(IdleMode.kCoast);
+        m_armSparkMax.setNeutralMode(NeutralMode.Coast);
         System.out.println("Arm Unlocked");
 
     }

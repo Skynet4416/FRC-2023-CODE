@@ -42,6 +42,6 @@ public class ArmToConstantAngleCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(m_wantedAngle - m_PidArmSubsystem.getArmAngleInDegrees()) < Physical.kHeightThreasholdInMeters;
+        return Math.abs(m_wantedAngle - m_PidArmSubsystem.getArmAngleInDegrees()) < Physical.kArmAngleThreasholdInDegrees;
     }
 }

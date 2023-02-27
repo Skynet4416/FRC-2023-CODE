@@ -311,7 +311,7 @@ public class DriveSubsystem extends SubsystemBase {
                         m_rightControllerGroup.get() * RobotController.getBatteryVoltage() });
         SmartDashboard.putNumberArray("left Side", new Double[] { getLeftDistance(), getLeftVelocity() });
         SmartDashboard.putNumberArray("right Side", new Double[] { getRightDistance(), getRightVelocity() });
-
+        SmartDashboard.putNumber("Charge Station Angle", getChargeStationAngle());
         SmartDashboard.putNumber("left forward Distance", m_leftForwardRelativeEncoder.getPosition());
         SmartDashboard.putNumber("left forward Velocity", m_leftForwardRelativeEncoder.getVelocity());
         SmartDashboard.putNumber("right forward Distance", m_rightForwardRelativeEncoder.getPosition());
@@ -321,6 +321,8 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("right backword Distance", m_rightBackwardRelativeEncoder.getPosition());
         SmartDashboard.putNumber("right backword Velocity", m_rightBackwardRelativeEncoder.getVelocity());
         SmartDashboard.putNumber("Drive Heading", getHeading().getDegrees());
+        SmartDashboard.putNumber("Drive Pitch", getPitch().getDegrees());
+
         m_angleProfiledPIDController.setP(SmartDashboard.getNumber("Drive Angular kp", PIDAngular.kP));
     }
 
