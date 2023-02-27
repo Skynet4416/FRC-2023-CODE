@@ -1,12 +1,16 @@
 package frc.robot.subsystems.Drive;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.BaseAutoBuilder;
+import com.pathplanner.lib.auto.RamseteAutoBuilder;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPRamseteCommand;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -397,27 +401,11 @@ public class DriveSubsystem extends SubsystemBase {
         m_simAngle.set(getHeading().getDegrees());
         m_differentialDrive.feed();
     }
-
-    public Command getFollowCommand(PathPlannerTrajectory traj) {
-        return new SequentialCommandGroup(
-
-                new PPRamseteCommand(
-                        traj,
-                        this::getPosition, // Pose supplier
-                        this.getRamseteController(),
-                        this.getFeedForward(),
-                        this.getDifferentialDriveKinematics(), // DifferentialDriveKinematics
-                        this::getWheelSpeeds, // DifferentialDriveWheelSpeeds supplier
-                        this.getLeftPIDController(), // Left controller. Tune these values for your robot. Leaving them
-                                                     // 0
-                        // will only
-                        // use feedforwards.
-                        this.getRightPIDController(), // Right controller (usually the same values as left controller)
-                        this::setVoltage, // Voltage biconsumer
-                        true, // Should the path be automatically mirrored depending on alliance color.
-                              // Optional, defaults to true
-                        this // Requires this drive subsystem
-                ));
+    public void resetPosition(Pose2d pose)
+    {
+        m_lastPose = pose;
+        m_driveOdometry.resetPosition(getHeading(), getLeftDistance(), getRightDistance(), pose);
+        m_differentialDrivePoseEstimator.resetPosition(getAbsuloteHeading(), getLeftDistance(), getRightDistance(), pose);
     }
 
     public Rotation2d getPitch() {

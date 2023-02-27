@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.VecBuilder;
@@ -289,7 +290,7 @@ public class Constants {
     public static class Trajectory {
       public static final double kMaxVelocity = 4.0;
       public static final double kMaxAcceleration = 4.0;
-      public static final TrajectoryConfig kTrajectoryConfig = new TrajectoryConfig(kMaxVelocity, kMaxAcceleration);
+      public static final PathConstraints kTrajectoryConfig = new PathConstraints(kMaxVelocity, kMaxAcceleration);
     }
 
     public static class Motors {

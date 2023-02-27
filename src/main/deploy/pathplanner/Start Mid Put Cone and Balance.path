@@ -17,11 +17,11 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "Put Cone"
+          "Put Cone Mid"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "deadline",
-        "waitTime": 2.0
+        "waitTime": 4.0
       }
     },
     {
@@ -68,7 +68,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "AutoBalance"
+          "Auto Balance"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
