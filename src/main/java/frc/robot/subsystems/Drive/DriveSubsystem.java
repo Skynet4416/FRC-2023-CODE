@@ -297,11 +297,15 @@ public class DriveSubsystem extends SubsystemBase {
     public void periodic() {
         if (Drive.kKalmanPoseEstimation) {
             m_differentialDrivePoseEstimator.update(getHeading(), getLeftDistance(), getRightDistance());
-            addVisionMessurement(m_visionSubsystem.getEstimatedGlobalPose(m_lastPose));
+            if(m_visionSubsystem.hasTarget()){
+                addVisionMessurement(m_visionSubsystem.getEstimatedGlobalPose(m_lastPose));
+            }
             m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
         } else {
             m_driveOdometry.update(getHeading(), getLeftDistance(), getRightDistance());
-            addVisionMessurement(m_visionSubsystem.getEstimatedGlobalPose(m_lastPose));
+            if(m_visionSubsystem.hasTarget()){
+                addVisionMessurement(m_visionSubsystem.getEstimatedGlobalPose(m_lastPose));
+            }
             m_lastPose = m_driveOdometry.getPoseMeters();
         }
         m_field2d.setRobotPose(m_lastPose);

@@ -20,8 +20,8 @@ import frc.robot.Constants.Vision.AprilTag;
 import frc.robot.Constants.Vision.ReflectiveTape;
 
 public class VisionSubsystem extends SubsystemBase {
-    private final PhotonCamera m_aprilTagCamera;
-    private final PhotonCamera m_reflectiveTapeCamera;
+    private PhotonCamera m_aprilTagCamera;
+    private PhotonCamera m_reflectiveTapeCamera;
     private AprilTagFieldLayout m_fieldLayout = null;
     private final Transform3d m_CamPositionAtRobot = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
             new Rotation3d(0, 0, 0)); // Cam mounted facing forward, half a meter forward of center, half a meter up
@@ -31,24 +31,35 @@ public class VisionSubsystem extends SubsystemBase {
 
     public VisionSubsystem(boolean enable) {
         this.enable = enable;
-        if(!this.enable){
-            m_aprilTagCamera = new PhotonCamera(Camera)
+        if (this.enable) {
+            m_aprilTagCamera = new PhotonCamera(AprilTag.kCameraName);
+            m_reflectiveTapeCamera = new PhotonCamera(AprilTag.kCameraName);
+            try {
+                m_fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2022RapidReact.m_resourceFile);
+                m_photonPoseEstimator = new PhotonPoseEstimator(m_fieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
+                        m_aprilTagCamera, m_CamPositionAtRobot);
+            } catch (IOException exception) {
+                System.out.println(exception);
+            }
+
         }
-        try {
-            m_fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2022RapidReact.m_resourceFile);
-            m_photonPoseEstimator = new PhotonPoseEstimator(m_fieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
-                    m_aprilTagCamera, m_CamPositionAtRobot);
-        } catch (IOException exception) {
-            System.out.println(exception);
-        }
+
     }
 
     public boolean aprilTagHasTarget() {
-        return m_aprilTagCamera.getLatestResult().hasTargets();
+        if (enable) {
+            return m_aprilTagCamera.getLatestResult().hasTargets();
+
+        }
+        return false;
     }
 
     public boolean reflectiveHasTarget() {
-        return m_aprilTagCamera.getLatestResult().hasTargets();
+        if (enable) {
+            return m_reflectiveTapeCamera.getLatestResult().hasTargets();
+
+        }
+        return false;
     }
 
     public boolean hasTarget() {
@@ -81,8 +92,12 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-        m_photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return m_photonPoseEstimator.update();
+        if (enable) {
+            m_photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+            return m_photonPoseEstimator.update();
+        }
+        return null;
+        
     }
 
 }
