@@ -155,7 +155,7 @@ public class RobotContainer {
     // OI.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30.0));
     // OI.X.onTrue(new InstantCommand(
     //     () -> m_PidArmSubsystem.setAngleInDegrees(SmartDashboard.getNumber("Wanted Arm setpoint", 0))));
-    OI.DPadDOWN.whileTrue(m_PutConeOrCubeLow);
+    // OI.DPadDOWN.whileTrue(m_PutConeOrCubeLow);
     // OI.DPadDOWN.onFalse(m_wrestingCommand);
     // OI.DPadUP.onFalse(m_wrestingCommand);
     // OI.DPadLEFT.onFalse(m_wrestingCommand);
@@ -193,7 +193,7 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     // return 
-    return null;
+    return m_autos.getMainAutoCommand();
   }
 
   public void enableBreak() {

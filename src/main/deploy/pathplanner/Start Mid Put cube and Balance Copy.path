@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8206582490197787,
-        "y": 3.3391537253830568
+        "x": 1.7406100432742944,
+        "y": 2.6758971634919013
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0442522511293237,
-        "y": 3.384895557237619
+        "x": 2.9650587343920005,
+        "y": 2.6758971634919013
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "Put Cone Mid"
+          "Put Cube Mid"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "deadline",
@@ -26,16 +26,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8892709968016221,
-        "y": 3.3620246413103376
+        "x": 2.1751574458926375,
+        "y": 2.6758971634919013
       },
       "prevControl": {
-        "x": 2.3519479867180477,
-        "y": 3.3620246413103376
+        "x": 2.6378344358090633,
+        "y": 2.6758971634919013
       },
       "nextControl": {
-        "x": 2.3519479867180477,
-        "y": 3.3620246413103376
+        "x": 2.6378344358090633,
+        "y": 2.6758971634919013
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -105,6 +105,6 @@
   ],
   "maxVelocity": null,
   "maxAcceleration": null,
-  "isReversed": true,
+  "isReversed": false,
   "markers": []
 }
