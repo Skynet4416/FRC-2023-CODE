@@ -289,7 +289,7 @@ public class Constants {
 
     public static class Trajectory {
       public static final double kMaxVelocity = 4.0;
-      public static final double kMaxAcceleration = 3.0;
+      public static final double kMaxAcceleration = 2;
       public static final PathConstraints kTrajectoryConfig = new PathConstraints(kMaxVelocity, kMaxAcceleration);
     }
 
