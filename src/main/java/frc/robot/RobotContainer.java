@@ -81,6 +81,8 @@ public class RobotContainer {
   private final Command m_putConeMid = (new ArmToConstantAngleCommand(m_PidArmSubsystem, MidCone.kArmAngle)
       .alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem))
       .alongWith(new WristSetAngleCommand(m_WristSubsystem, MidCone.kWristAngle)))
+      .andThen((new ArmToConstantAngleCommand(m_PidArmSubsystem, MidCone.kArmAngle2)
+      .alongWith(new WristSetAngleCommand(m_WristSubsystem, MidCone.kWristAngle2))))
       .andThen(new EjectCommand(m_intakeSubsystem, MidCone.kIntakeSpeed));
   private final Command m_putCubeHigh = (new ArmToConstantAngleCommand(m_PidArmSubsystem, HighCube.kArmAngle)
       .alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem))
