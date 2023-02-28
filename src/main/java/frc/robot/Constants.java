@@ -285,11 +285,11 @@ public class Constants {
 
   public static class Drive {
     public static final DrivingState kDriveState = DrivingState.CURVATURE;
-    public static final boolean kKalmanPoseEstimation = true;
+    public static final boolean kKalmanPoseEstimation = false;
 
     public static class Trajectory {
       public static final double kMaxVelocity = 4.0;
-      public static final double kMaxAcceleration = 4.0;
+      public static final double kMaxAcceleration = 3.0;
       public static final PathConstraints kTrajectoryConfig = new PathConstraints(kMaxVelocity, kMaxAcceleration);
     }
 

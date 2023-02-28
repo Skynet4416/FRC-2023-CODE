@@ -61,11 +61,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(m_visionSubsystem);
   private final WristSubsystem m_WristSubsystem = new WristSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final PIDArmSubsystem m_PidArmSubsystem = new PIDArmSubsystem();
-  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
   private final Autos m_autos;
   private final Command m_wrestingCommand = (new ArmToConstantAngleCommand(m_PidArmSubsystem, Physical.kArmRestingAngle)
       .alongWith(new WristSetAngleCommand(m_WristSubsystem, frc.robot.Constants.Wrist.Physical.kWristRestingAngle)));
@@ -138,10 +138,11 @@ public class RobotContainer {
     SmartDashboard.putNumber("Wanted Arm setpoint", 0);
     SmartDashboard.putNumber("Arm I", PID.kI);
     SmartDashboard.putNumber("Arm D", PID.kD);
-    SmartDashboard.putNumber("Extra Volt", 0);
+    SmartDashboard.putNumber("Drive Angular kp", 0);
     SmartDashboard.putNumber("ChargeStation d", ChargeStationPID.kD);
     SmartDashboard.putNumber("ChargeStation p", ChargeStationPID.kP);
     SmartDashboard.putNumber("ChargeStation i", ChargeStationPID.kI);
+
 
   }
 
@@ -150,7 +151,7 @@ public class RobotContainer {
         OI.xboxController::getLeftY, OI.xboxController::getRightY));
     // OI.A.onTrue(new TurnToConstantAngle(m_driveSubsystem, 30));
     m_WristSubsystem.setDefaultCommand(new WristKeepAngleCommand(m_WristSubsystem));
-    m_PidArmSubsystem.setDefaultCommand(new ArmKeepAtConstantAngle(m_PidArmSubsystem));
+    // m_PidArmSubsystem.setDefaultCommand(new ArmKeepAtConstantAngle(m_PidArmSubsystem));
     // OI.A.onTrue(new WristSetAngleCommand(m_WristSubsystem, 0));
     // OI.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30.0));
     // OI.X.onTrue(new InstantCommand(
@@ -162,24 +163,24 @@ public class RobotContainer {
     // OI.DpadRIGHT.onFalse(m_wrestingCommand);
     // OI.A.onFalse(m_wrestingCommand);
     // OI.Y.onFalse(m_wrestingCommand);
-    OI.DPadLEFT.whileTrue(m_putCubeMid);
-    OI.DpadRIGHT.whileTrue(m_putConeMid);
-    OI.DPadUP.whileTrue(m_putCubeHigh);
-    OI.A.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem,
-    IntakeGround.kArmAngle)
-    .alongWith(new WristSetAngleCommand(m_WristSubsystem,
-    IntakeGround.kWristAngle)))
-    .andThen(new IntakeCommand(m_intakeSubsystem, IntakeGround.kIntakeSpeed)));
-    OI.Y.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem,
-    IntakeSubstation.kArmAngle)
-    .alongWith(new WristSetAngleCommand(m_WristSubsystem,
-    IntakeSubstation.kWristAngle)))
-    .andThen(new IntakeCommand(m_intakeSubsystem,
-    IntakeSubstation.kIntakeSpeed))); 
-    OI.B.onTrue(m_autoBalacne);
-    OI.X.onTrue(new InstantCommand(()->m_PidArmSubsystem.unlockArm()));
+    // OI.DPadLEFT.whileTrue(m_putCubeMid);
+    // OI.DpadRIGHT.whileTrue(m_putConeMid);
+    // OI.DPadUP.whileTrue(m_putCubeHigh);
+    // OI.A.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem,
+    // IntakeGround.kArmAngle)
+    // .alongWith(new WristSetAngleCommand(m_WristSubsystem,
+    // IntakeGround.kWristAngle)))
+    // .andThen(new IntakeCommand(m_intakeSubsystem, IntakeGround.kIntakeSpeed)));
+    // OI.Y.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem,
+    // IntakeSubstation.kArmAngle)
+    // .alongWith(new WristSetAngleCommand(m_WristSubsystem,
+    // IntakeSubstation.kWristAngle)))
+    // .andThen(new IntakeCommand(m_intakeSubsystem,
+    // IntakeSubstation.kIntakeSpeed))); 
+    // OI.B.onTrue(m_autoBalacne);
+    OI.X.onTrue(new TurnToConstantAngle(m_driveSubsystem, 10));
     // OI.A.onTrue(new InstantCommand(()->m_PidArmSubsystem.setPrecentage(0.3)));
-    // OI.A.onFalse(new InstantCommand(()->m_PidArmSubsystem.setPrecentage(0)));
+    // OI.A.onFalse(new InstantCommand(()->m_PidArmS+ubsystem.setPrecentage(0)));
   }
 
   /**

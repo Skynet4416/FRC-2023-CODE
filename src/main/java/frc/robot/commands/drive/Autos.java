@@ -42,7 +42,7 @@ public final class Autos {
   }
 
   public Command getFollowCommand(PathPlannerTrajectory traj) {
-    return autoBuilder.followPathWithEvents(traj);
+    return autoBuilder.fullAuto(traj);
   }
 
   public Autos(Subsystem[] subsystems, HashMap<String, Command> eMap) {

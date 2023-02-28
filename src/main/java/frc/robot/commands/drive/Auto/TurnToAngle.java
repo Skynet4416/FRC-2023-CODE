@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.RobotContainer;
@@ -39,8 +40,9 @@ public class TurnToAngle extends CommandBase {
     }
     @Override
     public void execute(){
-        double voltage = m_PID.calculate(m_driveSubsystem.getHeading().getRadians());
-        m_driveSubsystem.setArcadeDrive(0, voltage/RobotController.getBatteryVoltage());
+        double precentage = m_PID.calculate(m_driveSubsystem.getHeading().getRadians());
+        SmartDashboard.putNumber("Drive Angular Precentage" , precentage);
+        m_driveSubsystem.setArcadeDrive(0, precentage);
     }
     @Override
     public boolean isFinished()

@@ -89,7 +89,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // The left-side drive encoder
     private final Encoder m_leftCheatingEncoder;
-    private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+    private final VisionSubsystem m_visionSubsystem;
     private final PIDController m_angleProfiledPIDController = new PIDController(PIDAngular.kP,
             PIDAngular.kI, PIDAngular.kD);
     // The right-side drive encoder
@@ -111,10 +111,11 @@ public class DriveSubsystem extends SubsystemBase {
     private final PIDController m_chargeStationPIDController = new PIDController(ChargeStationPID.kP,
             ChargeStationPID.kI, ChargeStationPID.kD);
 
-    public DriveSubsystem() throws IOException {
+    public DriveSubsystem(VisionSubsystem visionSubsystem) throws IOException {
+        m_visionSubsystem=  visionSubsystem;
         restoreFactoryDefaults();
         setIdleMode(IdleMode.kCoast); // being able to move the robot
-
+        
         m_rightControllerGroup.setInverted(true);
         //
         m_leftBackwardSparkMax.enableVoltageCompensation(12);
@@ -130,6 +131,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightForwardRelativeEncoder = m_rightForwardSparkMax.getEncoder();
         m_leftBackwardRelativeEncoder = m_leftBackwardSparkMax.getEncoder();
         m_rightBackwardRelativeEncoder = m_rightBackwardSparkMax.getEncoder();
+        m_angleProfiledPIDController.enableContinuousInput(-Math.PI, Math.PI);
         if (RobotBase.isSimulation()) {
 
             m_rightCheatingEncoder = new Encoder(
@@ -295,9 +297,11 @@ public class DriveSubsystem extends SubsystemBase {
     public void periodic() {
         if (Drive.kKalmanPoseEstimation) {
             m_differentialDrivePoseEstimator.update(getHeading(), getLeftDistance(), getRightDistance());
+            addVisionMessurement(m_visionSubsystem.getEstimatedGlobalPose(m_lastPose));
             m_lastPose = m_differentialDrivePoseEstimator.getEstimatedPosition();
         } else {
             m_driveOdometry.update(getHeading(), getLeftDistance(), getRightDistance());
+            addVisionMessurement(m_visionSubsystem.getEstimatedGlobalPose(m_lastPose));
             m_lastPose = m_driveOdometry.getPoseMeters();
         }
         m_field2d.setRobotPose(m_lastPose);
@@ -376,6 +380,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void resetGyro() {
         m_navx.reset();
+        m_simAngle.set(0);
     }
 
     public void reset() {
@@ -405,9 +410,14 @@ public class DriveSubsystem extends SubsystemBase {
     }
     public void resetPosition(Pose2d pose)
     {
+        resetGyro();
+
         m_lastPose = pose;
         m_driveOdometry.resetPosition(getHeading(), getLeftDistance(), getRightDistance(), pose);
+        m_differentialDrive.feed();
         m_differentialDrivePoseEstimator.resetPosition(getAbsuloteHeading(), getLeftDistance(), getRightDistance(), pose);
+        m_differentialDrive.feed();
+
     }
 
     public Rotation2d getPitch() {

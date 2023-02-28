@@ -37,9 +37,9 @@ public class TurnToConstantAngle extends CommandBase {
 
     @Override
     public void execute() {
-        double voltage = m_PID.calculate(m_driveSubsystem.getHeading().getRadians());
-        SmartDashboard.putNumber("Drive Angular Voltage" , voltage);
-        m_driveSubsystem.setArcadeDrive(0, voltage/RobotController.getBatteryVoltage());;
+        double precentage = m_PID.calculate(m_driveSubsystem.getHeading().getRadians());
+        SmartDashboard.putNumber("Drive Angular Precentage" , precentage);
+        m_driveSubsystem.setArcadeDrive(0, precentage);
     }
 
     @Override

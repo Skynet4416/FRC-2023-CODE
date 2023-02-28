@@ -37,6 +37,7 @@ public class PIDArmSubsystem extends ArmSubsystem {
 
     @Override
     public void setAngleInDegrees(double degrees) {
+        System.out.println("Arm Set To " + degrees);
         pidController.setSetpoint(degrees);
     }
 
