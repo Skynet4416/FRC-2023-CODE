@@ -20,6 +20,7 @@ public class PIDArmSubsystem extends ArmSubsystem {
         SmartDashboard.putNumber("Arm P", PID.kP);
         pidController.disableContinuousInput();
         pidController.setSetpoint(getArmAngleInDegrees());
+        
 
     }
 
@@ -46,7 +47,8 @@ public class PIDArmSubsystem extends ArmSubsystem {
         // if(Math.abs(pidController.getPositionError()) < 5 && getArmAngleInDegrees() > -70){
         //     extravolt = SmartDashboard.getNumber("Extra Volt", -1);
         // }
-        return pidController.calculate(getArmAngleInDegrees());
+        double calc = pidController.calculate(getArmAngleInDegrees());
+        return Math.max(Math.abs(calc),4) * Math.signum(calc);
     }
     public double calculatePrecentage() {
         return calculateVoltage()/12;
