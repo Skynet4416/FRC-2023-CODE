@@ -33,7 +33,7 @@ public final class Autos {
 
   public Command getMainAutoCommand()
   {
-    return getAutoFromPathName("Start Mid Put Cone and Balance");
+    return getAutoFromPathName("Start Mid Put Cube and Balance");
   }
 
   public Command getAutoFromPathName(String name) {
