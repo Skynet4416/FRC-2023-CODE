@@ -259,7 +259,7 @@ public class DriveSubsystem extends SubsystemBase {
         leftVoltage = MathUtil.clamp(leftVoltage, -12, 12) / RobotController.getBatteryVoltage();
         rightVoltage = MathUtil.clamp(rightVoltage, -12, 12) / RobotController.getBatteryVoltage();
         m_differentialDrive.tankDrive(leftVoltage, rightVoltage);
-        System.out.println("Voltage set to: " + leftVoltage + ", " + rightVoltage);
+        // System.out.println("Voltage set to: " + leftVoltage + ", " + rightVoltage);
 
     }
 
