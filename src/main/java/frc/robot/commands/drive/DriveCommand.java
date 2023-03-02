@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drive.DriveSubsystem;
+import frc.robot.subsystems.Vision.VisionSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class DriveCommand extends CommandBase {
@@ -18,14 +19,16 @@ public class DriveCommand extends CommandBase {
   private final DoubleSupplier m_left;
   private final DoubleSupplier m_right;
   private final DrivingState m_state;
+  private final VisionSubsystem m_VisionSubsystem;
 
-  public DriveCommand(DriveSubsystem m_system, DrivingState m_state, DoubleSupplier m_left, DoubleSupplier m_right) {
+  public DriveCommand(DriveSubsystem m_system, DrivingState m_state, DoubleSupplier m_left, DoubleSupplier m_right,VisionSubsystem visionSubsystem) {
     this.m_system = m_system;
     this.m_state = m_state;
     this.m_left = m_left;
     this.m_right = m_right;
+    this.m_VisionSubsystem = visionSubsystem;
 
-    addRequirements(m_system);
+    addRequirements(m_system,visionSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -51,7 +54,7 @@ public class DriveCommand extends CommandBase {
 
       case CURVATURE:
         m_system.setCurvatureDrive(correctJoystickDrift(-m_left.getAsDouble()),
-            correctJoystickDrift(-m_right.getAsDouble()), true);
+            correctJoystickDrift(m_right.getAsDouble())/2, true);
 
       default:
         // INSERT ERROR

@@ -15,15 +15,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Vision.AprilTag;
 import frc.robot.Constants.Vision.ReflectiveTape;
 
 public class VisionSubsystem extends SubsystemBase {
     private PhotonCamera m_aprilTagCamera;
-    private PhotonCamera m_reflectiveTapeCamera;
+    // private PhotonCamera m_reflectiveTapeCamera;
     private AprilTagFieldLayout m_fieldLayout = null;
-    private final Transform3d m_CamPositionAtRobot = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
+    private final Transform3d m_CamPositionAtRobot = new Transform3d(new Translation3d(Units.inchesToMeters(12), 0.0, Units.inchesToMeters(18.5)),
             new Rotation3d(0, 0, 0)); // Cam mounted facing forward, half a meter forward of center, half a meter up
                                       // from center.
     private PhotonPoseEstimator m_photonPoseEstimator = null;
@@ -33,7 +34,7 @@ public class VisionSubsystem extends SubsystemBase {
         this.enable = enable;
         if (this.enable) {
             m_aprilTagCamera = new PhotonCamera(AprilTag.kCameraName);
-            m_reflectiveTapeCamera = new PhotonCamera(AprilTag.kCameraName);
+            // m_reflectiveTapeCamera = new PhotonCamera(AprilTag.kCameraName);
             try {
                 m_fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2022RapidReact.m_resourceFile);
                 m_photonPoseEstimator = new PhotonPoseEstimator(m_fieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
@@ -54,24 +55,24 @@ public class VisionSubsystem extends SubsystemBase {
         return false;
     }
 
-    public boolean reflectiveHasTarget() {
-        if (enable) {
-            return m_reflectiveTapeCamera.getLatestResult().hasTargets();
+    // public boolean reflectiveHasTarget() {
+    //     if (enable) {
+    //         return m_reflectiveTapeCamera.getLatestResult().hasTargets();
 
-        }
-        return false;
-    }
+    //     }
+    //     return false;
+    // }
 
     public boolean hasTarget() {
-        return reflectiveHasTarget() || aprilTagHasTarget();
+        return aprilTagHasTarget();
     }
 
-    public PhotonTrackedTarget getReflectiveTarget() {
-        if (reflectiveHasTarget()) {
-            return m_reflectiveTapeCamera.getLatestResult().getBestTarget();
-        }
-        return null;
-    }
+    // public PhotonTrackedTarget getReflectiveTarget() {
+    //     if (reflectiveHasTarget()) {
+    //         return m_reflectiveTapeCamera.getLatestResult().getBestTarget();
+    //     }
+    //     return null;
+    // }
 
     public PhotonTrackedTarget getAprilTarget() {
         if (aprilTagHasTarget()) {
@@ -82,9 +83,9 @@ public class VisionSubsystem extends SubsystemBase {
 
     public PhotonTrackedTarget getVisionTarget() {
 
-        if (reflectiveHasTarget()) {
-            return getReflectiveTarget();
-        } else if (aprilTagHasTarget()) {
+        // if (reflectiveHasTarget()) {
+        //     return getReflectiveTarget();
+        if (aprilTagHasTarget()) {
             return getAprilTarget();
         }
         return null;

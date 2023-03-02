@@ -5,6 +5,7 @@
 package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Globals;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 
 public class IntakeCommand extends CommandBase {
@@ -21,6 +22,13 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.setPercentage(this.Percentage);
+    if(Percentage > 0 )
+    {
+      Globals.hasGamePice = true;
+    }
+    else{
+      Globals.hasGamePice = false;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

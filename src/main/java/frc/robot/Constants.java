@@ -269,7 +269,7 @@ public class Constants {
     public static final int kLeftJoystickControllerPort = 1;
     public static final int kRightJoystickControllerPort = 2;
     public static final int kXboxControllerPort = 0;
-    public static final double kXboxcontrollerDrift = 0.1;
+    public static final double kXboxcontrollerDrift = 0.05;
   }
 
   public static class Vision {
@@ -285,7 +285,7 @@ public class Constants {
 
   public static class Drive {
     public static final DrivingState kDriveState = DrivingState.CURVATURE;
-    public static final boolean kKalmanPoseEstimation = false;
+    public static final boolean kKalmanPoseEstimation = true;
 
     public static class Trajectory {
       public static final double kMaxVelocity = 4.0;
@@ -388,7 +388,7 @@ public class Constants {
       public static final double kMaxVelcoityRadiansPerSecond = 0.0;
       public static final double kMaxAccelerationRadiansPerSecondSquered = 0.0;
       public static final double kErrorTolarance = 1;
-      public static final double kWristRestingAngle = 0;
+      public static final double kWristRestingAngle = 120;
 
     }
 
@@ -409,7 +409,7 @@ public class Constants {
 
     public static class Encoders {
       public static final int kWristCANCoderCANID = 19;
-      public static final double kCANCoderZeroAbsAngle = 148.0078125;
+      public static final double kCANCoderZeroAbsAngle = 217;
     }
 
   }
@@ -483,14 +483,14 @@ public class Constants {
 
   public static class CommandGroups {
     public static class LowCube {
-      public static double kArmAngle = 67.06289062500002;
-      public static double kWristAngle = -63.19;
+      public static double kArmAngle = 57;
+      public static double kWristAngle = -20;
       public static double kIntakeSpeed = 0.1;
     }
 
     public static class MidCube {
-      public static double kArmAngle = -24.43;
-      public static double kWristAngle = 52.4;
+      public static double kArmAngle = -42;
+      public static double kWristAngle = 60;
       public static double kIntakeSpeed = 0.1;
     }
 
@@ -502,17 +502,17 @@ public class Constants {
     }
 
     public static class LowCone {
-      public static double kArmAngle = 67.06289062500002;
-      public static double kWristAngle = -63.19;
+      public static double kArmAngle = 57;
+      public static double kWristAngle = -20;
       public static double kIntakeSpeed = 0.1;
     }
 
     public static class MidCone {
-      public static double kArmAngle = -27.507421874999977;
-      public static double kWristAngle = 15.4;
+      public static double kArmAngle = -33.39;
+      public static double kWristAngle = 15.4-3;
       public static double kIntakeSpeed = 0.1;
-      public static double kArmAngle2 = -27.507421874999977;
-      public static double kWristAngle2 = 41.2;
+      public static double kArmAngle2 = -33.39;
+      public static double kWristAngle2 = 41.2-3;
       public static double kIntakeSpeed2 = 0.1;
     }
 
@@ -523,14 +523,14 @@ public class Constants {
     }
 
     public static class IntakeGround {
-      public static double kArmAngle = 67.06289062500002;
-      public static double kWristAngle = -63.19;
-      public static double kIntakeSpeed = 0.1;
+      public static double kArmAngle = -11;
+      public static double kWristAngle = -20;
+      public static double kIntakeSpeed = 0.2;
     }
 
     public static class IntakeSubstation {
       public static double kArmAngle = -38.31796874999998;
-      public static double kWristAngle = 10.8;
+      public static double kWristAngle = 10.8-3;
       public static double kIntakeSpeed = 0.2;
     }
   }

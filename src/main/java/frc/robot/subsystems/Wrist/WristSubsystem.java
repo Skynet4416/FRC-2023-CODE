@@ -29,8 +29,9 @@ public class WristSubsystem extends SubsystemBase {
     private final PIDController m_PidController = new PIDController(PID.kP, PID.kI, PID.kD);
     private final ArmFeedforward armFeedforward = new ArmFeedforward(FeedForward.kS, FeedForward.kG, FeedForward.kV,
             FeedForward.kA);
-    private double m_lastRotationalVelocity=0;
+    private double m_lastRotationalVelocity = 0;
     private double m_lastTimeStamp = Timer.getFPGATimestamp();
+    private double m_setpoint;
 
     public WristSubsystem() {
 
@@ -42,7 +43,6 @@ public class WristSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Wrist P", PID.kP);
         m_wristSparkMax.setInverted(true);
         m_PidController.setSetpoint(getWristAngleInDegrees());
-        
 
     }
 
@@ -93,7 +93,7 @@ public class WristSubsystem extends SubsystemBase {
 
     public void setAngle(double angle) {
         m_PidController.setSetpoint(angle);
-        System.out.println("Wrist angle set to " + angle);
+        SmartDashboard.putNumber("Wrist Setpoint", angle);
     }
 
     @Override
@@ -102,7 +102,9 @@ public class WristSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Wrist Angle In Degrees", getWristAngleInDegrees());
         SmartDashboard.putNumber("Wrist Rotational Velocity In Degrees Per Second", getRoationalVelocity());
         SmartDashboard.putNumber("Wrist Rotational Velocity In Radians Per Second", getRotationalVelocityInRadians());
-        SmartDashboard.putNumber("Wrist Acceleration In Radians Per Second Squered", (getRotationalVelocityInRadians() - m_lastRotationalVelocity)/(Timer.getFPGATimestamp() - m_lastTimeStamp));
+        SmartDashboard.putNumber("Wrist Acceleration In Radians Per Second Squered",
+                (getRotationalVelocityInRadians() - m_lastRotationalVelocity)
+                        / (Timer.getFPGATimestamp() - m_lastTimeStamp));
         SmartDashboard.putNumber("Wirst Error", m_PidController.getPositionError());
         SmartDashboard.putNumber("Wrist Voltage", m_wristSparkMax.get() * RobotController.getBatteryVoltage());
         m_PidController.setP(SmartDashboard.getNumber("Wrist P", PID.kP));
