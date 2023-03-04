@@ -52,7 +52,7 @@ public final class Autos {
   private final WristSubsystem wristSubsystem;
 
   public Command getMainAutoCommand() {
-    return getAutoFromPathName("Start Cable Gurd Put Cube");
+    return getAutoFromPathName("Start Mid Put Cone and Balance");
   }
 
   public Command getAutoFromPathName(String name) {
@@ -75,12 +75,14 @@ public final class Autos {
         .andThen(((new ArmToConstantAngleCommand(pidArmSubsystem, Physical.kArmRestingAngle)
             .alongWith(
                 new WristSetAngleCommand(wristSubsystem, frc.robot.Constants.Wrist.Physical.kWristRestingAngle))))
-        .raceWith(new WaitCommand(2)))
-        .andThen(new DriveCommand(driveSubsystem, DrivingState.ARCADE, () -> 1, () -> 0, visionSubsystem)
-            .raceWith(new WaitCommand(1.2)))
-        .andThen(new DriveCommand(driveSubsystem, DrivingState.ARCADE, () -> -1, () -> 0, visionSubsystem)
-            .raceWith(new WaitCommand(0.5)));
+        .raceWith(new WaitCommand(2)));
+
+        // return (new DriveCommand(driveSubsystem, DrivingState.ARCADE, () -> 1, () -> 0, visionSubsystem)
+        //     .raceWith(new WaitCommand(1.2)))
+        // .andThen(new DriveCommand(driveSubsystem, DrivingState.ARCADE, () -> -1, () -> 0, visionSubsystem)
+        //     .raceWith(new WaitCommand(0.5)));
         // .andThen(new AutoBalanceCommand(driveSubsystem));
+        // return null;
   }
 
   public Autos(Subsystem[] subsystems, HashMap<String, Command> eMap) {
