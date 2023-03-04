@@ -48,6 +48,7 @@ import frc.robot.subsystems.Wrist.WristSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -70,7 +71,7 @@ public class RobotContainer {
   private final OI oi = new OI();
   private final Autos m_autos;
   private final Command m_wrestingCommand = (new ArmToConstantAngleCommand(m_PidArmSubsystem, Physical.kArmRestingAngle)
-      .alongWith(new WristSetAngleCommand(m_WristSubsystem, frc.robot.Constants.Wrist.Physical.kWristRestingAngle)));
+      .alongWith(new WaitCommand(1).andThen(new WristSetAngleCommand(m_WristSubsystem, frc.robot.Constants.Wrist.Physical.kWristRestingAngle))));
   private final HashMap<String, Command> commandHashMap = new HashMap<String, Command>();
   private final Command m_PutConeOrCubeLow = (new ArmToConstantAngleCommand(m_PidArmSubsystem, LowCube.kArmAngle)
       // .alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem))
@@ -212,8 +213,8 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     // return
-    // return m_autos.getMainAutoCommand();
-    return m_autos.getStupidAuto();
+    return m_autos.getMainAutoCommand();
+    // return m_autos.getStupidAuto();
     // return null;
 
   }

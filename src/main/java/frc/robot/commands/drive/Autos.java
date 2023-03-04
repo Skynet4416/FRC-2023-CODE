@@ -52,7 +52,7 @@ public final class Autos {
   private final WristSubsystem wristSubsystem;
 
   public Command getMainAutoCommand() {
-    return getAutoFromPathName("Start Cable Gurd Put Cube");
+    return getAutoFromPathName("Start Mid Put Cone and Balance");
   }
 
   public Command getAutoFromPathName(String name) {
@@ -66,14 +66,23 @@ public final class Autos {
     return autoBuilder.fullAuto(traj);
   }
 
-  public Command getStupidAuto(){
-    return ((new ArmToConstantAngleCommand(pidArmSubsystem, MidCube.kArmAngle)
-    // .alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem))
-    .alongWith(new WristSetAngleCommand(wristSubsystem, MidCube.kWristAngle)))
-    .andThen((new EjectCommand(intakeSubsystem, MidCube.kIntakeSpeed)).raceWith(new WaitCommand(2)))).raceWith(new WaitCommand(4))
-    .andThen((new ArmToConstantAngleCommand(pidArmSubsystem, Physical.kArmRestingAngle)
-        .alongWith(
-            new WristSetAngleCommand(wristSubsystem, frc.robot.Constants.Wrist.Physical.kWristRestingAngle)))).andThen(new DriveCommand(driveSubsystem, DrivingState.ARCADE, ()->1, ()->0, visionSubsystem).raceWith(new WaitCommand(2.5))).andThen(new DriveCommand(driveSubsystem, DrivingState.ARCADE, ()->-0.5, ()->0, visionSubsystem).raceWith(new WaitCommand(1))).andThen(new AutoBalanceCommand(driveSubsystem));
+  public Command getStupidAuto() {
+    return (((new ArmToConstantAngleCommand(pidArmSubsystem, MidCube.kArmAngle)
+        // .alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem))
+        .alongWith(new WristSetAngleCommand(wristSubsystem, MidCube.kWristAngle)))
+        .andThen((new EjectCommand(intakeSubsystem, MidCube.kIntakeSpeed)).raceWith(new WaitCommand(2))))
+        .raceWith(new WaitCommand(4)))
+        .andThen(((new ArmToConstantAngleCommand(pidArmSubsystem, Physical.kArmRestingAngle)
+            .alongWith(
+                new WristSetAngleCommand(wristSubsystem, frc.robot.Constants.Wrist.Physical.kWristRestingAngle))))
+        .raceWith(new WaitCommand(2)));
+
+        // return (new DriveCommand(driveSubsystem, DrivingState.ARCADE, () -> 1, () -> 0, visionSubsystem)
+        //     .raceWith(new WaitCommand(1.2)))
+        // .andThen(new DriveCommand(driveSubsystem, DrivingState.ARCADE, () -> -1, () -> 0, visionSubsystem)
+        //     .raceWith(new WaitCommand(0.5)));
+        // .andThen(new AutoBalanceCommand(driveSubsystem));
+        // return null;
   }
 
   public Autos(Subsystem[] subsystems, HashMap<String, Command> eMap) {
@@ -92,7 +101,7 @@ public final class Autos {
     Command m_putCubeMid = ((new ArmToConstantAngleCommand(pidArmSubsystem, MidCube.kArmAngle)
         // .alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem))
         .alongWith(new WristSetAngleCommand(wristSubsystem, MidCube.kWristAngle)))
-        .andThen(new EjectCommand(intakeSubsystem, MidCube.kIntakeSpeed)).deadlineWith(new WaitCommand(2)))
+        .andThen(new EjectCommand(intakeSubsystem, MidCube.kIntakeSpeed).deadlineWith(new WaitCommand(2))))
         .andThen((new ArmToConstantAngleCommand(pidArmSubsystem, Physical.kArmRestingAngle)
             .alongWith(
                 new WristSetAngleCommand(wristSubsystem, frc.robot.Constants.Wrist.Physical.kWristRestingAngle))));

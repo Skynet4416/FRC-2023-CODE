@@ -312,12 +312,12 @@ public class Constants {
     }
 
     public static class PID {
-      public static final double kP = 1.2857;
+      public static final double kP = 0.39496;
       public static final double kI = 0;
       public static final double kD = 0;
-      public static final double kSVolts = 0.20489;
-      public static final double kVVoltSecondsPerMeter = 2.2815;
-      public static final double kAVoltSecondsSquaredPerMeter =0.27212;
+      public static final double kSVolts = 0.14209;
+      public static final double kVVoltSecondsPerMeter = 2.2883;
+      public static final double kAVoltSecondsSquaredPerMeter =0.12526;
     }
 
     public static class PIDAngular {
@@ -484,7 +484,7 @@ public class Constants {
   public static class CommandGroups {
     public static class LowCube {
       public static double kArmAngle = 57;
-      public static double kWristAngle = -20;
+      public static double kWristAngle = -50;
       public static double kIntakeSpeed = 0.1;
     }
 
@@ -503,7 +503,7 @@ public class Constants {
 
     public static class LowCone {
       public static double kArmAngle = 57;
-      public static double kWristAngle = -20;
+      public static double kWristAngle = -50;
       public static double kIntakeSpeed = 0.1;
     }
 
@@ -523,8 +523,8 @@ public class Constants {
     }
 
     public static class IntakeGround {
-      public static double kArmAngle = -11;
-      public static double kWristAngle = -20;
+      public static double kArmAngle = 57;
+      public static double kWristAngle = -50;
       public static double kIntakeSpeed = 0.2;
     }
 

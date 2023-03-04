@@ -123,10 +123,10 @@ public class DriveSubsystem extends SubsystemBase {
         m_rightBackwardSparkMax.enableVoltageCompensation(12);
         m_rightForwardSparkMax.enableVoltageCompensation(12);
         //
-        m_leftBackwardSparkMax.setSmartCurrentLimit(30);
-        m_leftForwardSparkMax.setSmartCurrentLimit(30);
-        m_rightBackwardSparkMax.setSmartCurrentLimit(30);
-        m_rightForwardSparkMax.setSmartCurrentLimit(30);
+        m_leftBackwardSparkMax.setSmartCurrentLimit(40);
+        m_leftForwardSparkMax.setSmartCurrentLimit(40);
+        m_rightBackwardSparkMax.setSmartCurrentLimit(40);
+        m_rightForwardSparkMax.setSmartCurrentLimit(40);
         m_leftForwardRelativeEncoder = m_leftForwardSparkMax.getEncoder();
         m_rightForwardRelativeEncoder = m_rightForwardSparkMax.getEncoder();
         m_leftBackwardRelativeEncoder = m_leftBackwardSparkMax.getEncoder();
@@ -259,7 +259,7 @@ public class DriveSubsystem extends SubsystemBase {
         leftVoltage = MathUtil.clamp(leftVoltage, -12, 12) / RobotController.getBatteryVoltage();
         rightVoltage = MathUtil.clamp(rightVoltage, -12, 12) / RobotController.getBatteryVoltage();
         m_differentialDrive.tankDrive(leftVoltage, rightVoltage);
-        System.out.println("Voltage set to: " + leftVoltage + ", " + rightVoltage);
+        // System.out.println("Voltage set to: " + leftVoltage + ", " + rightVoltage);
 
     }
 

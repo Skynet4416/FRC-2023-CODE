@@ -27,7 +27,6 @@ public class ArmKeepAtConstantAngle extends CommandBase {
     public void execute() {
         double voltage = m_pidArmSubsystem.calculateVoltage();
         m_pidArmSubsystem.setVoltage(voltage);
-        System.out.println(voltage);
 
 
     }

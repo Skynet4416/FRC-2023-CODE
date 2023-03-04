@@ -35,7 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
    * 
    */
   public void setPercentage(double percent) {
-    System.out.println("Intake speed: " + percent + ".");
+    // System.out.println("Intake speed: " + percent + ".");
     m_leftIntakeSparkMax.set(percent);
   }
 
