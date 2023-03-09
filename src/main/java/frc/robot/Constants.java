@@ -534,4 +534,15 @@ public class Constants {
       public static double kIntakeSpeed = 0.2;
     }
   }
+  public static class Elevator{
+    public static class Motors{
+      public static final int kLeftSparkMaxCANID = 0;
+      public static final int kRightSparkMaxCANID = 0;
+    }
+    public static class LimitSwitch{
+      public static final int kClosedLimitSwitchPort = 0;
+      public static final int kOpendLimitSwitchPort = 0;
+
+    }
+  }
 }
