@@ -1,5 +1,8 @@
 package frc.robot.subsystems.Wrist;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -11,6 +14,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance.NetworkMode;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -24,7 +28,7 @@ import frc.robot.Constants.Wrist.PID;
 import frc.robot.Constants.Wrist.Physical;
 
 public class WristSubsystem extends SubsystemBase {
-    private final CANSparkMax m_wristSparkMax = new CANSparkMax(Motors.kWristSparkMaxCANID, MotorType.kBrushless);
+    private final WPI_TalonFX m_wristSparkMax = new WPI_TalonFX(Motors.kWristSparkMaxCANID);
     private final CANCoder m_CANCoder = new CANCoder(Encoders.kWristCANCoderCANID);
     private final PIDController m_PidController = new PIDController(PID.kP, PID.kI, PID.kD);
     private final ArmFeedforward armFeedforward = new ArmFeedforward(FeedForward.kS, FeedForward.kG, FeedForward.kV,
@@ -36,10 +40,9 @@ public class WristSubsystem extends SubsystemBase {
     public WristSubsystem() {
 
         m_CANCoder.configFactoryDefault(); // Is this the right thing to do? yes.
-        m_wristSparkMax.restoreFactoryDefaults();
-        m_wristSparkMax.setIdleMode(IdleMode.kBrake);
-        m_wristSparkMax.enableVoltageCompensation(12);
-        m_wristSparkMax.setSmartCurrentLimit(30);
+        m_wristSparkMax.configFactoryDefault();
+        m_wristSparkMax.setNeutralMode(NeutralMode.Brake);
+        m_wristSparkMax.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, Units.secondsToMilliseconds(1), 30));
         SmartDashboard.putNumber("Wrist P", PID.kP);
         m_wristSparkMax.setInverted(true);
         m_PidController.setSetpoint(getWristAngleInDegrees());
@@ -63,7 +66,7 @@ public class WristSubsystem extends SubsystemBase {
         return Units.degreesToRadians(getWristAngleInDegrees());
     }
 
-    public CANSparkMax getSpark() {
+    public WPI_TalonFX getSpark() {
         return m_wristSparkMax;
     }
 
