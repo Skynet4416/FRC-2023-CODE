@@ -42,7 +42,7 @@ public class WristSubsystem extends SubsystemBase {
         m_CANCoder.configFactoryDefault(); // Is this the right thing to do? yes.
         m_wristSparkMax.configFactoryDefault();
         m_wristSparkMax.setNeutralMode(NeutralMode.Brake);
-        m_wristSparkMax.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, Units.secondsToMilliseconds(1), 30));
+        m_wristSparkMax.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 0.5, 30));
         SmartDashboard.putNumber("Wrist P", PID.kP);
         m_wristSparkMax.setInverted(true);
         m_PidController.setSetpoint(getWristAngleInDegrees());
