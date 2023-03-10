@@ -23,5 +23,8 @@ public class OI {
         public  final POVButton DPadDOWN = new POVButton(xboxController, 180);
         public  final POVButton DpadRIGHT = new POVButton(xboxController,90);
         public  final POVButton DPadLEFT = new POVButton(xboxController, 270);
+        public final JoystickButton LeftBumper = new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value);
+        public final JoystickButton RightBumper = new JoystickButton(xboxController, XboxController.Button.kRightBumper.value);
+
 
 }

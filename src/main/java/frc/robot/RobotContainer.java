@@ -47,6 +47,8 @@ import frc.robot.commands.Wrist.WristSetAngleCommand;
 import frc.robot.subsystems.Drive.DriveSubsystem;
 import frc.robot.subsystems.Elevator.ElevatorSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
+import frc.robot.subsystems.LED.ColorEnum;
+import frc.robot.subsystems.LED.LEDSubsystem;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Wrist.WristSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -71,6 +73,7 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(m_visionSubsystem);
   private final WristSubsystem m_WristSubsystem = new WristSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
   // private final PIDArmSubsystem m_PidArmSubsystem = new PIDArmSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
   private final OI oi = new OI();
@@ -192,6 +195,9 @@ public class RobotContainer {
     oi.DPadLEFT.whileTrue(m_putCubeMid);
     oi.DpadRIGHT.whileTrue(m_putConeMid);
     oi.DPadUP.whileTrue(m_putCubeHigh);
+    oi.RightBumper.onTrue(new InstantCommand(() -> m_LEDSubsystem.setColor(ColorEnum.YELLOW)));
+    oi.RightBumper.onTrue(new InstantCommand(() -> m_LEDSubsystem.setColor(ColorEnum.PERPULE)));
+
     // oi.A.whileTrue(new
     // .alongWith(new WristSetAngleCommand(m_WristSubsystem,
     // IntakeGround.kWristAngle)))
