@@ -13,7 +13,7 @@ public class ElevatorCloseCommand extends CommandBase{
     @Override
     public void initialize()
     {
-        m_elevator.setPrecentage(-0.5);
+        m_elevator.setPrecentage(0.2);
     }
     @Override
     public boolean isFinished(){

@@ -374,20 +374,20 @@ public class Constants {
   public static class Intake {
     public static class Motors {
       public static final MotorType kMotorType = MotorType.kBrushless;
-      public static final int kLeftIntakeCANID = 11;
-      public static final int kRightIntakeCANID = 13;
+      public static final int kLeftIntakeCANID = 19;
+      public static final int kRightIntakeCANID = 18;
     }
   }
 
   public static class Wrist {
     public static class Motors {
-      public static final int kWristSparkMaxCANID = 12;
+      public static final int kWristSparkMaxCANID = 17;
     }
 
     public static class Physical {
       public static final double kMaxVelcoityRadiansPerSecond = 0.0;
       public static final double kMaxAccelerationRadiansPerSecondSquered = 0.0;
-      public static final double kErrorTolarance = 1;
+      public static final double kErrorTolarance = 5;
       public static final double kWristRestingAngle = 120;
 
     }
@@ -484,63 +484,52 @@ public class Constants {
   public static class CommandGroups {
     public static class LowCube {
       public static double kArmAngle = 57;
-      public static double kWristAngle = -50;
+      public static double kWristAngle = 130;
       public static double kIntakeSpeed = 0.1;
     }
 
     public static class MidCube {
       public static double kArmAngle = -42;
-      public static double kWristAngle = 60;
-      public static double kIntakeSpeed = 0.1;
+      public static double kWristAngle = 177.1;
+      public static double kIntakeSpeed = 0.25;
     }
 
     public static class HighCube {
       public static double kArmAngle = 0;
-      public static double kWristAngle = 0;
-      public static double kIntakeSpeed = 0;
+      public static double kWristAngle = 115;
+      public static double kIntakeSpeed = 1;
 
     }
 
     public static class LowCone {
       public static double kArmAngle = 57;
-      public static double kWristAngle = -50;
+      public static double kWristAngle = 130;
       public static double kIntakeSpeed = 0.1;
     }
 
     public static class MidCone {
       public static double kArmAngle = -33.39;
-      public static double kWristAngle = 15.4-3;
-      public static double kIntakeSpeed = 0.1;
-      public static double kArmAngle2 = -33.39;
-      public static double kWristAngle2 = 41.2-3;
-      public static double kIntakeSpeed2 = 0.1;
+      public static double kWristAngle = 130;
+      public static double kIntakeSpeed = 0.4;
     }
 
     public static class HighCone {
       public static double kArmAngle = 0;
-      public static double kWristAngle = 0;
-      public static double kIntakeSpeed = 0.1;
+      public static double kWristAngle = 110;
+      public static double kIntakeSpeed = 1;
     }
+    public static class MidPoint{
+      public static double kWristAngle = 90;
 
-    public static class IntakeGround {
-      public static double kArmAngle = 57;
-      public static double kWristAngle = -50;
-      public static double kIntakeSpeed = 0.2;
-    }
-
-    public static class IntakeSubstation {
-      public static double kArmAngle = -38.31796874999998;
-      public static double kWristAngle = 10.8-3;
-      public static double kIntakeSpeed = 0.2;
     }
   }
   public static class Elevator{
     public static class Motors{
-      public static final int kLeftSparkMaxCANID = 0;
-      public static final int kRightSparkMaxCANID = 0;
+      public static final int kLeftSparkMaxCANID = 13;
+      public static final int kRightSparkMaxCANID =12;
     }
     public static class LimitSwitch{
-      public static final int kClosedLimitSwitchPort = 0;
+      public static final int kClosedLimitSwitchPort = 1;
       public static final int kOpendLimitSwitchPort = 0;
 
     }

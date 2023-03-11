@@ -1,8 +1,6 @@
 package frc.robot.subsystems.LED;
 
-import java.io.Flushable;
 
-import org.apache.commons.io.filefilter.FalseFileFilter;
 
 public enum ColorEnum {
     //
@@ -17,7 +15,7 @@ public enum ColorEnum {
     YELLOW(true, true, false),
     CYAN(false, true, true);
 
-    private final boolean blue, green, red;
+    public final boolean blue, green, red;
 
     ColorEnum(boolean red, boolean green, boolean blue) {
         this.blue = blue;

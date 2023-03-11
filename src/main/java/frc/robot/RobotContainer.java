@@ -25,11 +25,11 @@ import frc.robot.Constants.Arm.Physical;
 import frc.robot.Constants.Arm.PoistionPID.PID;
 import frc.robot.Constants.CommandGroups.HighCone;
 import frc.robot.Constants.CommandGroups.HighCube;
-import frc.robot.Constants.CommandGroups.IntakeGround;
-import frc.robot.Constants.CommandGroups.IntakeSubstation;
+
 import frc.robot.Constants.CommandGroups.LowCube;
 import frc.robot.Constants.CommandGroups.MidCone;
 import frc.robot.Constants.CommandGroups.MidCube;
+import frc.robot.Constants.CommandGroups.MidPoint;
 import frc.robot.Constants.Drive.ChargeStationPID;
 import frc.robot.Constants.Drive.PIDAngular;
 import frc.robot.commands.Arm.MovePrecentageCommand;
@@ -42,14 +42,16 @@ import frc.robot.commands.Elevator.ElevatorOpenCommand;
 import frc.robot.commands.Intake.ConstantIntake;
 import frc.robot.commands.Intake.EjectCommand;
 import frc.robot.commands.Intake.IntakeCommand;
-import frc.robot.commands.Wrist.WristKeepAngleCommand;
-import frc.robot.commands.Wrist.WristSetAngleCommand;
+import frc.robot.commands.Wrist.WristKeepAngleNoCANCoderCommand;
+import frc.robot.commands.Wrist.WristKeepAngleNoCANCoderCommand;
+import frc.robot.commands.Wrist.WristSetAngleCommandNoCANCoder;
 import frc.robot.subsystems.Drive.DriveSubsystem;
 import frc.robot.subsystems.Elevator.ElevatorSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.LED.ColorEnum;
 import frc.robot.subsystems.LED.LEDSubsystem;
 import frc.robot.subsystems.Vision.VisionSubsystem;
+import frc.robot.subsystems.Wrist.WristNoCANCoder;
 import frc.robot.subsystems.Wrist.WristSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -71,44 +73,52 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem(false);
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(m_visionSubsystem);
-  private final WristSubsystem m_WristSubsystem = new WristSubsystem();
+  private final WristNoCANCoder m_WristSubsystem = new WristNoCANCoder();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
   // private final PIDArmSubsystem m_PidArmSubsystem = new PIDArmSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
   private final OI oi = new OI();
-  private final Autos m_autos;
-  private final Command m_wrestingCommand = (new ElevatorCloseCommand(m_elevatorSubsystem)
-      .alongWith(new WaitCommand(1)
-          .andThen(new WristSetAngleCommand(m_WristSubsystem, frc.robot.Constants.Wrist.Physical.kWristRestingAngle))));
+  // private final Autos m_autos;
+  private final Command m_wrestingCommand = ((new ElevatorCloseCommand(m_elevatorSubsystem)
+      .alongWith(new WristSetAngleCommandNoCANCoder(m_WristSubsystem, MidPoint.kWristAngle)))
+      .andThen(new WristSetAngleCommandNoCANCoder(m_WristSubsystem, 0)));
   private final HashMap<String, Command> commandHashMap = new HashMap<String, Command>();
   private final Command m_PutConeOrCubeLow = // (new ElevatorOpenCommand(m_PidArmSubsystem, LowCube.kArmAngle)
       // .alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem))
-      new WristSetAngleCommand(m_WristSubsystem, LowCube.kWristAngle)
-          .andThen(new EjectCommand(m_intakeSubsystem, MidCone.kIntakeSpeed)
-              .alongWith(new WristKeepAngleCommand(m_WristSubsystem)));
+      ((new WristSetAngleCommandNoCANCoder(m_WristSubsystem, MidPoint.kWristAngle)
+          .andThen(new ElevatorCloseCommand(m_elevatorSubsystem))
+          .andThen(new WristSetAngleCommandNoCANCoder(m_WristSubsystem, LowCube.kWristAngle)))
+          .raceWith(new IntakeCommand(m_intakeSubsystem, 0.1)))
+          .andThen(new WristKeepAngleNoCANCoderCommand(m_WristSubsystem)
+              .alongWith(new EjectCommand(m_intakeSubsystem, LowCube.kIntakeSpeed)));
   // .alongWith(new ArmKeepAtConstantAngle(m_PidArmSubsystem)));
   private final Command m_putCubeMid = // (new ArmToConstantAngleCommand(m_PidArmSubsystem, MidCube.kArmAngle)
       // .alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem))
-      new ElevatorOpenCommand(m_elevatorSubsystem)
-          .alongWith(new WristSetAngleCommand(m_WristSubsystem, MidCube.kWristAngle))
-          .andThen(new EjectCommand(m_intakeSubsystem, MidCone.kIntakeSpeed)
-              .alongWith(new WristKeepAngleCommand(m_WristSubsystem)));
+      ((new WristSetAngleCommandNoCANCoder(m_WristSubsystem, MidPoint.kWristAngle)
+          .andThen(new ElevatorCloseCommand(m_elevatorSubsystem))
+          .andThen(new WristSetAngleCommandNoCANCoder(m_WristSubsystem, MidCube.kWristAngle)))
+          .raceWith(new IntakeCommand(m_intakeSubsystem, 0.1)))
+          .andThen(new WristKeepAngleNoCANCoderCommand(m_WristSubsystem)
+              .alongWith(new EjectCommand(m_intakeSubsystem, MidCube.kIntakeSpeed)));
   // .alongWith(new ArmKeepAtConstantAngle(m_PidArmSubsystem)));
   private final Command m_putConeMid = // (new ArmToConstantAngleCommand(m_PidArmSubsystem, MidCone.kArmAngle)
       // .alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem))
-      (new ElevatorOpenCommand(m_elevatorSubsystem)
-          .alongWith(new WristSetAngleCommand(m_WristSubsystem, MidCone.kWristAngle)))
-          .andThen((new WristSetAngleCommand(m_WristSubsystem, MidCone.kWristAngle2))
-              .andThen(new EjectCommand(m_intakeSubsystem, MidCone.kIntakeSpeed)
-                  .alongWith(new WristKeepAngleCommand(m_WristSubsystem))));
+      ((new WristSetAngleCommandNoCANCoder(m_WristSubsystem, MidCone.kWristAngle)
+          .andThen(new ElevatorCloseCommand(m_elevatorSubsystem))
+          .andThen(new WristSetAngleCommandNoCANCoder(m_WristSubsystem, MidCone.kWristAngle)))
+          .raceWith(new IntakeCommand(m_intakeSubsystem, 0.1)))
+          .andThen(new WristKeepAngleNoCANCoderCommand(m_WristSubsystem)
+              .alongWith(new EjectCommand(m_intakeSubsystem, MidCone.kIntakeSpeed)));
   // .alongWith(new ArmKeepAtConstantAngle(m_PidArmSubsystem)));
   private final Command m_putCubeHigh = // (new ArmToConstantAngleCommand(m_PidArmSubsystem, HighCube.kArmAngle)
       // .alongWith(new TurnToAngle(m_driveSubsystem, m_visionSubsystem))
-      new ElevatorOpenCommand(m_elevatorSubsystem)
-          .alongWith(new WristSetAngleCommand(m_WristSubsystem, HighCube.kWristAngle))
-          .andThen(new EjectCommand(m_intakeSubsystem, MidCone.kIntakeSpeed)
-              .alongWith(new WristKeepAngleCommand(m_WristSubsystem)));
+      ((new WristSetAngleCommandNoCANCoder(m_WristSubsystem, HighCube.kWristAngle)
+          .andThen(new ElevatorCloseCommand(m_elevatorSubsystem))
+          .andThen(new WristSetAngleCommandNoCANCoder(m_WristSubsystem, HighCube.kWristAngle)))
+          .raceWith(new IntakeCommand(m_intakeSubsystem, 0.1)))
+          .andThen(new WristKeepAngleNoCANCoderCommand(m_WristSubsystem)
+              .alongWith(new EjectCommand(m_intakeSubsystem, HighCube.kIntakeSpeed)));
   private final Command m_autoBalacne = new AutoBalanceCommand(m_driveSubsystem);
 
   // // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -125,9 +135,10 @@ public class RobotContainer {
     configureSmartDashboard();
     LiveWindow.disableAllTelemetry();
     CreateHashMap();
-    m_autos = new Autos(
-        new Subsystem[] { m_driveSubsystem, m_WristSubsystem, m_visionSubsystem, m_intakeSubsystem },
-        commandHashMap);
+    // m_autos = new Autos(
+    // new Subsystem[] { m_driveSubsystem, m_WristSubsystem, m_visionSubsystem,
+    // m_intakeSubsystem },
+    // commandHashMap);
   }
 
   public void CreateHashMap() {
@@ -165,7 +176,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("ChargeStation d", ChargeStationPID.kD);
     SmartDashboard.putNumber("ChargeStation p", ChargeStationPID.kP);
     SmartDashboard.putNumber("ChargeStation i", ChargeStationPID.kI);
-
+    SmartDashboard.putNumber("wanted wrist", m_WristSubsystem.getWristAngleInDegrees());
   }
 
   private void configureBindings() {
@@ -173,14 +184,22 @@ public class RobotContainer {
         oi.rightJoystickController::getY, oi.leftJoystickController::getY, m_visionSubsystem));
     // oi.rightJoystickController::getX, oi.rightJoystickController::getX));
     // OI.A.onTrue(new TurnToConstantAngle(m_driveSubsystem, 30));
-    m_WristSubsystem.setDefaultCommand(new WristKeepAngleCommand(m_WristSubsystem));
-    // m_PidArmSubsystem.setDefaultCommand(new
-    // ArmKeepAtConstantAngle(m_PidArmSubsystem));
-    m_intakeSubsystem.setDefaultCommand(new ConstantIntake(m_intakeSubsystem));
-    // oi.B.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, -90));
-    // oi.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30));
+    m_WristSubsystem.setDefaultCommand(new WristKeepAngleNoCANCoderCommand(m_WristSubsystem));
+    // oi.A.whileTrue(new ElevatorOpenCommand(m_elevatorSubsystem));
+    // oi.B.whileTrue(new ElevatorCloseCommand(m_elevatorSubsystem));
 
-    // oi.A.onTrue(new WristSetAngleCommand(m_WristSubsystem, 90));
+    // // m_PidArmSubsystem.setDefaultCommand(new
+    // // ArmKeepAtConstantAngle(m_PidArmSubsystem));
+    // // m_intakeSubsystem.setDefaultCommand(new
+    // ConstantIntake(m_intakeSubsystem));
+    // // oi.B.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, -90));
+    // // oi.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30));
+    // oi.Y.whileTrue(new IntakeCommand(m_intakeSubsystem, 0.2));
+    // oi.X.whileTrue(new EjectCommand(m_intakeSubsystem, 0.2));
+    // oi.A.onTrue(new
+    // InstantCommand(()->m_WristSubsystem.setAngle(SmartDashboard.getNumber("wanted
+    // wrist", m_WristSubsystem.getWristAngleInDegrees()))));
+    // oi.A.onTrue(new WristSetAngleCommandNoCANCoder(m_WristSubsystem, 90));
     // OI.X.onTrue(new ArmToConstantAngleCommand(m_PidArmSubsystem, 30.0));
     // OI.X.onTrue(new InstantCommand(
     // () -> m_PidArmSubsystem.setAngleInDegrees(SmartDashboard.getNumber("Wanted
@@ -191,25 +210,27 @@ public class RobotContainer {
     oi.DPadLEFT.onFalse(m_wrestingCommand);
     oi.DpadRIGHT.onFalse(m_wrestingCommand);
     oi.A.onFalse(m_wrestingCommand);
-    oi.Y.onFalse(m_wrestingCommand);
+    // oi.Y.onFalse(m_wrestingCommand);
     oi.DPadLEFT.whileTrue(m_putCubeMid);
     oi.DpadRIGHT.whileTrue(m_putConeMid);
     oi.DPadUP.whileTrue(m_putCubeHigh);
-    oi.RightBumper.onTrue(new InstantCommand(() -> m_LEDSubsystem.setColor(ColorEnum.YELLOW)));
-    oi.RightBumper.onTrue(new InstantCommand(() -> m_LEDSubsystem.setColor(ColorEnum.PERPULE)));
-
+    oi.RightBumper.whileTrue(new InstantCommand(() -> m_LEDSubsystem.setColor(ColorEnum.YELLOW), m_LEDSubsystem));
+    oi.LeftBumper.whileTrue(new InstantCommand(() -> m_LEDSubsystem.setColor(ColorEnum.PERPULE), m_LEDSubsystem));
+    oi.A.whileTrue(new ElevatorCloseCommand(m_elevatorSubsystem).andThen(
+        new WristSetAngleCommandNoCANCoder(m_WristSubsystem, 130).andThen(new IntakeCommand(m_intakeSubsystem, 0.1)
+            .alongWith(new WristKeepAngleNoCANCoderCommand(m_WristSubsystem)))));
     // oi.A.whileTrue(new
-    // .alongWith(new WristSetAngleCommand(m_WristSubsystem,
+    // .alongWith(new WristSetAngleCommandNoCANCoder(m_WristSubsystem,
     // IntakeGround.kWristAngle)))
     // .andThen(new IntakeCommand(m_intakeSubsystem, IntakeGround.kIntakeSpeed)
-    // .alongWith(new WristKeepAngleCommand(m_WristSubsystem))
+    // .alongWith(new WristKeepAngleNoCANCoderCommand(m_WristSubsystem))
     // .alongWith(new ArmKeepAtConstantAngle(m_PidArmSubsystem))));
     // oi.Y.whileTrue((new ArmToConstantAngleCommand(m_PidArmSubsystem,
     // IntakeSubstation.kArmAngle)
-    // .alongWith(new WristSetAngleCommand(m_WristSubsystem,
+    // .alongWith(new WristSetAngleCommandNoCANCoder(m_WristSubsystem,
     // IntakeSubstation.kWristAngle)))
     // .andThen(new IntakeCommand(m_intakeSubsystem, IntakeSubstation.kIntakeSpeed)
-    // .alongWith(new WristKeepAngleCommand(m_WristSubsystem))
+    // .alongWith(new WristKeepAngleNoCANCoderCommand(m_WristSubsystem))
     // .alongWith(new ArmKeepAtConstantAngle(m_PidArmSubsystem))));
     oi.B.onTrue(m_autoBalacne);
 
@@ -226,9 +247,9 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     // return
-    return m_autos.getMainAutoCommand();
-    // return m_autos.getStupidAuto();
-    // return null;
+    // return m_autos.getMainAutoCommand();
+    // return m_autos.getStupidAuto();x
+    return null;
 
   }
 

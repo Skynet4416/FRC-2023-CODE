@@ -36,11 +36,17 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (getLimits()) {
-            m_leftElevatorCANSparMax.set(0);
-            m_rightElevatorCANSparMax.set(0);
-        }
+        // if (getLimits()) {
+        //     m_leftElevatorCANSparMax.set(0);
+        //     m_rightElevatorCANSparMax.set(0);
+        // }
         SmartDashboard.putNumber("Elevator Precentage", m_leftElevatorCANSparMax.get());
+        SmartDashboard.putBoolean("Elevator isClosed", isClosed());
+        SmartDashboard.putBoolean("Elevator isOpen", isOpened());
+        SmartDashboard.putBoolean("Elevator Close Limit Switch", m_closedLimitSwitch.get());
+        SmartDashboard.putBoolean("Elevator Open Limit Switch", m_openedLimitSwitch.get());
+        SmartDashboard.putBoolean("Elevator Stop", getLimits());
+
     }
 
     public boolean getLimits() {
