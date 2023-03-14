@@ -17,6 +17,16 @@ public class IntakeCommand extends CommandBase {
     this.Percentage = Percentage;
     addRequirements(subsystem);
   }
+  public IntakeSubsystem getIntake(){
+    return m_subsystem;
+  }
+  public double getPrecentage(){
+    return Percentage;
+  }
+  public IntakeCommand(IntakeCommand ejectCommand){
+    this(ejectCommand.getIntake(),ejectCommand.getPrecentage());
+  }
+
 
   // Called when the command is initially scheduled.
   @Override

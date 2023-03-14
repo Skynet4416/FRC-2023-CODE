@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.node.IntNode;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Globals;
-import frc.robot.Constants.CommandGroups.IntakeSubstation;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 
 public class ConstantIntake extends CommandBase{

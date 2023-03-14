@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Wrist;
 
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -15,6 +16,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance.NetworkMode;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -27,39 +29,40 @@ import frc.robot.Constants.Wrist.Motors;
 import frc.robot.Constants.Wrist.PID;
 import frc.robot.Constants.Wrist.Physical;
 
-public class WristSubsystem extends SubsystemBase {
+public class WristNoCANCoder extends SubsystemBase {
     private final WPI_TalonFX m_wristSparkMax = new WPI_TalonFX(Motors.kWristSparkMaxCANID);
-    private final CANCoder m_CANCoder = new CANCoder(Encoders.kWristCANCoderCANID);
+    // private final CANCoder m_CANCoder = new
+    // CANCoder(Encoders.kWristCANCoderCANID);
     private final PIDController m_PidController = new PIDController(PID.kP, PID.kI, PID.kD);
-    private final ArmFeedforward armFeedforward = new ArmFeedforward(FeedForward.kS, FeedForward.kG, FeedForward.kV,
-            FeedForward.kA);
+    // private final DigitalInput m_limitSwtich =  new DigitalInput(3);
     private double m_lastRotationalVelocity = 0;
     private double m_lastTimeStamp = Timer.getFPGATimestamp();
-    private double m_setpoint;
+    private double m_initPos = 0;
 
-    public WristSubsystem() {
+    public WristNoCANCoder() {
 
-        m_CANCoder.configFactoryDefault(); // Is this the right thing to do? yes.
+        // m_CANCoder.configFactoryDefault(); // Is this the right thing to do? yes.
         m_wristSparkMax.configFactoryDefault();
         m_wristSparkMax.setNeutralMode(NeutralMode.Brake);
         m_wristSparkMax.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20, 0.5, 30));
         SmartDashboard.putNumber("Wrist P", PID.kP);
-        m_wristSparkMax.setInverted(true);
+        // m_wristSparkMax.setSensorPhase(true);
+        // m_wristSparkMax.setInverted(true);
         m_PidController.setSetpoint(getWristAngleInDegrees());
-
+        
     }
 
-    public double getAbsuloteAngleInDegrees() {
-        return m_CANCoder.getAbsolutePosition();
-    }
+    // public double getAbsuloteAngleInDegrees() {
+    // return m_CANCoder.getAbsolutePosition();
+    // }
 
-    public double getAbsuloteAngleInRadianes() {
-        return Units.degreesToRadians(getAbsuloteAngleInDegrees());
-    }
-
+    // public double getAbsuloteAngleInRadianes() {
+    // return Units.degreesToRadians(getAbsuloteAngleInDegrees());
+    // }
     public double getWristAngleInDegrees() {
-        return getAbsuloteAngleInDegrees() - Encoders.kCANCoderZeroAbsAngle;
+       return -(m_wristSparkMax.getSelectedSensorPosition() * 0.0017578125)+m_initPos *1;
     }
+
 
     public double getWristAngleInRadians() {
 
@@ -70,12 +73,12 @@ public class WristSubsystem extends SubsystemBase {
         return m_wristSparkMax;
     }
 
-    public CANCoder getCANCoder() {
-        return m_CANCoder;
-    }
+    // public CANCoder getCANCoder() {
+    //     return m_CANCoder;
+    // }
 
     public double getRoationalVelocity() {
-        return m_CANCoder.getVelocity();
+        return m_wristSparkMax.getSelectedSensorVelocity() * 10 / (2048*100);
     }
 
     public double getRotationalVelocityInRadians() {
@@ -91,18 +94,27 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     public double calculate() {
-        return m_PidController.calculate(getWristAngleInDegrees());
+        double voltage = -m_PidController.calculate(getWristAngleInDegrees());
+        if (Math.abs(voltage)>6){
+            voltage = 6 * Math.signum(voltage);
+        }
+        return voltage;
     }
 
     public void setAngle(double angle) {
         m_PidController.setSetpoint(angle);
-        SmartDashboard.putNumber("Wrist Setpoint", angle);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Wrist Absolute Angle In Degrees", getAbsuloteAngleInDegrees());
+        // if(m_limitSwtich.get()){
+        //     m_wristSparkMax.setSelectedSensorPosition(0);
+        // }
+        // SmartDashboard.putNumber("Wrist Absolute Angle In Degrees", getAbsuloteAngleInDegrees());
         SmartDashboard.putNumber("Wrist Angle In Degrees", getWristAngleInDegrees());
+        SmartDashboard.putNumber("Wrist Rotations", m_wristSparkMax.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Wrist Setpoint", m_PidController.getSetpoint());
+
         SmartDashboard.putNumber("Wrist Rotational Velocity In Degrees Per Second", getRoationalVelocity());
         SmartDashboard.putNumber("Wrist Rotational Velocity In Radians Per Second", getRotationalVelocityInRadians());
         SmartDashboard.putNumber("Wrist Acceleration In Radians Per Second Squered",

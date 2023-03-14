@@ -16,6 +16,15 @@ public class EjectCommand extends CommandBase {
     this.Percentage = Percentage;
     addRequirements(subsystem);
   }
+  public IntakeSubsystem getIntake(){
+    return m_subsystem;
+  }
+  public double getPrecentage(){
+    return Percentage;
+  }
+  public EjectCommand(EjectCommand ejectCommand){
+    this(ejectCommand.getIntake(),ejectCommand.getPrecentage());
+  }
 
   // Called when the command is initially scheduled.
   @Override
