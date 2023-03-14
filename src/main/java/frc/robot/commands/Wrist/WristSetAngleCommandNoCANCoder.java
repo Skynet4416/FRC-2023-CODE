@@ -9,13 +9,21 @@ public class WristSetAngleCommandNoCANCoder extends CommandBase {
     private final WristNoCANCoder m_subsystem;
     private double angle;
 
-    public WristSetAngleCommandNoCANCoder(WristNoCANCoder subsystem, double angle) {
-        m_subsystem = subsystem;
+    public WristSetAngleCommandNoCANCoder(WristNoCANCoder wristSubsystem, double angle) {
+        m_subsystem = wristSubsystem;
         this.angle = angle;
 
-        addRequirements(subsystem);
+        addRequirements(wristSubsystem);
     }
-
+    public WristNoCANCoder getWrist(){
+        return m_subsystem;
+    }
+    public double getAngle(){
+        return angle;
+    }
+    public WristSetAngleCommandNoCANCoder(WristSetAngleCommandNoCANCoder wristSetAngleCommandNoCANCoder){
+        this(wristSetAngleCommandNoCANCoder.getWrist(), wristSetAngleCommandNoCANCoder.getAngle());
+    }
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
@@ -38,6 +46,6 @@ public class WristSetAngleCommandNoCANCoder extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(m_subsystem.getWristAngleInDegrees()-angle) < Physical.kErrorTolarance;
+        return Math.abs(m_subsystem.getWristAngleInDegrees() - angle) < Physical.kErrorTolarance;
     }
 }

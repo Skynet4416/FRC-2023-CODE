@@ -1,7 +1,6 @@
 package frc.robot.commands.Arm.PIDCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Arm.PIDArmSubsystem;
 
 public class ArmInstantCommand extends CommandBase{

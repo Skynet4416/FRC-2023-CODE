@@ -2,6 +2,7 @@ package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorSubsystem;
 
 public class ElevatorCloseCommand extends CommandBase{
@@ -10,10 +11,17 @@ public class ElevatorCloseCommand extends CommandBase{
         this.m_elevator = elevator;
         addRequirements(elevator);
     }
+    public ElevatorSubsystem getElevator(){
+        return m_elevator;
+    }
+    public ElevatorCloseCommand(ElevatorCloseCommand elevatorCloseCommand){
+        this(elevatorCloseCommand.getElevator());
+    }
+
     @Override
     public void initialize()
     {
-        m_elevator.setPrecentage(0.2);
+        m_elevator.setPrecentage(Elevator.kSpeed);
     }
     @Override
     public boolean isFinished(){

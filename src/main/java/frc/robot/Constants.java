@@ -269,7 +269,7 @@ public class Constants {
     public static final int kLeftJoystickControllerPort = 1;
     public static final int kRightJoystickControllerPort = 2;
     public static final int kXboxControllerPort = 0;
-    public static final double kXboxcontrollerDrift = 0.05;
+    public static final double kXboxcontrollerDrift = 0.1;
   }
 
   public static class Vision {
@@ -317,7 +317,7 @@ public class Constants {
       public static final double kD = 0;
       public static final double kSVolts = 0.14209;
       public static final double kVVoltSecondsPerMeter = 2.2883;
-      public static final double kAVoltSecondsSquaredPerMeter =0.12526;
+      public static final double kAVoltSecondsSquaredPerMeter = 0.12526;
     }
 
     public static class PIDAngular {
@@ -337,7 +337,6 @@ public class Constants {
       public static final double kI = 0;
       public static final double kD = 0;
       public static double kThreashold = 0.02;
-
 
     }
 
@@ -496,7 +495,7 @@ public class Constants {
 
     public static class HighCube {
       public static double kArmAngle = 0;
-      public static double kWristAngle = 115;
+      public static double kWristAngle = 110;
       public static double kIntakeSpeed = 1;
 
     }
@@ -509,8 +508,8 @@ public class Constants {
 
     public static class MidCone {
       public static double kArmAngle = -33.39;
-      public static double kWristAngle = 130;
-      public static double kIntakeSpeed = 0.4;
+      public static double kWristAngle = 110;
+      public static double kIntakeSpeed = 1;
     }
 
     public static class HighCone {
@@ -518,20 +517,57 @@ public class Constants {
       public static double kWristAngle = 110;
       public static double kIntakeSpeed = 1;
     }
-    public static class MidPoint{
-      public static double kWristAngle = 90;
 
+    public static class MidPoint {
+      public static double kWristAngle = 90;
+    }
+
+    public static class SingleSubstation {
+      public static double kIntakeSpeed = 0.5;
+      public static double kWristAngle = 115;
     }
   }
-  public static class Elevator{
-    public static class Motors{
+
+  public static class Elevator {
+    public static final double kSpeed = 0.5;
+    public static class Motors {
       public static final int kLeftSparkMaxCANID = 13;
-      public static final int kRightSparkMaxCANID =12;
+      public static final int kRightSparkMaxCANID = 12;
     }
-    public static class LimitSwitch{
+
+    public static class LimitSwitch {
       public static final int kClosedLimitSwitchPort = 1;
       public static final int kOpendLimitSwitchPort = 0;
 
+    }
+  }
+
+  public static class Auto {
+    public static class ChargingStation {
+      public static class Forward {
+        public static double kSpeed =-0.2;
+        public static double kTime = 5;
+      }
+
+      public static class Backwords {
+        public static double kSpeed = 0.2;
+        public static double kTime = 2.5;
+
+      }
+    }
+
+    public static class CableGaurd {
+      public static class Forward {
+        public static double kSpeed = -0.2;
+        public static double kTime = 5;
+      }
+    }
+
+    public static class Substation {
+      public static class Forward {
+        public static double kSpeed = -0.2;
+        public static double kTime = 5;
+      }
     }
   }
 }

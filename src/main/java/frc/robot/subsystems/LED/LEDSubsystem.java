@@ -12,6 +12,7 @@ public class LEDSubsystem extends SubsystemBase {
     private final Solenoid green = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
     private final Solenoid blue = new Solenoid(PneumaticsModuleType.CTREPCM, 2);
     private final Solenoid[] rgb = new Solenoid[] { red, green, blue };
+    
     public LEDSubsystem(){
         // setColor(ColorEnum.BLUE);
     }

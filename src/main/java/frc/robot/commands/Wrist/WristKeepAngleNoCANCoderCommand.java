@@ -13,6 +13,12 @@ public class WristKeepAngleNoCANCoderCommand extends CommandBase {
 
         addRequirements(subsystem);
     }
+    public WristNoCANCoder getWristNoCANCoder(){
+        return m_subsystem;
+    }
+    public WristKeepAngleNoCANCoderCommand(WristKeepAngleNoCANCoderCommand wristKeepAngleCommand){
+        this(wristKeepAngleCommand.getWristNoCANCoder());
+    }
 
     // Called when the command is initially scheduled.
     @Override
