@@ -5,6 +5,7 @@
 package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Globals;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 
 public class EjectCommand extends CommandBase {
@@ -30,6 +31,8 @@ public class EjectCommand extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.setPercentage(-this.Percentage);
+    Globals.hasGamePice = false;
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.

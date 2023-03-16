@@ -469,6 +469,19 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ChargeStation p",
+              "_title": "/SmartDashboard/ChargeStation p",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
