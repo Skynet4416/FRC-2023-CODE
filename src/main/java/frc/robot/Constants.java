@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.util.Units;
 import frc.robot.commands.drive.DrivingState;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -266,8 +265,8 @@ public class Constants {
   }
 
   public static class OI {
-    public static final int kLeftJoystickControllerPort = 1;
-    public static final int kRightJoystickControllerPort = 2;
+    public static final int kLeftJoystickControllerPort = 2;
+    public static final int kRightJoystickControllerPort = 1;
     public static final int kXboxControllerPort = 0;
     public static final double kXboxcontrollerDrift = 0.1;
   }
@@ -333,7 +332,7 @@ public class Constants {
 
     public static class ChargeStationPID {
       public static final boolean kWantedLimits = false;
-      public static final double kP = 2;
+      public static final double kP = 3.2;
       public static final double kI = 0;
       public static final double kD = 0;
       public static double kThreashold = 0.02;
@@ -495,7 +494,7 @@ public class Constants {
 
     public static class HighCube {
       public static double kArmAngle = 0;
-      public static double kWristAngle = 110;
+      public static double kWristAngle = 100;
       public static double kIntakeSpeed = 1;
 
     }
@@ -507,7 +506,7 @@ public class Constants {
     }
 
     public static class MidCone {
-      public static double kArmAngle = -33.39;
+      public static double kArmAngle = 0;
       public static double kWristAngle = 110;
       public static double kIntakeSpeed = 1;
     }
@@ -523,8 +522,8 @@ public class Constants {
     }
 
     public static class SingleSubstation {
-      public static double kIntakeSpeed = 0.5;
-      public static double kWristAngle = 115;
+      public static double kIntakeSpeed = 0.2;
+      public static double kWristAngle = 105;
     }
   }
 
@@ -545,12 +544,15 @@ public class Constants {
   public static class Auto {
     public static class ChargingStation {
       public static class Forward {
-        public static double kSpeed =-0.2;
-        public static double kTime = 5;
+        public static double kSpeed =-0.1;
+        public static double kTime = 2.3;
+        public static double kSpeed2 =-0.3;
+        public static double kTime2 = 1.8;
+        
       }
 
       public static class Backwords {
-        public static double kSpeed = 0.2;
+        public static double kSpeed = 0;
         public static double kTime = 2.5;
 
       }

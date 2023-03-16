@@ -32,13 +32,7 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.setPercentage(this.Percentage);
-    if(Percentage > 0 )
-    {
-      Globals.hasGamePice = true;
-    }
-    else{
-      Globals.hasGamePice = false;
-    }
+    Globals.hasGamePice = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

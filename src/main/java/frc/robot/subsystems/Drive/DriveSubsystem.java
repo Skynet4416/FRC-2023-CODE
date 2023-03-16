@@ -330,6 +330,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("right backword Velocity", m_rightBackwardRelativeEncoder.getVelocity());
         SmartDashboard.putNumber("Drive Heading", getHeading().getDegrees());
         SmartDashboard.putNumber("Drive Pitch", getPitch().getDegrees());
+        // m_chargeStationPIDController.setP(SmartDashboard.getNumber("Charge Station p", ChargeStationPID.kP));
 
         m_angleProfiledPIDController.setP(SmartDashboard.getNumber("Drive Angular kp", PIDAngular.kP));
     }
@@ -434,5 +435,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     public double getChargeStationAngle() {
         return getRoll().getRadians() * getHeading().getSin() + getPitch().getRadians() * getHeading().getCos();
+    }
+    public double getChargeStationAngle2() {
+        return getPitch().getRadians();
     }
 }

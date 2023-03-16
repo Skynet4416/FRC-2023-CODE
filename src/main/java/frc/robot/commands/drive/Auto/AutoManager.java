@@ -58,10 +58,16 @@ public class AutoManager {
                                                                 Auto.ChargingStation.Forward.kSpeed, 0,
                                                                 visionSubsystem)))
                                 .andThen(new ParallelDeadlineGroup(
+                                                new WaitCommand(Auto.ChargingStation.Forward.kTime2),
+                                                new AutoDriveCommand(driveSubsystem, DrivingState.ARCADE,
+                                                                Auto.ChargingStation.Forward.kSpeed2, 0,
+                                                                visionSubsystem)))
+                                .andThen(new ParallelDeadlineGroup(
                                                 new WaitCommand(Auto.ChargingStation.Backwords.kTime),
                                                 new AutoDriveCommand(driveSubsystem, DrivingState.ARCADE,
                                                                 Auto.ChargingStation.Backwords.kSpeed, 0,
                                                                 visionSubsystem)));
+                                // .andThen(new AutoBalanceCommand(driveSubsystem, false));
 
         }
 
@@ -135,16 +141,24 @@ public class AutoManager {
                                 new ElevatorOpenCommand(elevatorOpenCommand), cubeMidPosition,
                                 new WristKeepAngleNoCANCoderCommand(wristKeepAngleNoCANCoderCommand),
                                 midCubeEjectCommand);
-                Command autoBalacne = new AutoBalanceCommand(driveSubsystem);
+                Command autoBalacne = new AutoBalanceCommand(driveSubsystem, true);
                 switch (gamePice) {
                         case CUBE:
-                                return new ParallelRaceGroup(new AutoDriveCommand(driveSubsystem,DrivingState.TANK,0,0,visionSubsystem), new SequentialCommandGroup(
-                                                new ParallelDeadlineGroup(new WaitCommand(5), putCubeHigh),
-                                                restingCommand));
+                                return new ParallelRaceGroup(
+                                                new AutoDriveCommand(driveSubsystem, DrivingState.TANK, 0, 0,
+                                                                visionSubsystem),
+                                                new SequentialCommandGroup(
+                                                                new ParallelDeadlineGroup(new WaitCommand(5),
+                                                                putCubeHigh),
+                                                                restingCommand));
                         case CONE:
-                                return new SequentialCommandGroup(new AutoDriveCommand(driveSubsystem,DrivingState.TANK,0,0,visionSubsystem),
-                                                new ParallelDeadlineGroup(new WaitCommand(4), putConeMid),
-                                                restingCommand);                                
+                        return new ParallelRaceGroup(
+                                new AutoDriveCommand(driveSubsystem, DrivingState.TANK, 0, 0,
+                                                visionSubsystem),
+                                new SequentialCommandGroup(
+                                                new ParallelDeadlineGroup(new WaitCommand(5),
+                                                putConeMid),
+                                                restingCommand));
                         default:
                                 return new InstantCommand();
 

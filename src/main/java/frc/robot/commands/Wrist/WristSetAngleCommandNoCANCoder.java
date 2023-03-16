@@ -3,7 +3,6 @@ package frc.robot.commands.Wrist;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.Wrist.Physical;
 import frc.robot.subsystems.Wrist.WristNoCANCoder;
-import frc.robot.subsystems.Wrist.WristSubsystem;
 
 public class WristSetAngleCommandNoCANCoder extends CommandBase {
     private final WristNoCANCoder m_subsystem;

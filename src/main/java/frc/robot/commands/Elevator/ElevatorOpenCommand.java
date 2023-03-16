@@ -1,6 +1,5 @@
 package frc.robot.commands.Elevator;
 
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorSubsystem;

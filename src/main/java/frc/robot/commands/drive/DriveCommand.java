@@ -53,7 +53,7 @@ public class DriveCommand extends CommandBase {
             correctJoystickDrift(-m_right.getAsDouble()));
 
       case CURVATURE:
-        m_system.setCurvatureDrive(correctJoystickDrift(-m_left.getAsDouble()),
+        m_system.setCurvatureDrive(correctJoystickDrift(-m_left.getAsDouble()*3/4),
             correctJoystickDrift(-m_right.getAsDouble()), true);
 
       default:

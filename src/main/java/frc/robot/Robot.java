@@ -83,6 +83,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_robotContainer.SetColor();
     m_robotContainer.enableBreak();
     try {
       m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -103,6 +104,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.SetColor();
     m_robotContainer.enableBreak();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
