@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.drive;
+package frc.robot.commands.Drive;
 
 import frc.robot.Constants.Drive;
 import frc.robot.Constants.Arm.Physical;
@@ -13,7 +13,7 @@ import frc.robot.Constants.Drive.Trajectory;
 import frc.robot.commands.Arm.PIDCommands.ArmToConstantAngleCommand;
 import frc.robot.commands.Intake.EjectCommand;
 import frc.robot.commands.Wrist.WristSetAngleCommand;
-import frc.robot.commands.drive.Auto.AutoBalanceCommand;
+import frc.robot.commands.Drive.Auto.AutoBalanceCommand;
 import frc.robot.subsystems.Arm.PIDArmSubsystem;
 import frc.robot.subsystems.Drive.DriveSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;

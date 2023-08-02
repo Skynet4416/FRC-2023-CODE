@@ -1,4 +1,4 @@
-package frc.robot.commands.drive.Auto;
+package frc.robot.commands.Drive.Auto;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;

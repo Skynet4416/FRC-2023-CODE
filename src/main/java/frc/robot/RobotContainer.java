@@ -5,11 +5,11 @@
 package frc.robot;
 
 import frc.robot.Constants.Drive;
-import frc.robot.commands.drive.DriveCommand;
-import frc.robot.commands.drive.Auto.AutoBalanceCommand;
-import frc.robot.commands.drive.Auto.AutoManager;
-import frc.robot.commands.drive.Auto.GamePice;
-import frc.robot.commands.drive.Auto.StartingPosition;
+import frc.robot.commands.Drive.DriveCommand;
+import frc.robot.commands.Drive.Auto.AutoBalanceCommand;
+import frc.robot.commands.Drive.Auto.AutoManager;
+import frc.robot.commands.Drive.Auto.GamePice;
+import frc.robot.commands.Drive.Auto.StartingPosition;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;

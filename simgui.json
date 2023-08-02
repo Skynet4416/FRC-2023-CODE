@@ -1,13 +1,4 @@
 {
-  "HALProvider": {
-    "Solenoids": {
-      "0": {
-        "header": {
-          "open": true
-        }
-      }
-    }
-  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",

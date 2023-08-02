@@ -1,7 +1,7 @@
-package frc.robot.commands.drive.Auto;
+package frc.robot.commands.Drive.Auto;
 
 import frc.robot.Constants.Auto;
-import frc.robot.commands.drive.DrivingState;
+import frc.robot.commands.Drive.DrivingState;
 import frc.robot.Constants.CommandGroups.HighCube;
 
 import frc.robot.Constants.CommandGroups.LowCube;
